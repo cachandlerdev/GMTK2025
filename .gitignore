@@ -80,3 +80,6 @@ GMTK2025/Intermediate/*
 # Cache files for the editor to use
 DerivedDataCache/*
 GMTK2025/DerivedDataCache/*
+
+.idea/*
+GMTK2025/.idea/*

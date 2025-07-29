@@ -16,4 +16,16 @@ Itch.io page: [Game Name](Link here)
 ## About
 Game created for the GMTK Game Jam 2025 in 96 hours. 
 
-Credits: Name Name Name Name
+## Credits:
+
+- Artists:
+	* Name
+	* Name
+	* Name
+- Sound:
+	* Name 
+	* Name 
+- Programmers:
+	* Name 
+	* Name 
+	* Name 
