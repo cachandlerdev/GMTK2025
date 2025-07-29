@@ -1,0 +1,13 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-GMTK2025.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Intermediate\Build\Win64\x64\GMTK2025Editor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
+"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Intermediate\Build\Win64\x64\UnrealEditor\Development\GMTK2025\GMTK2025.cpp.obj"
+"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Intermediate\Build\Win64\x64\UnrealEditor\Development\GMTK2025\PerModuleInline.gen.cpp.obj"
+"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Intermediate\Build\Win64\x64\UnrealEditor\Development\GMTK2025\Default.rc2.res"
+/OUT:"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Intermediate\Build\Win64\x64\UnrealEditor\Development\GMTK2025\UnrealEditor-GMTK2025.lib"

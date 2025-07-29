@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "GMTK2025",
+			"Path": "..\\Source\\GMTK2025.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "GMTK2025Editor",
+			"Path": "..\\Source\\GMTK2025Editor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}

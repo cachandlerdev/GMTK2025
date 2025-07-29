@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\source\\gmtk2025\\gmtk2025.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\intermediate\\build\\win64\\x64\\gmtk2025editor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\gmtk2025\\definitions.gmtk2025.h",
+            "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\source\\gmtk2025\\gmtk2025.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
