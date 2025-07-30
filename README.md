@@ -11,7 +11,7 @@ Itch.io page: [Game Name](Link here)
 
 ## Style Conventions
 - [Unreal Engine Project Structure and Naming Conventions](https://dev.epicgames.com/community/learning/tutorials/mX6b/unreal-engine-project-structure-naming-conventions)
-- [Unreal Engine Coding Standard](https://dev.epicgames.com/documentation/en-us/unreal-engine/coding-standard)
+- [Unreal Engine Coding Standard](https://github.com/Allar/ue5-style-guide)
 
 ## About
 Game created for the GMTK Game Jam 2025 in 96 hours. 
