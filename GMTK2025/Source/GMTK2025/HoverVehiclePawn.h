@@ -14,7 +14,8 @@ class UInputMappingContext;
 class UInputAction;
 
 UCLASS()
-class GMTK2025_API AHoverVehiclePawn : public AWheeledVehiclePawn
+//class GMTK2025_API AHoverVehiclePawn : public AWheeledVehiclePawn
+class GMTK2025_API AHoverVehiclePawn : public APawn
 {
 	GENERATED_BODY()
 
@@ -27,6 +28,18 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	UCameraComponent* Camera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	UStaticMeshComponent* Chassis;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float SpeedMultiplier = 2500.0;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float SteeringMultiplier = 50.0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float ForceAmount = 1000.0f;
 
 protected:
 	// Called when the game starts or when spawned
@@ -46,11 +59,24 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* SteeringAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* LookAroundAction;
 
-	void Throttle(const FInputActionValue &value);
-	void Brake(const FInputActionValue &value);
-	void Handbrake(const FInputActionValue &value);
-	void Steer(const FInputActionValue &value);
+	void OnActivateThrottle(const FInputActionValue &value);
+	void OnActivateBrake(const FInputActionValue &value);
+	void OnActivateHandbrake(const FInputActionValue &value);
+	void OnActivateSteer(const FInputActionValue &value);
+	void OnReleaseSteer(const FInputActionValue &value);
+
+private:
+	float Speed;
+
+	float Steering;
+
+	bool bIsSteering = false;
+
+	
 
 public:	
 	// Called every frame
