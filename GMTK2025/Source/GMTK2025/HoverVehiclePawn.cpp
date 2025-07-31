@@ -5,6 +5,7 @@
 //#include "ChaosVehicleMovementComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "MyGameModeBase.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/World.h"
@@ -59,6 +60,8 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 void AHoverVehiclePawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
 // Called every frame
@@ -133,6 +136,9 @@ void AHoverVehiclePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnActivateSteer);
 		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Started, this, &AHoverVehiclePawn::OnActivateHandbrake);
 		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnActivateHandbrake);
+		
+		EnhancedInputComponent->BindAction(ResetAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateReset);
+		EnhancedInputComponent->BindAction(UseItemAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateUseItem);
 
 		SteeringAxisBinding = EnhancedInputComponent->BindActionValue(SteeringAction);
 	}
@@ -181,6 +187,36 @@ void AHoverVehiclePawn::OnActivateSteer(const FInputActionValue& value)
 	else
 	{
 		MySteerDirection = STRAIGHT;
+	}
+}
+
+void AHoverVehiclePawn::OnActivateReset(const FInputActionValue& value)
+{
+	const float axisValue = value.Get<float>();
+	
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Reset loop"));
+
+	if (axisValue != 0)
+	{
+		if (GameMode)
+		{
+			GameMode->RestartThisLoop();
+		}
+	}
+}
+
+void AHoverVehiclePawn::OnActivateUseItem(const FInputActionValue& value)
+{
+	const float axisValue = value.Get<float>();
+	
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Use item."));
+	
+	if (axisValue != 0)
+	{
+		// TODO: add use item logic
+		Boost(BoostSpeedMultiplier);
 	}
 }
 
