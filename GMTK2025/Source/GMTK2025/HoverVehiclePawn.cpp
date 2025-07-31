@@ -60,6 +60,8 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 void AHoverVehiclePawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
 // Called every frame
@@ -197,7 +199,10 @@ void AHoverVehiclePawn::OnActivateReset(const FInputActionValue& value)
 
 	if (axisValue != 0)
 	{
-		GameMode->RestartThisLoop();
+		if (GameMode)
+		{
+			GameMode->RestartThisLoop();
+		}
 	}
 }
 
