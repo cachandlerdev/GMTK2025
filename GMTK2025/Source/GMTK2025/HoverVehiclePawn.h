@@ -8,6 +8,7 @@
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputLibrary.h"
 #include "WheeledVehiclePawn.h"
+#include "Components/BoxComponent.h"
 #include "HoverVehiclePawn.generated.h"
 
 class UInputMappingContext;
@@ -32,6 +33,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	UStaticMeshComponent* Chassis;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
+	UBoxComponent* BoxCollision;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float MaxDistanceToFloor = 500.0f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float SpeedMultiplier = 2500.0;
 	
@@ -39,7 +46,13 @@ public:
 	float SteeringMultiplier = 50.0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	float ForceAmount = 1000.0f;
+	float HoverAmount = 150.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float SteeringVisualRotationMultiplier = 0.05f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float SteeringVisualMaxRotation = 10.0f;
 
 protected:
 	// Called when the game starts or when spawned
