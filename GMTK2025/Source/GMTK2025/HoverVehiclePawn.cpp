@@ -40,6 +40,7 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
 
+	//CameraBoom->bUsePawnControlRotation = false;
 	CameraBoom->bUsePawnControlRotation = false;
 	CameraBoom->bInheritYaw = true;
 	CameraBoom->bInheritPitch = false;
@@ -136,9 +137,9 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 		//Chassis->AddTorqueInDegrees(rotationQuat.GetForwardVector(), "", true);
 	}
 
-	if (MySteerDirection != STRAIGHT)
+	if (MySteerDirection == STRAIGHT)
 	{
-		RotationLerp = 0;
+		//RotationLerp = 0;
 		FVector counterTorque = FVector(0, 0, -1 * Steering);
 		BoxCollision->AddTorqueInDegrees(counterTorque, "", true);
 	}
@@ -200,9 +201,6 @@ void AHoverVehiclePawn::OnActivateSteer(const FInputActionValue& value)
 {
 	const float axisValue = value.Get<float>();
 	Steering = SteeringMultiplier * axisValue;
-
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("%f"), axisValue));
 	
 	// Not very clean but if it works
 	if (axisValue > 0)
@@ -245,15 +243,11 @@ void AHoverVehiclePawn::LeanCamera()
 		{
 			// Lean camera right
 			SetLeanSettings(CameraLeanAmount, CameraLeanSpeed);
-			if (GEngine)
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Lean right"));
 		}
 		else if (MySteerDirection == LEFT)
 		{
 			// Lean camera left
 			SetLeanSettings(-1 * CameraLeanAmount, CameraLeanSpeed);
-			if (GEngine)
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Lean right"));
 		}
 	}
 	
@@ -261,8 +255,6 @@ void AHoverVehiclePawn::LeanCamera()
 	{
 		// Stop lean camera
 		SetLeanSettings(0, CameraLeanSpeed);
-		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Don't lean"));
 	}
 }
 

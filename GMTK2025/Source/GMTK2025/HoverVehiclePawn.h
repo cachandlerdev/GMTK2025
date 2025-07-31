@@ -111,7 +111,7 @@ private:
 
 	SteerDirection MySteerDirection = STRAIGHT;
 
-	float RotationLerp = 0.0f;
+	//float RotationLerp = 0.0f;
 
 	// garbage deletion isn't an issue (I think) because we check if it's null
 	// todo: double check this if it's a problem
