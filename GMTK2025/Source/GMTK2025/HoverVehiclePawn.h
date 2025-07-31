@@ -12,6 +12,8 @@
 #include "Components/BoxComponent.h"
 #include "HoverVehiclePawn.generated.h"
 
+class AMyGameModeBase;
+
 UENUM(BlueprintType)
 enum SteerDirection
 {
@@ -56,6 +58,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float SteeringMultiplier = 50.0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float BoostSpeedMultiplier = 1.2f;
 
 	// 1.0 lets it stop on a dime, 0 makes it never stop.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
@@ -104,11 +109,19 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* LookAroundAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* ResetAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* UseItemAction;
 
 	void OnActivateThrottle(const FInputActionValue &value);
 	void OnActivateBrake(const FInputActionValue &value);
 	void OnActivateHandbrake(const FInputActionValue &value);
 	void OnActivateSteer(const FInputActionValue &value);
+	void OnActivateReset(const FInputActionValue &value);
+	void OnActivateUseItem(const FInputActionValue &value);
 	
 	void OnReleaseThrottle(const FInputActionValue &value);
 	void OnReleaseBrake(const FInputActionValue &value);
@@ -127,21 +140,18 @@ protected:
 private:
 	float Speed;
 	float Steering;
-
 	SteerDirection MySteerDirection = STRAIGHT;
-
 	bool bWantsToGoForwardOrBackwards = false;
-
-	//float RotationLerp = 0.0f;
 
 	// garbage deletion isn't an issue (I think) because we check if it's null
 	// todo: double check this if it's a problem
 	UEnhancedInputComponent* EnhancedInputComponent;
 
 	FEnhancedInputActionValueBinding SteeringAxisBinding;
-
 	float OriginalFOV = 90;
 	float SpeedFOV = OriginalFOV * (1 + (SpeedFOVEffect / 1000));;
+
+	AMyGameModeBase* GameMode;
 
 public:	
 	// Called every frame
