@@ -58,6 +58,10 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Music")
 	USoundBase* GetNextMusicTrack();
 
+	//Stores the player position over time
+	UPROPERTY(EditAnywhere, Category = "Ghost")
+	TArray<FTransform> PlayerPositions;
+
 private:
 	UPROPERTY()
 	USoundBase* CurrentMusicTrack;
