@@ -9,6 +9,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
+#include "MyGameInstance.h"
 
 
 // Sets default values
@@ -59,6 +60,11 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 void AHoverVehiclePawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//Initiate timer
+	GhostSnapshotTimer = GetWorld()->TimeSeconds;
+
+	GameInstance = Cast<UMyGameInstance>(GetGameInstance());
 }
 
 // Called every frame
@@ -105,6 +111,20 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 		FVector counterTorque = FVector(0, 0, -1 * Steering);
 		BoxCollision->AddTorqueInDegrees(counterTorque, "", true);
 	}
+
+	//Store player transform to game instance for the ghost, every second
+	if (GetWorld()->TimeSeconds - GhostSnapshotTimer >= 1)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red, TEXT("Storing Position!"));
+		}
+		GameInstance->PlayerPositions.Add(GetActorTransform());
+
+		//update timer
+		GhostSnapshotTimer = GetWorld()->TimeSeconds;
+	}
+
 
 	RunCameraEffects();
 }

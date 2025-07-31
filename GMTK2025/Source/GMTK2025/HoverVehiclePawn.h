@@ -10,6 +10,7 @@
 #include "EnhancedInputLibrary.h"
 #include "WheeledVehiclePawn.h"
 #include "Components/BoxComponent.h"
+#include "MyGameInstance.h"
 #include "HoverVehiclePawn.generated.h"
 
 UENUM(BlueprintType)
@@ -142,6 +143,12 @@ private:
 
 	float OriginalFOV = 90;
 	float SpeedFOV = OriginalFOV * (1 + (SpeedFOVEffect / 1000));;
+
+	//Ghost Snapshot Timer
+	double GhostSnapshotTimer;
+
+	//Game instance reference
+	UMyGameInstance* GameInstance;
 
 public:	
 	// Called every frame
