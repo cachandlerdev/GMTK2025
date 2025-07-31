@@ -70,7 +70,11 @@ public:
 	float CameraLeanAmount = 5.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	float CameraLeanSpeed = 5.0f;
+	float CameraInterpSpeed = 5.0f;
+
+	// Divides this number by 500 and adds 1. e.g. "50" becomes a "1.05" FOV change
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float SpeedFOVEffect = 50;
 
 protected:
 	// Called when the game starts or when spawned
@@ -103,6 +107,12 @@ protected:
 	void RunCameraEffects();
 	void LeanCamera();
 	void SetLeanSettings(float Roll, float InterpSpeed);
+	void CameraShake();
+	void ChangeCameraFOV();
+	void SetFOVSettings(float FOV, float InterpSpeed);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Camera")
+	void CameraShakeBP();
 
 private:
 	float Speed;
@@ -118,6 +128,9 @@ private:
 	UEnhancedInputComponent* EnhancedInputComponent;
 
 	FEnhancedInputActionValueBinding SteeringAxisBinding;
+
+	float OriginalFOV = 90;
+	float SpeedFOV = OriginalFOV * (1 + (SpeedFOVEffect / 1000));;
 
 public:	
 	// Called every frame

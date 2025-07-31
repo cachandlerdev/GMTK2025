@@ -51,6 +51,8 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 
 	CameraBoom->TargetArmLength = 450.0f;
 	CameraBoom->SocketOffset.Z = 140.0f;
+
+	OriginalFOV = Camera->FieldOfView;
 }
 
 // Called when the game starts or when spawned
@@ -232,41 +234,69 @@ void AHoverVehiclePawn::RunCameraEffects()
 	}
 
 	LeanCamera();
+	CameraShake();
+	ChangeCameraFOV();
 }
 
 void AHoverVehiclePawn::LeanCamera()
 {
-	// Workaround for input get value not working
 	if (GetVelocity().Length() > FastVelocityThreshold)
 	{
+		// Workaround for input get value not working
 		if (MySteerDirection == RIGHT)
 		{
 			// Lean camera right
-			SetLeanSettings(CameraLeanAmount, CameraLeanSpeed);
+			SetLeanSettings(CameraLeanAmount, CameraInterpSpeed);
 		}
 		else if (MySteerDirection == LEFT)
 		{
 			// Lean camera left
-			SetLeanSettings(-1 * CameraLeanAmount, CameraLeanSpeed);
+			SetLeanSettings(-1 * CameraLeanAmount, CameraInterpSpeed);
 		}
 	}
 	
 	if (MySteerDirection == STRAIGHT)
 	{
 		// Stop lean camera
-		SetLeanSettings(0, CameraLeanSpeed);
+		SetLeanSettings(0, CameraInterpSpeed);
 	}
 }
 
 void AHoverVehiclePawn::SetLeanSettings(float Roll, float InterpSpeed)
 {
-	auto controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	//FRotator currentRotation = controller->GetControlRotation();
 	FRotator currentRotation = Camera->GetRelativeRotation();
 	FRotator targetRotation = currentRotation;
 	targetRotation.Roll = Roll;
 	
 	FRotator newRotation = UKismetMathLibrary::RInterpTo(currentRotation, targetRotation, GetWorld()->DeltaTimeSeconds, InterpSpeed);
 	Camera->SetRelativeRotation(newRotation);
-	//controller->SetControlRotation(newRotation);
+}
+
+void AHoverVehiclePawn::CameraShake()
+{
+	if (GetVelocity().Length() > FastVelocityThreshold)
+	{
+		// Done because this is easier in blueprints
+		CameraShakeBP();
+	}
+}
+
+void AHoverVehiclePawn::ChangeCameraFOV()
+{
+	if (GetVelocity().Length() > FastVelocityThreshold)
+	{
+		float targetFOV = OriginalFOV * (1 + (SpeedFOVEffect / 1000));
+		SetFOVSettings(SpeedFOV, CameraInterpSpeed);
+	}
+	else
+	{
+		SetFOVSettings(OriginalFOV, CameraInterpSpeed);
+	}
+}
+
+void AHoverVehiclePawn::SetFOVSettings(float FOV, float InterpSpeed)
+{
+	float currentFOV = Camera->FieldOfView;
+	float newFOV = UKismetMathLibrary::FInterpTo(currentFOV, FOV, GetWorld()->DeltaTimeSeconds, InterpSpeed);
+	Camera->SetFieldOfView(newFOV);
 }
