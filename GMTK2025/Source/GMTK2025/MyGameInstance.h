@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "MyEnums.h"
 #include "MyGameInstance.generated.h"
 
 /**
@@ -58,9 +59,23 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Music")
 	USoundBase* GetNextMusicTrack();
 
+	// Ghost logic
+	
 	//Stores the player position over time
-	UPROPERTY(EditAnywhere, Category = "Ghost")
+	UPROPERTY(BlueprintReadOnly, Category = "Ghost")
 	TArray<FTransform> PlayerPositions;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Ghost")
+	TArray<float> PlayerSpeed;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Ghost")
+	TArray<float> PlayerSteering;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Ghost")
+	TArray<bool> PlayerWantsToGoForwardOrBackwards;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Ghost")
+	TArray<ESteerDirection> PlayerSteerDirections;
 
 private:
 	UPROPERTY()
