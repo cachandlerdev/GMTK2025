@@ -197,17 +197,36 @@ void AHoverVehiclePawn::OnActivateSteer(const FInputActionValue& value)
 	Steering = SteeringMultiplier * axisValue;
 	
 	// Not very clean but if it works
-	if (axisValue > 0)
+	if (Speed >= 0)
 	{
-		MySteerDirection = RIGHT;
+		if (axisValue > 0)
+		{
+			MySteerDirection = RIGHT;
+		}
+		else if (axisValue < 0)
+		{
+			MySteerDirection = LEFT;
+		}
+		else
+		{
+			MySteerDirection = STRAIGHT;
+		}
 	}
-	else if (axisValue < 0)
+	else 
 	{
-		MySteerDirection = LEFT;
-	}
-	else
-	{
-		MySteerDirection = STRAIGHT;
+		// Reverse if going backwards
+		if (axisValue > 0)
+		{
+			MySteerDirection = LEFT;
+		}
+		else if (axisValue < 0)
+		{
+			MySteerDirection = RIGHT;
+		}
+		else
+		{
+			MySteerDirection = STRAIGHT;
+		}
 	}
 }
 

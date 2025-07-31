@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "MyGameInstance.h"
+#include "Components/BoxComponent.h"
 #include "PlayerGhostActor.generated.h"
 
 UCLASS()
@@ -18,6 +19,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	UStaticMeshComponent* Chassis;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
+	UBoxComponent* BoxCollision;
 
 	UPROPERTY(EditAnywhere, Category = "Ghost")
 	float GhostPositionInterpolationSpeed = 1.0f;

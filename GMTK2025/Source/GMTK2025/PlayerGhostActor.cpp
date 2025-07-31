@@ -9,11 +9,22 @@ APlayerGhostActor::APlayerGhostActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
+	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
+	SetRootComponent(BoxCollision);
+	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
+	BoxCollision->SetSimulatePhysics(true);
+	BoxCollision->SetCollisionProfileName(TEXT("Vehicle"));
 
 	Chassis = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Chassis"));
-	RootComponent = Chassis;
 	Chassis->SetSimulatePhysics(false);
-	Chassis->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//Chassis->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Chassis->SetupAttachment(BoxCollision);
+	
+	//Chassis->SetSimulatePhysics(true);
+	Chassis->SetMassOverrideInKg("", 50000.0);
+	Chassis->SetLinearDamping(1.0);
+	Chassis->SetAngularDamping(1.0);
 }
 
 // Called when the game starts or when spawned
@@ -37,15 +48,18 @@ void APlayerGhostActor::Tick(float DeltaTime)
 	//Update target transform every second
 	if (GetWorld()->TimeSeconds - GhostSnapshotTimer >= 1)
 	{
-		if (GameInstance->PlayerPositions[CurrentTransformIndex].IsValid())
+		if (GameInstance->PlayerPositions.Num() > 0 && GameInstance->PlayerPositions.Num() > CurrentTransformIndex)
 		{
-			TargetTransform = GameInstance->PlayerPositions[CurrentTransformIndex];
+			if (GameInstance->PlayerPositions[CurrentTransformIndex].IsValid())
+			{
+				TargetTransform = GameInstance->PlayerPositions[CurrentTransformIndex];
 
-			//update timer
-			GhostSnapshotTimer = GetWorld()->TimeSeconds;
+				//update timer
+				GhostSnapshotTimer = GetWorld()->TimeSeconds;
 
-			//update current transform index
-			CurrentTransformIndex++;
+				//update current transform index
+				CurrentTransformIndex++;
+			}
 		}
 	}
 
