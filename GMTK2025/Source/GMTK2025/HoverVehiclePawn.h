@@ -8,20 +8,12 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputLibrary.h"
-#include "WheeledVehiclePawn.h"
 #include "Components/BoxComponent.h"
+#include "MyEnums.h"
 #include "MyGameInstance.h"
 #include "HoverVehiclePawn.generated.h"
 
 class AMyGameModeBase;
-
-UENUM(BlueprintType)
-enum SteerDirection
-{
-	STRAIGHT	UMETA(DisplayName = "STRAIGHT"),
-	LEFT		UMETA(DisplayName = "LEFT"),
-	RIGHT		UMETA(DisplayName = "RIGHT"),
-};
 
 class UInputMappingContext;
 class UInputAction;
@@ -89,6 +81,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	float SpeedFOVEffect = 50;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ghost")
+	float GhostUpdateSeconds = 0.2;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -141,7 +136,7 @@ protected:
 private:
 	float Speed;
 	float Steering;
-	SteerDirection MySteerDirection = STRAIGHT;
+	ESteerDirection MySteerDirection = ESteerDirection::STRAIGHT;
 	bool bWantsToGoForwardOrBackwards = false;
 
 	// garbage deletion isn't an issue (I think) because we check if it's null
