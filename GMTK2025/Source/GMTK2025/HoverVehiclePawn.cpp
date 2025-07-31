@@ -6,7 +6,9 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Components/StaticMeshComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -88,10 +90,16 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 		
 		BoxCollision->AddForce(force, "", true);
 		BoxCollision->AddTorqueInDegrees(torque, "", true);
-		
-		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Apply force"));
 
+		//if (GEngine)
+		//{
+		//	//auto message = FString::Printf(TEXT("Velocity: %f"), GetVelocity().Length());
+		//	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, message);
+		//}
+		
+		// Failed attempt for the time being to have the car "tilt in the direction of movement"
+
+		// Attempt 1
 		//FVector turnTorque = FVector::CrossProduct(GetActorForwardVector(), FVector(0, 0, 1));
 
 		//turnTorque = turnTorque * DeltaTime * Steering * SteeringMultiplier;
@@ -107,15 +115,20 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 		//}
 		//BoxCollision->AddTorqueInDegrees(turnTorque, "", true);
 
-		float steerAngle = Steering * SteeringVisualRotationMultiplier * DeltaTime;
-		steerAngle = FMath::Clamp(steerAngle, -1 * SteeringVisualMaxRotation, SteeringVisualMaxRotation);
-		FQuat currentRotation = GetActorQuat();
-		//FQuat change(FVector::RightVector, steerAngle);
-		FQuat change(Camera->GetForwardVector(), steerAngle);
-		FQuat newRotation = currentRotation * change;
-		Chassis->SetWorldRotation(newRotation);
+		// Attempt 2 (somewhat works but looks bad)
+		//float steerAngle = Steering * SteeringVisualRotationMultiplier * DeltaTime * -1;
+		//steerAngle = FMath::Clamp(steerAngle, -1 * SteeringVisualMaxRotation, SteeringVisualMaxRotation);
+		//FQuat currentRotation = GetActorQuat();
+		//FQuat change(Camera->GetForwardVector(), steerAngle);
+		//FQuat targetRotation = currentRotation * change;
+		//FRotator newRotation = UKismetMathLibrary::RLerp(currentRotation.Rotator(), targetRotation.Rotator(), RotationLerp, true);
+		//Chassis->SetWorldRotation(newRotation);
+		//
+		//RotationLerp = FMath::Clamp(RotationLerp + DeltaTime, 0.0f, 1.0f);
+		
 		//SetActorRotation(newRotation);
 
+		// Attempt 3
 		//float steeringRotationDegrees = FMath::Clamp(Steering * SteeringVisualRotationMultiplier, - 1 * SteeringVisualMaxRotation, SteeringVisualMaxRotation);
 		//float angleRadians = FMath::DegreesToRadians(steeringRotationDegrees);
 		//FVector rotationAxis = RootComponent->GetForwardVector();
@@ -123,11 +136,14 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 		//Chassis->AddTorqueInDegrees(rotationQuat.GetForwardVector(), "", true);
 	}
 
-	if (!bIsSteering)
+	if (MySteerDirection != STRAIGHT)
 	{
+		RotationLerp = 0;
 		FVector counterTorque = FVector(0, 0, -1 * Steering);
 		BoxCollision->AddTorqueInDegrees(counterTorque, "", true);
 	}
+
+	RunCameraEffects();
 }
 
 // Called to bind functionality to input
@@ -143,14 +159,17 @@ void AHoverVehiclePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		}
 	}
 
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	if (UEnhancedInputComponent* MyInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
+		EnhancedInputComponent = MyInputComponent;
 		EnhancedInputComponent->BindAction(ThrottleAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateThrottle);
 		EnhancedInputComponent->BindAction(BrakeAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateBrake);
 		EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateSteer);
 		EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnActivateSteer);
 		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Started, this, &AHoverVehiclePawn::OnActivateHandbrake);
 		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnActivateHandbrake);
+
+		SteeringAxisBinding = EnhancedInputComponent->BindActionValue(SteeringAction);
 	}
 }
 
@@ -158,11 +177,6 @@ void AHoverVehiclePawn::OnActivateThrottle(const FInputActionValue& value)
 {
 	const float axisValue = value.Get<float>();
 	Speed = axisValue * SpeedMultiplier;
-
-	//GetVehicleMovementComponent()->SetThrottleInput(CurrentValue);
-	
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Throttle"));
 }
 
 void AHoverVehiclePawn::OnActivateBrake(const FInputActionValue& value)
@@ -186,14 +200,81 @@ void AHoverVehiclePawn::OnActivateSteer(const FInputActionValue& value)
 {
 	const float axisValue = value.Get<float>();
 	Steering = SteeringMultiplier * axisValue;
-	
-	bIsSteering = true;
-	
+
 	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Steer"));
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("%f"), axisValue));
+	
+	// Not very clean but if it works
+	if (axisValue > 0)
+	{
+		MySteerDirection = RIGHT;
+	}
+	else if (axisValue < 0)
+	{
+		MySteerDirection = LEFT;
+	}
+	else
+	{
+		MySteerDirection = STRAIGHT;
+	}
 }
 
 void AHoverVehiclePawn::OnReleaseSteer(const FInputActionValue& value)
 {
-	bIsSteering = false;
+	MySteerDirection = STRAIGHT;
+}
+
+void AHoverVehiclePawn::RunCameraEffects()
+{
+	// TODO: Camera shake, motion blur,
+
+	if (EnhancedInputComponent == nullptr)
+	{
+		return;
+	}
+
+	LeanCamera();
+}
+
+void AHoverVehiclePawn::LeanCamera()
+{
+	// Workaround for input get value not working
+	if (GetVelocity().Length() > FastVelocityThreshold)
+	{
+		if (MySteerDirection == RIGHT)
+		{
+			// Lean camera right
+			SetLeanSettings(CameraLeanAmount, CameraLeanSpeed);
+			if (GEngine)
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Lean right"));
+		}
+		else if (MySteerDirection == LEFT)
+		{
+			// Lean camera left
+			SetLeanSettings(-1 * CameraLeanAmount, CameraLeanSpeed);
+			if (GEngine)
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Lean right"));
+		}
+	}
+	
+	if (MySteerDirection == STRAIGHT)
+	{
+		// Stop lean camera
+		SetLeanSettings(0, CameraLeanSpeed);
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Don't lean"));
+	}
+}
+
+void AHoverVehiclePawn::SetLeanSettings(float Roll, float InterpSpeed)
+{
+	auto controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	//FRotator currentRotation = controller->GetControlRotation();
+	FRotator currentRotation = Camera->GetRelativeRotation();
+	FRotator targetRotation = currentRotation;
+	targetRotation.Roll = Roll;
+	
+	FRotator newRotation = UKismetMathLibrary::RInterpTo(currentRotation, targetRotation, GetWorld()->DeltaTimeSeconds, InterpSpeed);
+	Camera->SetRelativeRotation(newRotation);
+	//controller->SetControlRotation(newRotation);
 }
