@@ -3,18 +3,29 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EnhancedInputComponent.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputLibrary.h"
 #include "WheeledVehiclePawn.h"
+#include "Components/BoxComponent.h"
 #include "HoverVehiclePawn.generated.h"
+
+UENUM(BlueprintType)
+enum SteerDirection
+{
+	STRAIGHT	UMETA(DisplayName = "STRAIGHT"),
+	LEFT		UMETA(DisplayName = "LEFT"),
+	RIGHT		UMETA(DisplayName = "RIGHT"),
+};
 
 class UInputMappingContext;
 class UInputAction;
 
 UCLASS()
-class GMTK2025_API AHoverVehiclePawn : public AWheeledVehiclePawn
+//class GMTK2025_API AHoverVehiclePawn : public AWheeledVehiclePawn
+class GMTK2025_API AHoverVehiclePawn : public APawn
 {
 	GENERATED_BODY()
 
@@ -27,6 +38,50 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	UCameraComponent* Camera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	UStaticMeshComponent* Chassis;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
+	UBoxComponent* BoxCollision;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float MaxDistanceToFloor = 500.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float SpeedMultiplier = 2500.0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float MaxSpeed = 4000.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float SteeringMultiplier = 50.0;
+
+	// 1.0 lets it stop on a dime, 0 makes it never stop.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float BrakeSpeed = 0.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float HoverAmount = 150.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float FastVelocityThreshold = 500.0f;
+	
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	//float SteeringVisualRotationMultiplier = 0.05f;
+	//
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	//float SteeringVisualMaxRotation = 10.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float CameraLeanAmount = 5.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float CameraInterpSpeed = 5.0f;
+
+	// Divides this number by 500 and adds 1. e.g. "50" becomes a "1.05" FOV change
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float SpeedFOVEffect = 50;
 
 protected:
 	// Called when the game starts or when spawned
@@ -46,11 +101,47 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* SteeringAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* LookAroundAction;
 
-	void Throttle(const FInputActionValue &value);
-	void Brake(const FInputActionValue &value);
-	void Handbrake(const FInputActionValue &value);
-	void Steer(const FInputActionValue &value);
+	void OnActivateThrottle(const FInputActionValue &value);
+	void OnActivateBrake(const FInputActionValue &value);
+	void OnActivateHandbrake(const FInputActionValue &value);
+	void OnActivateSteer(const FInputActionValue &value);
+	
+	void OnReleaseThrottle(const FInputActionValue &value);
+	void OnReleaseBrake(const FInputActionValue &value);
+	void OnReleaseSteer(const FInputActionValue &value);
+
+	void RunCameraEffects();
+	void LeanCamera();
+	void SetLeanSettings(float Roll, float InterpSpeed);
+	void CameraShake();
+	void ChangeCameraFOV();
+	void SetFOVSettings(float FOV, float InterpSpeed);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Camera")
+	void CameraShakeBP();
+
+private:
+	float Speed;
+	float Steering;
+
+	SteerDirection MySteerDirection = STRAIGHT;
+
+	bool bWantsToGoForwardOrBackwards = false;
+
+	//float RotationLerp = 0.0f;
+
+	// garbage deletion isn't an issue (I think) because we check if it's null
+	// todo: double check this if it's a problem
+	UEnhancedInputComponent* EnhancedInputComponent;
+
+	FEnhancedInputActionValueBinding SteeringAxisBinding;
+
+	float OriginalFOV = 90;
+	float SpeedFOV = OriginalFOV * (1 + (SpeedFOVEffect / 1000));;
 
 public:	
 	// Called every frame
