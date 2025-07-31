@@ -138,6 +138,13 @@ void AHoverVehiclePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	}
 }
 
+void AHoverVehiclePawn::Boost(float BoostStrength)
+{
+	const float baseBoostMultiplier = 100000.0f;
+	FVector direction = RootComponent->GetForwardVector();
+	BoxCollision->AddForce(direction * BoostStrength * baseBoostMultiplier, "", true);
+}
+
 void AHoverVehiclePawn::OnActivateThrottle(const FInputActionValue& value)
 {
 	bWantsToGoForwardOrBackwards = true;
