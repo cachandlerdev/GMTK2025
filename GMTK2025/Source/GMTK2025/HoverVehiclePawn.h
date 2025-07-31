@@ -15,9 +15,9 @@
 UENUM(BlueprintType)
 enum SteerDirection
 {
-	STRAIGHT	UMETA(DisplayName = "Straight"),
+	STRAIGHT	UMETA(DisplayName = "STRAIGHT"),
 	LEFT		UMETA(DisplayName = "LEFT"),
-	RIGHT		UMETA(DisplayName = "Right"),
+	RIGHT		UMETA(DisplayName = "RIGHT"),
 };
 
 class UInputMappingContext;
@@ -50,9 +50,16 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float SpeedMultiplier = 2500.0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float MaxSpeed = 4000.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float SteeringMultiplier = 50.0;
+
+	// 1.0 lets it stop on a dime, 0 makes it never stop.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float BrakeSpeed = 0.5f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float HoverAmount = 150.0f;
@@ -102,6 +109,9 @@ protected:
 	void OnActivateBrake(const FInputActionValue &value);
 	void OnActivateHandbrake(const FInputActionValue &value);
 	void OnActivateSteer(const FInputActionValue &value);
+	
+	void OnReleaseThrottle(const FInputActionValue &value);
+	void OnReleaseBrake(const FInputActionValue &value);
 	void OnReleaseSteer(const FInputActionValue &value);
 
 	void RunCameraEffects();
@@ -116,10 +126,11 @@ protected:
 
 private:
 	float Speed;
-
 	float Steering;
 
 	SteerDirection MySteerDirection = STRAIGHT;
+
+	bool bWantsToGoForwardOrBackwards = false;
 
 	//float RotationLerp = 0.0f;
 

@@ -86,57 +86,17 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 	if (bHit)
 	{
 		FVector torque = FVector(0, 0, Steering);
-		FVector force = Chassis->GetForwardVector();
-		force.X *= Speed;
-		force.Y *= Speed;
-		force.Z = HoverAmount;
+
+		if (bWantsToGoForwardOrBackwards)
+		{
+			FVector force = Chassis->GetForwardVector();
+			force.X *= Speed;
+			force.Y *= Speed;
+			force.Z = HoverAmount;
 		
-		BoxCollision->AddForce(force, "", true);
+			BoxCollision->AddForce(force, "", true);
+		}
 		BoxCollision->AddTorqueInDegrees(torque, "", true);
-
-		//if (GEngine)
-		//{
-		//	//auto message = FString::Printf(TEXT("Velocity: %f"), GetVelocity().Length());
-		//	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, message);
-		//}
-		
-		// Failed attempt for the time being to have the car "tilt in the direction of movement"
-
-		// Attempt 1
-		//FVector turnTorque = FVector::CrossProduct(GetActorForwardVector(), FVector(0, 0, 1));
-
-		//turnTorque = turnTorque * DeltaTime * Steering * SteeringMultiplier;
-		//
-		//turnTorque = FVector::RightVector * DeltaTime * Steering * SteeringMultiplier;
-		//if (Steering > 0)
-		//{
-		//	// Turning right
-		//}
-		//else
-		//{
-		//	// Turning left
-		//}
-		//BoxCollision->AddTorqueInDegrees(turnTorque, "", true);
-
-		// Attempt 2 (somewhat works but looks bad)
-		//float steerAngle = Steering * SteeringVisualRotationMultiplier * DeltaTime * -1;
-		//steerAngle = FMath::Clamp(steerAngle, -1 * SteeringVisualMaxRotation, SteeringVisualMaxRotation);
-		//FQuat currentRotation = GetActorQuat();
-		//FQuat change(Camera->GetForwardVector(), steerAngle);
-		//FQuat targetRotation = currentRotation * change;
-		//FRotator newRotation = UKismetMathLibrary::RLerp(currentRotation.Rotator(), targetRotation.Rotator(), RotationLerp, true);
-		//Chassis->SetWorldRotation(newRotation);
-		//
-		//RotationLerp = FMath::Clamp(RotationLerp + DeltaTime, 0.0f, 1.0f);
-		
-		//SetActorRotation(newRotation);
-
-		// Attempt 3
-		//float steeringRotationDegrees = FMath::Clamp(Steering * SteeringVisualRotationMultiplier, - 1 * SteeringVisualMaxRotation, SteeringVisualMaxRotation);
-		//float angleRadians = FMath::DegreesToRadians(steeringRotationDegrees);
-		//FVector rotationAxis = RootComponent->GetForwardVector();
-		//FQuat rotationQuat = FQuat(rotationAxis, angleRadians);
-		//Chassis->AddTorqueInDegrees(rotationQuat.GetForwardVector(), "", true);
 	}
 
 	if (MySteerDirection == STRAIGHT)
@@ -166,7 +126,9 @@ void AHoverVehiclePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	{
 		EnhancedInputComponent = MyInputComponent;
 		EnhancedInputComponent->BindAction(ThrottleAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateThrottle);
+		EnhancedInputComponent->BindAction(ThrottleAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnReleaseThrottle);
 		EnhancedInputComponent->BindAction(BrakeAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateBrake);
+		EnhancedInputComponent->BindAction(BrakeAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnReleaseBrake);
 		EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateSteer);
 		EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnActivateSteer);
 		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Started, this, &AHoverVehiclePawn::OnActivateHandbrake);
@@ -178,20 +140,16 @@ void AHoverVehiclePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void AHoverVehiclePawn::OnActivateThrottle(const FInputActionValue& value)
 {
+	bWantsToGoForwardOrBackwards = true;
 	const float axisValue = value.Get<float>();
-	Speed = axisValue * SpeedMultiplier;
+	Speed = FMath::Clamp(axisValue * SpeedMultiplier, 1.0f, MaxSpeed);
 }
 
 void AHoverVehiclePawn::OnActivateBrake(const FInputActionValue& value)
 {
+	bWantsToGoForwardOrBackwards = true;
 	const float axisValue = value.Get<float>();
-	const float slowAmount = axisValue * SpeedMultiplier * -1;
-	Speed -= slowAmount;
-
-	//GetVehicleMovementComponent()->SetBrakeInput(CurrentValue);
-
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Brake"));
+	Speed *= FMath::Clamp(-1 * BrakeSpeed, -1.0f, -1 * MaxSpeed);
 }
 
 void AHoverVehiclePawn::OnActivateHandbrake(const FInputActionValue& value)
@@ -217,6 +175,16 @@ void AHoverVehiclePawn::OnActivateSteer(const FInputActionValue& value)
 	{
 		MySteerDirection = STRAIGHT;
 	}
+}
+
+void AHoverVehiclePawn::OnReleaseThrottle(const FInputActionValue& value)
+{
+	bWantsToGoForwardOrBackwards = false;
+}
+
+void AHoverVehiclePawn::OnReleaseBrake(const FInputActionValue& value)
+{
+	bWantsToGoForwardOrBackwards = false;
 }
 
 void AHoverVehiclePawn::OnReleaseSteer(const FInputActionValue& value)
