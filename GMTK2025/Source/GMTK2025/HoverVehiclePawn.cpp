@@ -109,7 +109,7 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 		BoxCollision->AddTorqueInDegrees(torque, "", true);
 	}
 
-	if (MySteerDirection == STRAIGHT)
+	if (MySteerDirection == ESteerDirection::STRAIGHT)
 	{
 		//RotationLerp = 0;
 		FVector counterTorque = FVector(0, 0, -1 * Steering);
@@ -117,13 +117,18 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 	}
 
 	//Store player transform to game instance for the ghost, every second
-	if (GetWorld()->TimeSeconds - GhostSnapshotTimer >= 1)
+	if (GetWorld()->TimeSeconds - GhostSnapshotTimer >= GhostUpdateSeconds)
 	{
 		if (GEngine)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red, TEXT("Storing Position!"));
 		}
 		GameInstance->PlayerPositions.Add(GetActorTransform());
+
+		GameInstance->PlayerSpeed.Add(Speed);
+		GameInstance->PlayerSteering.Add(Steering);
+		GameInstance->PlayerWantsToGoForwardOrBackwards.Add(bWantsToGoForwardOrBackwards);
+		GameInstance->PlayerSteerDirections.Add(MySteerDirection);
 
 		//update timer
 		GhostSnapshotTimer = GetWorld()->TimeSeconds;
@@ -201,15 +206,15 @@ void AHoverVehiclePawn::OnActivateSteer(const FInputActionValue& value)
 	{
 		if (axisValue > 0)
 		{
-			MySteerDirection = RIGHT;
+			MySteerDirection = ESteerDirection::RIGHT;
 		}
 		else if (axisValue < 0)
 		{
-			MySteerDirection = LEFT;
+			MySteerDirection = ESteerDirection::LEFT;
 		}
 		else
 		{
-			MySteerDirection = STRAIGHT;
+			MySteerDirection = ESteerDirection::STRAIGHT;
 		}
 	}
 	else 
@@ -217,15 +222,15 @@ void AHoverVehiclePawn::OnActivateSteer(const FInputActionValue& value)
 		// Reverse if going backwards
 		if (axisValue > 0)
 		{
-			MySteerDirection = LEFT;
+			MySteerDirection = ESteerDirection::LEFT;
 		}
 		else if (axisValue < 0)
 		{
-			MySteerDirection = RIGHT;
+			MySteerDirection = ESteerDirection::RIGHT;
 		}
 		else
 		{
-			MySteerDirection = STRAIGHT;
+			MySteerDirection = ESteerDirection::STRAIGHT;
 		}
 	}
 }
@@ -272,7 +277,7 @@ void AHoverVehiclePawn::OnReleaseBrake(const FInputActionValue& value)
 
 void AHoverVehiclePawn::OnReleaseSteer(const FInputActionValue& value)
 {
-	MySteerDirection = STRAIGHT;
+	MySteerDirection = ESteerDirection::STRAIGHT;
 }
 
 void AHoverVehiclePawn::RunCameraEffects()
@@ -294,19 +299,19 @@ void AHoverVehiclePawn::LeanCamera()
 	if (GetVelocity().Length() > FastVelocityThreshold)
 	{
 		// Workaround for input get value not working
-		if (MySteerDirection == RIGHT)
+		if (MySteerDirection == ESteerDirection::RIGHT)
 		{
 			// Lean camera right
 			SetLeanSettings(CameraLeanAmount, CameraInterpSpeed);
 		}
-		else if (MySteerDirection == LEFT)
+		else if (MySteerDirection == ESteerDirection::LEFT)
 		{
 			// Lean camera left
 			SetLeanSettings(-1 * CameraLeanAmount, CameraInterpSpeed);
 		}
 	}
 	
-	if (MySteerDirection == STRAIGHT)
+	if (MySteerDirection == ESteerDirection::STRAIGHT)
 	{
 		// Stop lean camera
 		SetLeanSettings(0, CameraInterpSpeed);
