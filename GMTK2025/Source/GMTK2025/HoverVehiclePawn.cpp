@@ -62,6 +62,8 @@ void AHoverVehiclePawn::Throttle(const FInputActionValue& value)
 
 	GetVehicleMovementComponent()->SetThrottleInput(CurrentValue);
 	
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Throttle"));
 }
 
 void AHoverVehiclePawn::Brake(const FInputActionValue& value)
@@ -69,6 +71,9 @@ void AHoverVehiclePawn::Brake(const FInputActionValue& value)
 	const float CurrentValue = value.Get<float>();
 
 	GetVehicleMovementComponent()->SetBrakeInput(CurrentValue);
+
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Brake"));
 }
 
 void AHoverVehiclePawn::Handbrake(const FInputActionValue& value)
@@ -83,5 +88,8 @@ void AHoverVehiclePawn::Steer(const FInputActionValue& value)
 	const float CurrentValue = value.Get<float>();
 
 	GetVehicleMovementComponent()->SetSteeringInput(CurrentValue);
+
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Steer"));
 }
 
