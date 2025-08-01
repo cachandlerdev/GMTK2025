@@ -75,7 +75,7 @@ void AMyGameModeBase::StartNextLoop()
 	if (CurrentLoopNumber > 0)
 	{
 		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		APlayerGhostActor* newGhost =
 			GetWorld()->SpawnActor<APlayerGhostActor>(GhostBPClass, StartLocation->GetActorLocation(),
 				StartLocation->GetActorRotation(), SpawnParams);
