@@ -37,35 +37,20 @@ void APlayerGhostActor::BeginPlay()
 	Super::BeginPlay();
 	
 	//Initiate timer
-	GhostSnapshotTimer = GetWorld()->TimeSeconds;
-
 	CurrentFollowIndex = 0;
 
 	GameInstance = Cast<UMyGameInstance>(GetGameInstance());
 	Player = Cast<AHoverVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	PlayerMaxDistanceToFloor = Player->MaxDistanceToFloor;
+	
+	GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &APlayerGhostActor::UpdateMovementPhysics,
+		Player->PhysicsUpdateTime, true);	
 }
 
 // Called every frame
 void APlayerGhostActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//Update target transform every second
-	if (GetWorld()->TimeSeconds - GhostSnapshotTimer >= Player->GhostUpdateSeconds)
-	{
-		int32 numOfStoredValues = GameInstance->PlayerSpeed[FollowLoopNumber].ArrayOfFloats.Num();
-		if (numOfStoredValues > 0 && numOfStoredValues > CurrentFollowIndex)
-		{
-			UpdateGhostLocation(CurrentFollowIndex);
-
-			//update timer
-			GhostSnapshotTimer = GetWorld()->TimeSeconds;
-
-			//update current transform index
-			CurrentFollowIndex++;
-		}
-	}
 }
 
 void APlayerGhostActor::SetFollowLoopNumber(int32 LoopNumber)
@@ -99,56 +84,43 @@ void APlayerGhostActor::RestartThisLoop(FVector StartLocation, FRotator StartRot
 	CurrentFollowIndex = 0;
 }
 
+void APlayerGhostActor::ApplyGhostUpdate(int32 FollowIndex)
+{
+	float currentSteering = GameInstance->PlayerSteering[FollowLoopNumber].ArrayOfFloats[FollowIndex];
+	float currentSpeed = GameInstance->PlayerSpeed[FollowLoopNumber].ArrayOfFloats[FollowIndex];
+	float currentWantsForwardOrBackwards = GameInstance->PlayerWantsToGoForwardOrBackwards[FollowLoopNumber].ArrayOfBools[FollowIndex];
+	ESteerDirection currentSteerDirection = GameInstance->PlayerSteerDirections[FollowLoopNumber].ArrayOfDirections[FollowIndex];
+
+	if (currentWantsForwardOrBackwards)
+	{
+		FVector force = Chassis->GetForwardVector();
+		//force.X *= currentSpeed * FollowUpdateForcePhysicsStrength * Player->GhostUpdateSeconds;
+		//force.Y *= currentSpeed * FollowUpdateForcePhysicsStrength * Player->GhostUpdateSeconds;
+		force.X *= currentSpeed * Player->SpeedMultiplier * Player->PhysicsUpdateTime;
+		force.Y *= currentSpeed * Player->SpeedMultiplier * Player->PhysicsUpdateTime;
+		force.Z = Player->HoverAmount;
+		
+		BoxCollision->AddForce(force, "", true);
+	}
+
+	if (currentSteerDirection != ESteerDirection::STRAIGHT)
+	{
+		FVector torque = FVector(0, 0, currentSteering * Player->SteeringMultiplier * Player->PhysicsUpdateTime);
+		BoxCollision->AddTorqueInDegrees(torque, "", true);
+	}
+}
+
 void APlayerGhostActor::UpdateGhostLocation(int32 FollowIndex)
 {
-	FHitResult HitResult;
-	FVector TraceStart = GetActorLocation();
-	FVector TraceEnd = TraceStart;
-	TraceEnd.Z -= PlayerMaxDistanceToFloor;
-	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(this);
-
-	bool bHit = GetWorld()->LineTraceSingleByChannel(
-		HitResult,
-		TraceStart,
-		TraceEnd,
-		ECC_Visibility,
-		QueryParams
-	);
-
 	// Protect against index out of bound issues.
-	//if (GameInstance->PlayerSteering.Num() <= FollowIndex)
 	if (GameInstance->PlayerSteering[FollowLoopNumber].ArrayOfFloats.Num() <= FollowIndex)
 	{
 		return;
 	}
 	
-	float currentSteering = GameInstance->PlayerSteering[FollowLoopNumber].ArrayOfFloats[FollowIndex];
-	float currentSpeed = GameInstance->PlayerSpeed[FollowLoopNumber].ArrayOfFloats[FollowIndex];
-	float currentWantsForwardOrBackwards = GameInstance->PlayerWantsToGoForwardOrBackwards[FollowLoopNumber].ArrayOfBools[FollowIndex];
-	ESteerDirection currentSteerDirection = GameInstance->PlayerSteerDirections[FollowLoopNumber].ArrayOfDirections[FollowIndex];
-	
-	if (bHit)
+	if (ShouldUpdateGhostLocation())
 	{
-		FVector torque = FVector(0, 0, currentSteering * FollowUpdateTorquePhysicsStrength * Player->GhostUpdateSeconds);
-
-		if (currentWantsForwardOrBackwards)
-		{
-			FVector force = Chassis->GetForwardVector();
-			force.X *= currentSpeed * FollowUpdateForcePhysicsStrength * Player->GhostUpdateSeconds;
-			force.Y *= currentSpeed * FollowUpdateForcePhysicsStrength * Player->GhostUpdateSeconds;
-			force.Z = Player->HoverAmount;
-		
-			BoxCollision->AddForce(force, "", true);
-		}
-		BoxCollision->AddTorqueInDegrees(torque, "", true);
-	}
-
-	if (currentSteerDirection == ESteerDirection::STRAIGHT)
-	{
-		//RotationLerp = 0;
-		FVector counterTorque = FVector(0, 0, -1 * currentSteering * FollowUpdateTorquePhysicsStrength * Player->GhostUpdateSeconds);
-		BoxCollision->AddTorqueInDegrees(counterTorque, "", true);
+		ApplyGhostUpdate(FollowIndex);
 	}
 }
 
@@ -158,13 +130,36 @@ void APlayerGhostActor::ReenableCollision()
 	{
 		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Reenable collision"));
 	}
-	//ReenableLoopCollisionBP();
-	//BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
 	BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
-	
-	//BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Overlap);
-	//FCollisionResponseContainer CurrentResponses = BoxCollision->GetCollisionResponseToChannels();
-	//CurrentResponses.SetResponse(ECC_GameTraceChannel1, ECR_Block);
-	//BoxCollision->SetCollisionResponseToChannels(CurrentResponses);
+}
+
+void APlayerGhostActor::UpdateMovementPhysics()
+{
+	int32 numOfStoredValues = GameInstance->PlayerSpeed[FollowLoopNumber].ArrayOfFloats.Num();
+	if (numOfStoredValues > 0 && numOfStoredValues > CurrentFollowIndex)
+	{
+		UpdateGhostLocation(CurrentFollowIndex);
+
+		//update current transform index
+		CurrentFollowIndex++;
+	}
+}
+
+bool APlayerGhostActor::ShouldUpdateGhostLocation()
+{
+	FHitResult HitResult;
+	FVector TraceStart = GetActorLocation();
+	FVector TraceEnd = TraceStart;
+	TraceEnd.Z -= PlayerMaxDistanceToFloor;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
+	return GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		TraceStart,
+		TraceEnd,
+		ECC_Visibility,
+		QueryParams
+	);
 }
 

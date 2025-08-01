@@ -59,13 +59,11 @@ void AHoverVehiclePawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-
-	//Initiate timer
-	GhostSnapshotTimer = GetWorld()->TimeSeconds;
-
 	GameInstance = Cast<UMyGameInstance>(GetGameInstance());
 	GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 
+	GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &AHoverVehiclePawn::UpdateMovementPhysics,
+		PhysicsUpdateTime, true);	
 }
 
 // Called every frame
@@ -73,10 +71,13 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// This is very poor design, but if it works, it works
+	RunCameraEffects();
+}
+
+bool AHoverVehiclePawn::ShouldApplyMovement()
+{
 	FHitResult HitResult;
 	FVector TraceStart = GetActorLocation();
-	//FVector TraceEnd = TraceStart + GetActorForwardVector() * 1000.0f;
 	FVector TraceEnd = TraceStart;
 	TraceEnd.Z -= MaxDistanceToFloor;
 	FCollisionQueryParams QueryParams;
@@ -89,52 +90,51 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 		ECC_Visibility,
 		QueryParams
 	);
+	
+	return bHit;
+}
 
-	if (bHit)
+void AHoverVehiclePawn::ApplyPlayerMovement()
+{
+	if (bWantsToGoForwardOrBackwards)
 	{
-
-		if (bWantsToGoForwardOrBackwards)
-		{
-			FVector force = Chassis->GetForwardVector();
-			force.X *= Speed * DeltaTime * SpeedMultiplier;
-			force.Y *= Speed * DeltaTime * SpeedMultiplier;
-			force.Z = HoverAmount;
+		FVector force = Chassis->GetForwardVector();
+		force.X *= Speed * PhysicsUpdateTime * SpeedMultiplier;
+		force.Y *= Speed * PhysicsUpdateTime * SpeedMultiplier;
+		force.Z = HoverAmount;
 		
-			BoxCollision->AddForce(force, "", true);
-		}
-
-		if (MySteerDirection != ESteerDirection::STRAIGHT)
-		{
-			FVector torque = FVector(0, 0, Steering * DeltaTime * SteeringMultiplier);
-			BoxCollision->AddTorqueInDegrees(torque, "", true);
-		}
+		BoxCollision->AddForce(force, "", true);
 	}
 
-	//Store player transform to game instance for the ghost, every second
-	if (GetWorld()->TimeSeconds - GhostSnapshotTimer >= GhostUpdateSeconds)
+	if (MySteerDirection != ESteerDirection::STRAIGHT)
 	{
-		int32 loopNum = GameMode->GetCurrentLoopNumber();
-		
-		if (loopNum > -1)
-		{
-			GameInstance->PlayerSpeed[loopNum].ArrayOfFloats.Emplace(Speed);
-			GameInstance->PlayerSteering[loopNum].ArrayOfFloats.Emplace(Steering);
-			GameInstance->PlayerWantsToGoForwardOrBackwards[loopNum].ArrayOfBools.Emplace(bWantsToGoForwardOrBackwards);
-			GameInstance->PlayerSteerDirections[loopNum].ArrayOfDirections.Emplace(MySteerDirection);
-		}
-		
-		// OLD
-		//GameInstance->PlayerSpeed.Add(Speed);
-		//GameInstance->PlayerSteering.Add(Steering);
-		//GameInstance->PlayerWantsToGoForwardOrBackwards.Add(bWantsToGoForwardOrBackwards);
-		//GameInstance->PlayerSteerDirections.Add(MySteerDirection);
+		FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * SteeringMultiplier);
+		BoxCollision->AddTorqueInDegrees(torque, "", true);
+	}
+}
 
-		//update timer
-		GhostSnapshotTimer = GetWorld()->TimeSeconds;
+void AHoverVehiclePawn::RecordPlayerInfo()
+{
+	int32 loopNum = GameMode->GetCurrentLoopNumber();
+		
+	if (loopNum > -1)
+	{
+		GameInstance->PlayerSpeed[loopNum].ArrayOfFloats.Emplace(Speed);
+		GameInstance->PlayerSteering[loopNum].ArrayOfFloats.Emplace(Steering);
+		GameInstance->PlayerWantsToGoForwardOrBackwards[loopNum].ArrayOfBools.Emplace(bWantsToGoForwardOrBackwards);
+		GameInstance->PlayerSteerDirections[loopNum].ArrayOfDirections.Emplace(MySteerDirection);
+	}
+}
+
+void AHoverVehiclePawn::UpdateMovementPhysics()
+{
+	if (ShouldApplyMovement())
+	{
+		ApplyPlayerMovement();
 	}
 
-
-	RunCameraEffects();
+	//Store player info to game instance for the ghost, every second
+	RecordPlayerInfo();
 }
 
 // Called to bind functionality to input
