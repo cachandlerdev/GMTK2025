@@ -167,6 +167,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Vehicle")
 	void Boost(float BoostStrength);
 
+	UFUNCTION(BlueprintCallable, Category="Vehicle")
+	void StopMovement();
+	
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
 	float GetSpeed();
 

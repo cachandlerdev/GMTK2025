@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MyGameInstance.h"
+#include "PlayerGhostActor.h"
 #include "RaceEndLocation.h"
 #include "RaceStartLocation.h"
 #include "GameFramework/GameModeBase.h"
@@ -21,6 +23,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="Loop")
 	int32 NumOfLoops = 5;
+	
+	UPROPERTY(EditAnywhere, Category="Loop")
+	TSubclassOf<APlayerGhostActor> GhostBPClass;
 
 protected:
 
@@ -35,7 +40,13 @@ protected:
 private:
 
 	bool bHasInitializedRace = false;
-	int32 CurrentLoopNumber = 0;
+	// The first "active recording" loop number is 0
+	int32 CurrentLoopNumber = -1;
+	
+	TArray<APlayerGhostActor*> Ghosts;
+
+	UMyGameInstance* GameInstance;
+	
 	int32 CurrentLoopTimer = 0;
 	int32 CurrentLoopStartTime = 0;
 

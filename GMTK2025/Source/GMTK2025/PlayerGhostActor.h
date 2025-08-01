@@ -33,6 +33,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Ghost")
 	float FollowUpdateTorquePhysicsStrength = 3.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Ghost")
+	float CollisionOffAfterRestartDuration = 5.0f;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -51,19 +54,35 @@ private:
 
 	float PlayerMaxDistanceToFloor;
 
-	//Current index in the player transform array
+	// Current index of the "copy these player movements" array
 	int32 CurrentFollowIndex;
+
+	// Which loop this ghost should copy the inputs for
+	int32 FollowLoopNumber;
 
 	//Game instance reference
 	UMyGameInstance* GameInstance;
 
 	AHoverVehiclePawn* Player;
 
+	// Used for temporarily turning collision off
+	FTimerHandle CollisionHandle;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Category="Loop")
+	void SetFollowLoopNumber(int32 LoopNumber);
+	
+	UFUNCTION(BlueprintCallable, Category="Loop")
+	void StartNextLoop(FVector StartLocation);
+	
+	UFUNCTION(BlueprintCallable, Category="Loop")
+	void RestartThisLoop(FVector StartLocation);
+
 private:
 	void UpdateGhostLocation(int32 FollowIndex);
 
+	void ReenableCollision();
 };

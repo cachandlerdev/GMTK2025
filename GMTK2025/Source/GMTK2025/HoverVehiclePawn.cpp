@@ -24,6 +24,7 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
 	BoxCollision->SetSimulatePhysics(true);
 	BoxCollision->SetCollisionProfileName(TEXT("Vehicle"));
+	BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
 
 	Chassis = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Chassis"));
 	//SetRootComponent(Chassis);
@@ -119,16 +120,21 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 	//Store player transform to game instance for the ghost, every second
 	if (GetWorld()->TimeSeconds - GhostSnapshotTimer >= GhostUpdateSeconds)
 	{
-		if (GEngine)
+		int32 loopNum = GameMode->GetCurrentLoopNumber();
+		
+		if (loopNum > -1)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red, TEXT("Storing Position!"));
+			GameInstance->PlayerSpeed[loopNum].ArrayOfFloats.Add(Speed);
+			GameInstance->PlayerSteering[loopNum].ArrayOfFloats.Add(Steering);
+			GameInstance->PlayerWantsToGoForwardOrBackwards[loopNum].ArrayOfBools.Add(bWantsToGoForwardOrBackwards);
+			GameInstance->PlayerSteerDirections[loopNum].ArrayOfDirections.Add(MySteerDirection);
 		}
-		GameInstance->PlayerPositions.Add(GetActorTransform());
-
-		GameInstance->PlayerSpeed.Add(Speed);
-		GameInstance->PlayerSteering.Add(Steering);
-		GameInstance->PlayerWantsToGoForwardOrBackwards.Add(bWantsToGoForwardOrBackwards);
-		GameInstance->PlayerSteerDirections.Add(MySteerDirection);
+		
+		// OLD
+		//GameInstance->PlayerSpeed.Add(Speed);
+		//GameInstance->PlayerSteering.Add(Steering);
+		//GameInstance->PlayerWantsToGoForwardOrBackwards.Add(bWantsToGoForwardOrBackwards);
+		//GameInstance->PlayerSteerDirections.Add(MySteerDirection);
 
 		//update timer
 		GhostSnapshotTimer = GetWorld()->TimeSeconds;
@@ -162,6 +168,8 @@ void AHoverVehiclePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnActivateSteer);
 		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Started, this, &AHoverVehiclePawn::OnActivateHandbrake);
 		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnActivateHandbrake);
+		EnhancedInputComponent->BindAction(LookAroundAction, ETriggerEvent::Started, this, &AHoverVehiclePawn::OnActivateSteer);
+		EnhancedInputComponent->BindAction(LookAroundAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnReleaseSteer);
 		
 		EnhancedInputComponent->BindAction(ResetAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateReset);
 		EnhancedInputComponent->BindAction(UseItemAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateUseItem);
@@ -177,6 +185,16 @@ void AHoverVehiclePawn::Boost(float BoostStrength)
 	BoxCollision->AddForce(direction * BoostStrength * baseBoostMultiplier, "", true);
 }
 
+void AHoverVehiclePawn::StopMovement()
+{
+	Speed = 0;
+	Steering = 0;
+	bWantsToGoForwardOrBackwards = false;
+	MySteerDirection = ESteerDirection::STRAIGHT;
+
+	BoxCollision->SetPhysicsLinearVelocity(FVector(0, 0, 0));
+	BoxCollision->SetPhysicsAngularVelocityInDegrees(FVector(0, 0, 0));
+}
 float AHoverVehiclePawn::GetSpeed()
 {
 	if (Speed)
@@ -202,6 +220,7 @@ TArray<int> AHoverVehiclePawn::GetItems()
 	Items.Init(1, 2);
 
 	return Items;
+
 }
 
 void AHoverVehiclePawn::OnActivateThrottle(const FInputActionValue& value)
