@@ -19,10 +19,8 @@ APlayerGhostActor::APlayerGhostActor()
 
 	Chassis = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Chassis"));
 	Chassis->SetSimulatePhysics(false);
-	//Chassis->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Chassis->SetupAttachment(BoxCollision);
 	
-	//Chassis->SetSimulatePhysics(true);
 	Chassis->SetMassOverrideInKg("", 50000.0);
 	Chassis->SetLinearDamping(1.0);
 	Chassis->SetAngularDamping(1.0);
@@ -55,7 +53,6 @@ void APlayerGhostActor::Tick(float DeltaTime)
 		{
 			if (GameInstance->PlayerPositions[CurrentFollowIndex].IsValid())
 			{
-				//TargetTransform = GameInstance->PlayerPositions[CurrentFollowIndex];
 				UpdateGhostLocation(CurrentFollowIndex);
 
 				//update timer
@@ -66,27 +63,6 @@ void APlayerGhostActor::Tick(float DeltaTime)
 			}
 		}
 	}
-	
-
-	// Old transformation code
-	
-	//interpolate current ghost transform to target transform
-	//FTransform CurrentTransform = GetActorTransform();
-
-	//// Interpolate Translation
-	//FVector NewLocation = FMath::VInterpTo(CurrentTransform.GetLocation(), TargetTransform.GetLocation(), DeltaTime, GhostPositionInterpolationSpeed);
-
-	//// Interpolate Rotation (using Quaternions for smoother results)
-	//FQuat NewRotation = FMath::QInterpTo(CurrentTransform.GetRotation(), TargetTransform.GetRotation(), DeltaTime, GhostPositionInterpolationSpeed);
-
-	//// Interpolate Scale (if needed)
-	//FVector NewScale = FMath::VInterpTo(CurrentTransform.GetScale3D(), TargetTransform.GetScale3D(), DeltaTime, GhostPositionInterpolationSpeed);
-
-	//// Combine into a new FTransform
-	//FTransform NewTransform(NewRotation, NewLocation, NewScale);
-
-	////FTransform NewTransform = FMath::FInterpTo(CurrentTransform, TargetTransform, DeltaTime, InterpSpeed);
-	//SetActorTransform(NewTransform);
 }
 
 void APlayerGhostActor::UpdateGhostLocation(int32 FollowIndex)
@@ -111,6 +87,11 @@ void APlayerGhostActor::UpdateGhostLocation(int32 FollowIndex)
 		QueryParams
 	);
 
+	// Protect against index out of bound issues.
+	if (GameInstance->PlayerSteering.Num() <= FollowIndex)
+	{
+		return;
+	}
 	float currentSteering = GameInstance->PlayerSteering[FollowIndex];
 	float currentSpeed = GameInstance->PlayerSpeed[FollowIndex];
 	bool currentWantsForwardOrBackwards = GameInstance->PlayerWantsToGoForwardOrBackwards[FollowIndex];
