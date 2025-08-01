@@ -25,5 +25,5 @@ public:
 	
 	// Function to handle pickup logic
 	UFUNCTION(BlueprintCallable, Category = "Pickup")
-	void HandlePickup();
+	virtual void HandlePickup(AActor* PickupInstigator);
 };

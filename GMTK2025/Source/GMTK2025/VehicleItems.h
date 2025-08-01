@@ -25,9 +25,9 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, Category = "UseItem")
-	void UseItem();
+	virtual void UseItem();
 
 	UFUNCTION(BlueprintCallable, Category = "RemoveItem")
-	void RemoveItem();
+	virtual void RemoveItem();
 
 };

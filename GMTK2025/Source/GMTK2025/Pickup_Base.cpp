@@ -25,7 +25,7 @@ void APickup_Base::Tick(float DeltaTime)
 
 }
 
-void APickup_Base::HandlePickup()
+void APickup_Base::HandlePickup(AActor* PickupInstigator)
 {
 	// Logic for handling the pickup
 	// This could include adding to inventory, updating score, etc.
