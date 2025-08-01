@@ -46,6 +46,9 @@ private:
 	TArray<APlayerGhostActor*> Ghosts;
 
 	UMyGameInstance* GameInstance;
+	
+	int32 CurrentLoopTimer = 0;
+	int32 CurrentLoopStartTime = 0;
 
 public:
 	
@@ -72,6 +75,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Loop")
 	void OnFinishThisLoopBP();
+
+	UFUNCTION(BlueprintCallable, Category = "Loop")
+	int32 GetCurrentLoopTimeInSeconds();
 
 private:
 	bool CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActor*> endActors);

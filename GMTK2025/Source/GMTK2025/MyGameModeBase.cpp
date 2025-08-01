@@ -90,6 +90,8 @@ void AMyGameModeBase::StartNextLoop()
 		Ghosts.Add(newGhost);
 	}
 
+	CurrentLoopStartTime = GetWorld()->TimeSeconds;
+
 	// reset coins/items? (tbd)
 
 	OnStartNextLoopBP();
@@ -134,6 +136,11 @@ void AMyGameModeBase::FinishThisLoop()
 int32 AMyGameModeBase::GetCurrentLoopNumber()
 {
 	return CurrentLoopNumber;
+}
+
+int32 AMyGameModeBase::GetCurrentLoopTimeInSeconds()
+{
+	return GetWorld()->TimeSeconds - CurrentLoopStartTime;
 }
 
 bool AMyGameModeBase::CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActor*> endActors)
