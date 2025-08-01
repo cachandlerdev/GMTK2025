@@ -76,10 +76,10 @@ public:
 	void SetFollowLoopNumber(int32 LoopNumber);
 	
 	UFUNCTION(BlueprintCallable, Category="Loop")
-	void StartNextLoop(FVector StartLocation);
+	void StartNextLoop(FVector StartLocation, FRotator StartRotation);
 	
 	UFUNCTION(BlueprintCallable, Category="Loop")
-	void RestartThisLoop(FVector StartLocation);
+	void RestartThisLoop(FVector StartLocation, FRotator StartRotation);
 
 private:
 	void UpdateGhostLocation(int32 FollowIndex);

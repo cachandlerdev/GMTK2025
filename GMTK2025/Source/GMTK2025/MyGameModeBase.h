@@ -27,6 +27,9 @@ public:
 	UPROPERTY(EditAnywhere, Category="Loop")
 	TSubclassOf<APlayerGhostActor> GhostBPClass;
 
+	UPROPERTY(EditAnywhere, Category="Loop")
+	float DelayTimePerLoopForPlayer = 0.2f;
+
 protected:
 
 	// There can only be one start location per level.
@@ -49,6 +52,9 @@ private:
 	
 	int32 CurrentLoopTimer = 0;
 	int32 CurrentLoopStartTime = 0;
+	
+	// Used for slowing the player each loop
+	FTimerHandle SlowTimeHandle;
 
 public:
 	
@@ -81,5 +87,6 @@ public:
 
 private:
 	bool CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActor*> endActors);
-	
+
+	void SetupPlayerForLoop();
 };

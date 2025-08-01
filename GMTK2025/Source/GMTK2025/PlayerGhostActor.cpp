@@ -17,11 +17,13 @@ APlayerGhostActor::APlayerGhostActor()
 	BoxCollision->SetSimulatePhysics(true);
 	BoxCollision->SetCollisionProfileName(TEXT("Vehicle"));
 	BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
+	BoxCollision->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 
 	Chassis = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Chassis"));
 	Chassis->SetSimulatePhysics(false);
 	Chassis->SetCollisionProfileName(TEXT("NoCollision"));
 	Chassis->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
+	Chassis->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	Chassis->SetupAttachment(BoxCollision);
 	
 	Chassis->SetMassOverrideInKg("", 50000.0);
@@ -71,14 +73,12 @@ void APlayerGhostActor::SetFollowLoopNumber(int32 LoopNumber)
 	FollowLoopNumber = LoopNumber;
 }
 
-void APlayerGhostActor::StartNextLoop(FVector StartLocation)
+void APlayerGhostActor::StartNextLoop(FVector StartLocation, FRotator StartRotation)
 {
-	//SetActorLocation(StartLocation);
-	//CurrentFollowIndex = 0;
-	RestartThisLoop(StartLocation);
+	RestartThisLoop(StartLocation, StartRotation);
 }
 
-void APlayerGhostActor::RestartThisLoop(FVector StartLocation)
+void APlayerGhostActor::RestartThisLoop(FVector StartLocation, FRotator StartRotation)
 {
 	if (GEngine)
 	{
@@ -94,6 +94,7 @@ void APlayerGhostActor::RestartThisLoop(FVector StartLocation)
 	BoxCollision->SetPhysicsAngularVelocityInDegrees(FVector(0, 0, 0));
 	
 	SetActorLocation(StartLocation);
+	SetActorRotation(StartRotation);
 	
 	CurrentFollowIndex = 0;
 }
@@ -129,13 +130,13 @@ void APlayerGhostActor::UpdateGhostLocation(int32 FollowIndex)
 	
 	if (bHit)
 	{
-		FVector torque = FVector(0, 0, currentSteering * FollowUpdateTorquePhysicsStrength);
+		FVector torque = FVector(0, 0, currentSteering * FollowUpdateTorquePhysicsStrength * Player->GhostUpdateSeconds);
 
 		if (currentWantsForwardOrBackwards)
 		{
 			FVector force = Chassis->GetForwardVector();
-			force.X *= currentSpeed * FollowUpdateForcePhysicsStrength;
-			force.Y *= currentSpeed * FollowUpdateForcePhysicsStrength;
+			force.X *= currentSpeed * FollowUpdateForcePhysicsStrength * Player->GhostUpdateSeconds;
+			force.Y *= currentSpeed * FollowUpdateForcePhysicsStrength * Player->GhostUpdateSeconds;
 			force.Z = Player->HoverAmount;
 		
 			BoxCollision->AddForce(force, "", true);
@@ -146,7 +147,7 @@ void APlayerGhostActor::UpdateGhostLocation(int32 FollowIndex)
 	if (currentSteerDirection == ESteerDirection::STRAIGHT)
 	{
 		//RotationLerp = 0;
-		FVector counterTorque = FVector(0, 0, -1 * currentSteering);
+		FVector counterTorque = FVector(0, 0, -1 * currentSteering * FollowUpdateTorquePhysicsStrength * Player->GhostUpdateSeconds);
 		BoxCollision->AddTorqueInDegrees(counterTorque, "", true);
 	}
 }

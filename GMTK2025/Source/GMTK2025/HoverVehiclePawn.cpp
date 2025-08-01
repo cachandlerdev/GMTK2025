@@ -96,25 +96,22 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 
 	if (bHit)
 	{
-		FVector torque = FVector(0, 0, Steering);
 
 		if (bWantsToGoForwardOrBackwards)
 		{
 			FVector force = Chassis->GetForwardVector();
-			force.X *= Speed;
-			force.Y *= Speed;
+			force.X *= Speed * DeltaTime * SpeedMultiplier;
+			force.Y *= Speed * DeltaTime * SpeedMultiplier;
 			force.Z = HoverAmount;
 		
 			BoxCollision->AddForce(force, "", true);
 		}
-		BoxCollision->AddTorqueInDegrees(torque, "", true);
-	}
 
-	if (MySteerDirection == ESteerDirection::STRAIGHT)
-	{
-		//RotationLerp = 0;
-		FVector counterTorque = FVector(0, 0, -1 * Steering);
-		BoxCollision->AddTorqueInDegrees(counterTorque, "", true);
+		if (MySteerDirection != ESteerDirection::STRAIGHT)
+		{
+			FVector torque = FVector(0, 0, Steering * DeltaTime * SteeringMultiplier);
+			BoxCollision->AddTorqueInDegrees(torque, "", true);
+		}
 	}
 
 	//Store player transform to game instance for the ghost, every second
@@ -124,10 +121,10 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 		
 		if (loopNum > -1)
 		{
-			GameInstance->PlayerSpeed[loopNum].ArrayOfFloats.Add(Speed);
-			GameInstance->PlayerSteering[loopNum].ArrayOfFloats.Add(Steering);
-			GameInstance->PlayerWantsToGoForwardOrBackwards[loopNum].ArrayOfBools.Add(bWantsToGoForwardOrBackwards);
-			GameInstance->PlayerSteerDirections[loopNum].ArrayOfDirections.Add(MySteerDirection);
+			GameInstance->PlayerSpeed[loopNum].ArrayOfFloats.Emplace(Speed);
+			GameInstance->PlayerSteering[loopNum].ArrayOfFloats.Emplace(Steering);
+			GameInstance->PlayerWantsToGoForwardOrBackwards[loopNum].ArrayOfBools.Emplace(bWantsToGoForwardOrBackwards);
+			GameInstance->PlayerSteerDirections[loopNum].ArrayOfDirections.Emplace(MySteerDirection);
 		}
 		
 		// OLD
@@ -187,20 +184,22 @@ void AHoverVehiclePawn::Boost(float BoostStrength)
 
 void AHoverVehiclePawn::StopMovement()
 {
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Stop movement"));
+	
 	Speed = 0;
 	Steering = 0;
 	bWantsToGoForwardOrBackwards = false;
 	MySteerDirection = ESteerDirection::STRAIGHT;
 
-	BoxCollision->SetPhysicsLinearVelocity(FVector(0, 0, 0));
-	BoxCollision->SetPhysicsAngularVelocityInDegrees(FVector(0, 0, 0));
+	//BoxCollision->SetAllPhysicsLinearVelocity(FVector(0, 0, 0));
+	//BoxCollision->SetAllPhysicsAngularVelocityInDegrees(FVector(0, 0, 0));
+	BoxCollision->SetSimulatePhysics(false);
+	BoxCollision->SetSimulatePhysics(true);
 }
 float AHoverVehiclePawn::GetSpeed()
 {
-	if (Speed)
-		return Speed;
-	else
-		return 0.f;
+	return Speed;
 }
 
 float AHoverVehiclePawn::GetCurrentVelocityInKMPerHour()
@@ -233,7 +232,6 @@ void AHoverVehiclePawn::OnActivateThrottle(const FInputActionValue& value)
 void AHoverVehiclePawn::OnActivateBrake(const FInputActionValue& value)
 {
 	bWantsToGoForwardOrBackwards = true;
-	const float axisValue = value.Get<float>();
 	Speed *= FMath::Clamp(-1 * BrakeSpeed, -1.0f, -1 * MaxSpeed);
 }
 

@@ -52,9 +52,9 @@ void AMyGameModeBase::StartNextLoop()
 		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,FString::Printf(TEXT("Start loop %i"), CurrentLoopNumber));
 	}
 	
-	APawn* player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	player->SetActorLocation(StartLocation->GetActorLocation());
-	player->SetActorRotation(StartLocation->GetActorRotation());
+	GetWorldTimerManager().SetTimer(SlowTimeHandle, this, &AMyGameModeBase::SetupPlayerForLoop,
+		DelayTimePerLoopForPlayer, false);	
+	
 
 	// Add the data arrays to track this loop
 	FInnerFloatArray speedThisLoop;
@@ -69,7 +69,7 @@ void AMyGameModeBase::StartNextLoop()
 
 	for (int32 i = 0; i < Ghosts.Num(); i++)
 	{
-		Ghosts[i]->StartNextLoop(StartLocation->GetActorLocation());
+		Ghosts[i]->StartNextLoop(StartLocation->GetActorLocation(), StartLocation->GetActorRotation());
 	}
 
 	if (CurrentLoopNumber > 0)
@@ -80,7 +80,7 @@ void AMyGameModeBase::StartNextLoop()
 			GetWorld()->SpawnActor<APlayerGhostActor>(GhostBPClass, StartLocation->GetActorLocation(),
 				StartLocation->GetActorRotation(), SpawnParams);
 		newGhost->SetFollowLoopNumber(CurrentLoopNumber - 1);
-		newGhost->RestartThisLoop(StartLocation->GetActorLocation());
+		newGhost->RestartThisLoop(StartLocation->GetActorLocation(), StartLocation->GetActorRotation());
 	
 		if (GEngine)
 		{
@@ -111,8 +111,15 @@ void AMyGameModeBase::RestartThisLoop()
 		
 		for (int32 i = 0; i < Ghosts.Num(); i++)
 		{
-			Ghosts[i]->RestartThisLoop(StartLocation->GetActorLocation());
+			Ghosts[i]->RestartThisLoop(StartLocation->GetActorLocation(), StartLocation->GetActorRotation());
 		}
+
+		GameInstance->PlayerSpeed[CurrentLoopNumber].ArrayOfFloats.Reset();
+		GameInstance->PlayerSteering[CurrentLoopNumber].ArrayOfFloats.Reset();
+		GameInstance->PlayerWantsToGoForwardOrBackwards[CurrentLoopNumber].ArrayOfBools.Reset();
+		GameInstance->PlayerSteerDirections[CurrentLoopNumber].ArrayOfDirections.Reset();
+		
+		CurrentLoopStartTime = GetWorld()->TimeSeconds;
 		
 		OnRestartThisLoopBP();
 	}
@@ -184,4 +191,16 @@ bool AMyGameModeBase::CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActo
 	}
 
 	return true;
+}
+
+void AMyGameModeBase::SetupPlayerForLoop()
+{
+	AHoverVehiclePawn* player = Cast<AHoverVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	if (player)
+	{
+		player->StopMovement();
+	}
+	
+	player->SetActorLocation(StartLocation->GetActorLocation());
+	player->SetActorRotation(StartLocation->GetActorRotation());
 }
