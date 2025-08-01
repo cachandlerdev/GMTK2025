@@ -38,6 +38,8 @@ void AMyGameModeBase::StartNextLoop()
 	player->SetActorLocation(StartLocation->GetActorLocation());
 	player->SetActorRotation(StartLocation->GetActorRotation());
 
+	CurrentLoopStartTime = GetWorld()->TimeSeconds;
+
 	// todo: save player path and create a new ghost
 	// reset all ghosts
 	// reset coins/items? (tbd)
@@ -72,6 +74,11 @@ void AMyGameModeBase::FinishThisLoop()
 int32 AMyGameModeBase::GetCurrentLoopNumber()
 {
 	return CurrentLoopNumber;
+}
+
+int32 AMyGameModeBase::GetCurrentLoopTimeInSeconds()
+{
+	return GetWorld()->TimeSeconds - CurrentLoopStartTime;
 }
 
 bool AMyGameModeBase::CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActor*> endActors)
