@@ -28,10 +28,6 @@ void UVehicleItems::BeginPlay()
 void UVehicleItems::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	AActor* PawnOwner = GetOwner();
-	FString OwnerName = PawnOwner->GetName();
-	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Green, TEXT("Vehicle Items Tick: ") + OwnerName);
-	// ...
 }
 
 void UVehicleItems::UseItem()
@@ -43,5 +39,6 @@ void UVehicleItems::UseItem()
 void UVehicleItems::RemoveItem()
 {
 	// Implement item removal logic here
+	DestroyComponent();
 }
 

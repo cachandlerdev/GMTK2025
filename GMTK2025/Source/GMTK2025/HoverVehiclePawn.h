@@ -11,6 +11,7 @@
 #include "Components/BoxComponent.h"
 #include "MyEnums.h"
 #include "MyGameInstance.h"
+#include "VehicleItems.h"
 #include "HoverVehiclePawn.generated.h"
 
 class AMyGameModeBase;
@@ -19,7 +20,6 @@ class UInputMappingContext;
 class UInputAction;
 
 UCLASS()
-//class GMTK2025_API AHoverVehiclePawn : public AWheeledVehiclePawn
 class GMTK2025_API AHoverVehiclePawn : public APawn
 {
 	GENERATED_BODY()
@@ -155,6 +155,8 @@ private:
 
 	AMyGameModeBase* GameMode;
 
+	UVehicleItems* VehicleItem;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -176,8 +178,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
 	float GetCurrentVelocityInKMPerHour();
 
-	//TODO: Change this to an arary of pickable items
+	//TODO: Change this to an array of pickable items
 	UFUNCTION(BlueprintCallable, Category = "Items")
 	TArray<int> GetItems();
 
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemClass);
 };

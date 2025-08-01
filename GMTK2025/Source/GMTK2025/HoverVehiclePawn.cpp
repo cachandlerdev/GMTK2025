@@ -27,23 +27,18 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 	BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
 
 	Chassis = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Chassis"));
-	//SetRootComponent(Chassis);
 	Chassis->SetupAttachment(BoxCollision);
 	Chassis->SetSimulatePhysics(true);
 	Chassis->SetMassOverrideInKg("", 50000.0);
 	Chassis->SetLinearDamping(1.0);
 	Chassis->SetAngularDamping(1.0);
 
-	//Chassis->SetCollisionProfileName(TEXT("Vehicle"));
-
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	//CameraBoom->SetupAttachment(Chassis);
 	CameraBoom->SetupAttachment(RootComponent);
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
-
-	//CameraBoom->bUsePawnControlRotation = false;
+	
 	CameraBoom->bUsePawnControlRotation = false;
 	CameraBoom->bInheritYaw = true;
 	CameraBoom->bInheritPitch = false;
@@ -56,6 +51,7 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 	CameraBoom->SocketOffset.Z = 140.0f;
 
 	OriginalFOV = Camera->FieldOfView;
+
 }
 
 // Called when the game starts or when spawned
@@ -222,6 +218,17 @@ TArray<int> AHoverVehiclePawn::GetItems()
 
 }
 
+void AHoverVehiclePawn::AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemClass)
+{
+	if (VehicleItem)
+	{
+		VehicleItem->RemoveItem();
+	}
+	
+	UVehicleItems* NewVehicleItem = NewObject<UVehicleItems>(this, VehicleItemClass);
+	VehicleItem = NewVehicleItem;
+}
+
 void AHoverVehiclePawn::OnActivateThrottle(const FInputActionValue& value)
 {
 	bWantsToGoForwardOrBackwards = true;
@@ -305,7 +312,14 @@ void AHoverVehiclePawn::OnActivateUseItem(const FInputActionValue& value)
 	if (axisValue != 0)
 	{
 		// TODO: add use item logic
-		Boost(BoostSpeedMultiplier);
+		
+		//Boost(BoostSpeedMultiplier);
+		
+		if (VehicleItem)
+		{
+			VehicleItem->RegisterComponent();
+			VehicleItem->UseItem();
+		}
 	}
 }
 
