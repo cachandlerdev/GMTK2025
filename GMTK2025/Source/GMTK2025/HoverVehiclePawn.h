@@ -65,12 +65,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float FastVelocityThreshold = 500.0f;
 	
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	//float SteeringVisualRotationMultiplier = 0.05f;
-	//
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	//float SteeringVisualMaxRotation = 10.0f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	float CameraLeanAmount = 5.0f;
 	
@@ -83,6 +77,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ghost")
 	float GhostUpdateSeconds = 0.2;
+
+	// How often this vehicle will have force applied (in seconds).
+	// Had to switch away from tick to ensure consistent movement
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float PhysicsUpdateTime = 0.05;
 
 protected:
 	// Called when the game starts or when spawned
@@ -147,15 +146,14 @@ private:
 	float OriginalFOV = 90;
 	float SpeedFOV = OriginalFOV * (1 + (SpeedFOVEffect / 1000));;
 
-	//Ghost Snapshot Timer
-	double GhostSnapshotTimer;
-
 	//Game instance reference
 	UMyGameInstance* GameInstance;
 
 	AMyGameModeBase* GameMode;
 
 	UVehicleItems* VehicleItem;
+
+	FTimerHandle PhysicsUpdateHandle;
 
 public:	
 	// Called every frame
@@ -175,7 +173,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
 	float GetSpeed();
 
-	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Vehicle")
 	float GetCurrentVelocityInKMPerHour();
 
 	//TODO: Change this to an array of pickable items
@@ -184,4 +182,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
 	void AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemClass);
+	
+private:
+	bool ShouldApplyMovement();
+
+	void ApplyPlayerMovement();
+
+	void RecordPlayerInfo();
+
+	void UpdateMovementPhysics();
 };

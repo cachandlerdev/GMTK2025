@@ -42,9 +42,6 @@ protected:
 
 private:
 
-	//Timer
-	double GhostSnapshotTimer;
-
 	//Target transform
 	FTransform TargetTransform;
 
@@ -67,6 +64,8 @@ private:
 
 	// Used for temporarily turning collision off
 	FTimerHandle CollisionHandle;
+	
+	FTimerHandle PhysicsUpdateHandle;
 
 public:	
 	// Called every frame
@@ -85,4 +84,10 @@ private:
 	void UpdateGhostLocation(int32 FollowIndex);
 
 	void ReenableCollision();
+	
+	void UpdateMovementPhysics();
+
+	bool ShouldUpdateGhostLocation();
+	
+	void ApplyGhostUpdate(int32 FollowIndex);
 };
