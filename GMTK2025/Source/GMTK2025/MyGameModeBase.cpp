@@ -166,7 +166,7 @@ bool AMyGameModeBase::CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActo
 	{
 		if (GEngine)
 		{
-			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Error: Couldn't find race start location.")
+			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Error: Couldn't find race end location.")
 			);
 		}
 		return false;
@@ -199,8 +199,10 @@ void AMyGameModeBase::SetupPlayerForLoop()
 	if (player)
 	{
 		player->StopMovement();
+		if (StartLocation)
+		{
+			player->SetActorLocation(StartLocation->GetActorLocation());
+			player->SetActorRotation(StartLocation->GetActorRotation());
+		}
 	}
-	
-	player->SetActorLocation(StartLocation->GetActorLocation());
-	player->SetActorRotation(StartLocation->GetActorRotation());
 }
