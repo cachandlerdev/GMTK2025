@@ -7,7 +7,7 @@
 #include "VehicleItems.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), Blueprintable, meta=(BlueprintSpawnableComponent) )
 class GMTK2025_API UVehicleItems : public UActorComponent
 {
 	GENERATED_BODY()
