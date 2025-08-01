@@ -24,6 +24,7 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
 	BoxCollision->SetSimulatePhysics(true);
 	BoxCollision->SetCollisionProfileName(TEXT("Vehicle"));
+	BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
 
 	Chassis = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Chassis"));
 	//SetRootComponent(Chassis);
@@ -167,6 +168,8 @@ void AHoverVehiclePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnActivateSteer);
 		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Started, this, &AHoverVehiclePawn::OnActivateHandbrake);
 		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnActivateHandbrake);
+		EnhancedInputComponent->BindAction(LookAroundAction, ETriggerEvent::Started, this, &AHoverVehiclePawn::OnActivateSteer);
+		EnhancedInputComponent->BindAction(LookAroundAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnReleaseSteer);
 		
 		EnhancedInputComponent->BindAction(ResetAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateReset);
 		EnhancedInputComponent->BindAction(UseItemAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateUseItem);
@@ -180,6 +183,17 @@ void AHoverVehiclePawn::Boost(float BoostStrength)
 	const float baseBoostMultiplier = 100000.0f;
 	FVector direction = RootComponent->GetForwardVector();
 	BoxCollision->AddForce(direction * BoostStrength * baseBoostMultiplier, "", true);
+}
+
+void AHoverVehiclePawn::StopMovement()
+{
+	Speed = 0;
+	Steering = 0;
+	bWantsToGoForwardOrBackwards = false;
+	MySteerDirection = ESteerDirection::STRAIGHT;
+
+	BoxCollision->SetPhysicsLinearVelocity(FVector(0, 0, 0));
+	BoxCollision->SetPhysicsAngularVelocityInDegrees(FVector(0, 0, 0));
 }
 
 void AHoverVehiclePawn::OnActivateThrottle(const FInputActionValue& value)

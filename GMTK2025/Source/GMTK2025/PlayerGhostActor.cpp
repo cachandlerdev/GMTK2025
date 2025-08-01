@@ -16,9 +16,12 @@ APlayerGhostActor::APlayerGhostActor()
 	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
 	BoxCollision->SetSimulatePhysics(true);
 	BoxCollision->SetCollisionProfileName(TEXT("Vehicle"));
+	BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
 
 	Chassis = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Chassis"));
 	Chassis->SetSimulatePhysics(false);
+	Chassis->SetCollisionProfileName(TEXT("NoCollision"));
+	Chassis->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
 	Chassis->SetupAttachment(BoxCollision);
 	
 	Chassis->SetMassOverrideInKg("", 50000.0);
@@ -70,17 +73,33 @@ void APlayerGhostActor::SetFollowLoopNumber(int32 LoopNumber)
 
 void APlayerGhostActor::StartNextLoop(FVector StartLocation)
 {
+	//SetActorLocation(StartLocation);
+	//CurrentFollowIndex = 0;
+	RestartThisLoop(StartLocation);
+}
+
+void APlayerGhostActor::RestartThisLoop(FVector StartLocation)
+{
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Disable collision"));
+	}
+
+	BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
+
+	GetWorldTimerManager().SetTimer(CollisionHandle, this, &APlayerGhostActor::ReenableCollision,
+		CollisionOffAfterRestartDuration, false);	
+	
+	BoxCollision->SetPhysicsLinearVelocity(FVector(0, 0, 0));
+	BoxCollision->SetPhysicsAngularVelocityInDegrees(FVector(0, 0, 0));
+	
 	SetActorLocation(StartLocation);
+	
 	CurrentFollowIndex = 0;
 }
 
 void APlayerGhostActor::UpdateGhostLocation(int32 FollowIndex)
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Try to update ghost"));
-	}
-	
 	FHitResult HitResult;
 	FVector TraceStart = GetActorLocation();
 	FVector TraceEnd = TraceStart;
@@ -103,11 +122,6 @@ void APlayerGhostActor::UpdateGhostLocation(int32 FollowIndex)
 		return;
 	}
 	
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,FString::Printf(TEXT("Follow loop %i"), FollowLoopNumber));
-	}
-
 	float currentSteering = GameInstance->PlayerSteering[FollowLoopNumber].ArrayOfFloats[FollowIndex];
 	float currentSpeed = GameInstance->PlayerSpeed[FollowLoopNumber].ArrayOfFloats[FollowIndex];
 	float currentWantsForwardOrBackwards = GameInstance->PlayerWantsToGoForwardOrBackwards[FollowLoopNumber].ArrayOfBools[FollowIndex];
@@ -135,5 +149,21 @@ void APlayerGhostActor::UpdateGhostLocation(int32 FollowIndex)
 		FVector counterTorque = FVector(0, 0, -1 * currentSteering);
 		BoxCollision->AddTorqueInDegrees(counterTorque, "", true);
 	}
+}
+
+void APlayerGhostActor::ReenableCollision()
+{
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Reenable collision"));
+	}
+	//ReenableLoopCollisionBP();
+	//BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
+	BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
+	
+	//BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Overlap);
+	//FCollisionResponseContainer CurrentResponses = BoxCollision->GetCollisionResponseToChannels();
+	//CurrentResponses.SetResponse(ECC_GameTraceChannel1, ECR_Block);
+	//BoxCollision->SetCollisionResponseToChannels(CurrentResponses);
 }
 

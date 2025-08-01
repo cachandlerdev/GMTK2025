@@ -80,6 +80,7 @@ void AMyGameModeBase::StartNextLoop()
 			GetWorld()->SpawnActor<APlayerGhostActor>(GhostBPClass, StartLocation->GetActorLocation(),
 				StartLocation->GetActorRotation(), SpawnParams);
 		newGhost->SetFollowLoopNumber(CurrentLoopNumber - 1);
+		newGhost->RestartThisLoop(StartLocation->GetActorLocation());
 	
 		if (GEngine)
 		{
@@ -98,9 +99,19 @@ void AMyGameModeBase::RestartThisLoop()
 {
 	if (bHasInitializedRace)
 	{
-		APawn* player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+		AHoverVehiclePawn* player = Cast<AHoverVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+		if (player)
+		{
+			player->StopMovement();
+		}
 		player->SetActorLocation(StartLocation->GetActorLocation());
 		player->SetActorRotation(StartLocation->GetActorRotation());
+		
+		for (int32 i = 0; i < Ghosts.Num(); i++)
+		{
+			Ghosts[i]->RestartThisLoop(StartLocation->GetActorLocation());
+		}
+		
 		OnRestartThisLoopBP();
 	}
 }

@@ -33,6 +33,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Ghost")
 	float FollowUpdateTorquePhysicsStrength = 3.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Ghost")
+	float CollisionOffAfterRestartDuration = 5.0f;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -62,6 +65,9 @@ private:
 
 	AHoverVehiclePawn* Player;
 
+	// Used for temporarily turning collision off
+	FTimerHandle CollisionHandle;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -71,8 +77,12 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="Loop")
 	void StartNextLoop(FVector StartLocation);
+	
+	UFUNCTION(BlueprintCallable, Category="Loop")
+	void RestartThisLoop(FVector StartLocation);
 
 private:
 	void UpdateGhostLocation(int32 FollowIndex);
 
+	void ReenableCollision();
 };

@@ -17,6 +17,7 @@ ARaceEndLocation::ARaceEndLocation()
 	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
 	BoxCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 	BoxCollision->SetGenerateOverlapEvents(true);
+	BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Overlap);
 
 	SetRootComponent(BoxCollision);
 }
