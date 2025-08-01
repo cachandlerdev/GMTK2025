@@ -105,7 +105,7 @@ void APlayerGhostActor::ApplyGhostUpdate(int32 FollowIndex)
 
 	if (currentSteerDirection != ESteerDirection::STRAIGHT)
 	{
-		FVector torque = FVector(0, 0, currentSteering * Player->SpeedMultiplier * Player->PhysicsUpdateTime);
+		FVector torque = FVector(0, 0, currentSteering * Player->SteeringMultiplier * Player->PhysicsUpdateTime);
 		BoxCollision->AddTorqueInDegrees(torque, "", true);
 	}
 }
