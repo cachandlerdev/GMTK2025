@@ -88,3 +88,7 @@ USoundBase* UMyGameInstance::GetNextMusicTrack()
 	int newTrackIndex = FMath::RandRange(0, InGameMusicTracks.Num() - 1);
 	return InGameMusicTracks[newTrackIndex];
 }
+
+void UMyGameInstance::InitNewLoopData()
+{
+}

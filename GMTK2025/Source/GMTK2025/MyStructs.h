@@ -31,3 +31,12 @@ struct FInnerSteerDirectionArray
 	UPROPERTY(/* Inner specifiers */)
 	TArray<ESteerDirection> ArrayOfDirections;
 };
+
+USTRUCT()
+struct FInnerTransformArray
+{
+	GENERATED_BODY()
+
+	UPROPERTY(/* Inner specifiers */)
+	TArray<FTransform> ArrayOfTransforms;
+};

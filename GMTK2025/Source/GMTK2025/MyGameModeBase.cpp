@@ -61,11 +61,14 @@ void AMyGameModeBase::StartNextLoop()
 	FInnerFloatArray steeringThisLoop;
 	FInnerBoolArray wantsToGoForwardOrBackwardsThisLoop;
 	FInnerSteerDirectionArray steerDirectionThisLoop;
+	FInnerTransformArray transformsThisLoop;
 	
 	GameInstance->PlayerSpeed.Add(speedThisLoop);
 	GameInstance->PlayerSteering.Add(steeringThisLoop);
 	GameInstance->PlayerWantsToGoForwardOrBackwards.Add(wantsToGoForwardOrBackwardsThisLoop);
 	GameInstance->PlayerSteerDirections.Add(steerDirectionThisLoop);
+	
+	GameInstance->PlayerTransforms.Add(transformsThisLoop);
 
 	for (int32 i = 0; i < Ghosts.Num(); i++)
 	{
@@ -77,8 +80,8 @@ void AMyGameModeBase::StartNextLoop()
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		APlayerGhostActor* newGhost =
-			GetWorld()->SpawnActor<APlayerGhostActor>(GhostBPClass, StartLocation->GetActorLocation(),
-				StartLocation->GetActorRotation(), SpawnParams);
+			GetWorld()->SpawnActor<APlayerGhostActor>(GhostBPClass, FVector(0, 0, 0),
+				FRotator(0, 0, 0), SpawnParams);
 		newGhost->SetFollowLoopNumber(CurrentLoopNumber - 1);
 		newGhost->RestartThisLoop(StartLocation->GetActorLocation(), StartLocation->GetActorRotation());
 	
