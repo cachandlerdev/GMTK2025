@@ -177,6 +177,33 @@ void AHoverVehiclePawn::Boost(float BoostStrength)
 	BoxCollision->AddForce(direction * BoostStrength * baseBoostMultiplier, "", true);
 }
 
+float AHoverVehiclePawn::GetSpeed()
+{
+	if (Speed)
+		return Speed;
+	else
+		return 0.f;
+}
+
+float AHoverVehiclePawn::GetCurrentVelocityInKMPerHour()
+{
+	FVector VelocityVector = GetVelocity();
+
+	double VelocityInCmPerSecond = VelocityVector.Length();
+
+	double VelocityInKMPerHour = VelocityInCmPerSecond * 0.036;
+
+	return VelocityInKMPerHour;
+}
+
+TArray<int> AHoverVehiclePawn::GetItems()
+{
+	TArray<int> Items;
+	Items.Init(1, 2);
+
+	return Items;
+}
+
 void AHoverVehiclePawn::OnActivateThrottle(const FInputActionValue& value)
 {
 	bWantsToGoForwardOrBackwards = true;

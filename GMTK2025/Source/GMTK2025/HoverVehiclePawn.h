@@ -167,4 +167,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Vehicle")
 	void Boost(float BoostStrength);
 
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	float GetSpeed();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	float GetCurrentVelocityInKMPerHour();
+
+	//TODO: Change this to an arary of pickable items
+	UFUNCTION(BlueprintCallable, Category = "Items")
+	TArray<int> GetItems();
+
 };
