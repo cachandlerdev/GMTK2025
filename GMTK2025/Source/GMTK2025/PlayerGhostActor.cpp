@@ -49,27 +49,36 @@ void APlayerGhostActor::Tick(float DeltaTime)
 	//Update target transform every second
 	if (GetWorld()->TimeSeconds - GhostSnapshotTimer >= Player->GhostUpdateSeconds)
 	{
-		if (GameInstance->PlayerPositions.Num() > 0 && GameInstance->PlayerPositions.Num() > CurrentFollowIndex)
+		int32 numOfStoredValues = GameInstance->PlayerSpeed[FollowLoopNumber].ArrayOfFloats.Num();
+		if (numOfStoredValues > 0 && numOfStoredValues > CurrentFollowIndex)
 		{
-			if (GameInstance->PlayerPositions[CurrentFollowIndex].IsValid())
-			{
-				UpdateGhostLocation(CurrentFollowIndex);
+			UpdateGhostLocation(CurrentFollowIndex);
 
-				//update timer
-				GhostSnapshotTimer = GetWorld()->TimeSeconds;
+			//update timer
+			GhostSnapshotTimer = GetWorld()->TimeSeconds;
 
-				//update current transform index
-				CurrentFollowIndex++;
-			}
+			//update current transform index
+			CurrentFollowIndex++;
 		}
 	}
+}
+
+void APlayerGhostActor::SetFollowLoopNumber(int32 LoopNumber)
+{
+	FollowLoopNumber = LoopNumber;
+}
+
+void APlayerGhostActor::StartNextLoop(FVector StartLocation)
+{
+	SetActorLocation(StartLocation);
+	CurrentFollowIndex = 0;
 }
 
 void APlayerGhostActor::UpdateGhostLocation(int32 FollowIndex)
 {
 	if (GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Update ghost location"));
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Try to update ghost"));
 	}
 	
 	FHitResult HitResult;
@@ -88,14 +97,21 @@ void APlayerGhostActor::UpdateGhostLocation(int32 FollowIndex)
 	);
 
 	// Protect against index out of bound issues.
-	if (GameInstance->PlayerSteering.Num() <= FollowIndex)
+	//if (GameInstance->PlayerSteering.Num() <= FollowIndex)
+	if (GameInstance->PlayerSteering[FollowLoopNumber].ArrayOfFloats.Num() <= FollowIndex)
 	{
 		return;
 	}
-	float currentSteering = GameInstance->PlayerSteering[FollowIndex];
-	float currentSpeed = GameInstance->PlayerSpeed[FollowIndex];
-	bool currentWantsForwardOrBackwards = GameInstance->PlayerWantsToGoForwardOrBackwards[FollowIndex];
-	ESteerDirection currentSteerDirection = GameInstance->PlayerSteerDirections[FollowIndex];
+	
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,FString::Printf(TEXT("Follow loop %i"), FollowLoopNumber));
+	}
+
+	float currentSteering = GameInstance->PlayerSteering[FollowLoopNumber].ArrayOfFloats[FollowIndex];
+	float currentSpeed = GameInstance->PlayerSpeed[FollowLoopNumber].ArrayOfFloats[FollowIndex];
+	float currentWantsForwardOrBackwards = GameInstance->PlayerWantsToGoForwardOrBackwards[FollowLoopNumber].ArrayOfBools[FollowIndex];
+	ESteerDirection currentSteerDirection = GameInstance->PlayerSteerDirections[FollowLoopNumber].ArrayOfDirections[FollowIndex];
 	
 	if (bHit)
 	{

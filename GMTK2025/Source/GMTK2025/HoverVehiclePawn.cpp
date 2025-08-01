@@ -119,16 +119,21 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 	//Store player transform to game instance for the ghost, every second
 	if (GetWorld()->TimeSeconds - GhostSnapshotTimer >= GhostUpdateSeconds)
 	{
-		if (GEngine)
+		int32 loopNum = GameMode->GetCurrentLoopNumber();
+		
+		if (loopNum > -1)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red, TEXT("Storing Position!"));
+			GameInstance->PlayerSpeed[loopNum].ArrayOfFloats.Add(Speed);
+			GameInstance->PlayerSteering[loopNum].ArrayOfFloats.Add(Steering);
+			GameInstance->PlayerWantsToGoForwardOrBackwards[loopNum].ArrayOfBools.Add(bWantsToGoForwardOrBackwards);
+			GameInstance->PlayerSteerDirections[loopNum].ArrayOfDirections.Add(MySteerDirection);
 		}
-		GameInstance->PlayerPositions.Add(GetActorTransform());
-
-		GameInstance->PlayerSpeed.Add(Speed);
-		GameInstance->PlayerSteering.Add(Steering);
-		GameInstance->PlayerWantsToGoForwardOrBackwards.Add(bWantsToGoForwardOrBackwards);
-		GameInstance->PlayerSteerDirections.Add(MySteerDirection);
+		
+		// OLD
+		//GameInstance->PlayerSpeed.Add(Speed);
+		//GameInstance->PlayerSteering.Add(Steering);
+		//GameInstance->PlayerWantsToGoForwardOrBackwards.Add(bWantsToGoForwardOrBackwards);
+		//GameInstance->PlayerSteerDirections.Add(MySteerDirection);
 
 		//update timer
 		GhostSnapshotTimer = GetWorld()->TimeSeconds;

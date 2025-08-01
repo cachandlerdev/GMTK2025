@@ -51,8 +51,11 @@ private:
 
 	float PlayerMaxDistanceToFloor;
 
-	//Current index in the player transform array
+	// Current index of the "copy these player movements" array
 	int32 CurrentFollowIndex;
+
+	// Which loop this ghost should copy the inputs for
+	int32 FollowLoopNumber;
 
 	//Game instance reference
 	UMyGameInstance* GameInstance;
@@ -62,6 +65,12 @@ private:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable, Category="Loop")
+	void SetFollowLoopNumber(int32 LoopNumber);
+	
+	UFUNCTION(BlueprintCallable, Category="Loop")
+	void StartNextLoop(FVector StartLocation);
 
 private:
 	void UpdateGhostLocation(int32 FollowIndex);
