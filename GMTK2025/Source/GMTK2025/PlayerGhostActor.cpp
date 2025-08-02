@@ -133,15 +133,14 @@ void APlayerGhostActor::ApplyCorrectionFactor(float DeltaTime)
 	FTransform targetTransform = GameInstance->PlayerTransforms[FollowLoopNumber].ArrayOfTransforms[CurrentFollowIndex];
 	
 	// Interpolate transform
-	//FVector NewLocation = FMath::VInterpTo(currentTransform.GetLocation(),
-	//	targetTransform.GetLocation(), DeltaTime,
-	//	GhostPositionInterpolationSpeed);
-	FVector NewLocation = targetTransform.GetLocation();
+	FVector NewLocation = FMath::VInterpTo(currentTransform.GetLocation(),
+		targetTransform.GetLocation(), DeltaTime,
+		GhostPositionInterpolationSpeed);
+	//FVector NewLocation = targetTransform.GetLocation();
 	
 	//Interpolate rotation (using quaternions for smoother results)
 	//FQuat NewRotation = FMath::QInterpTo(currentTransform.GetRotation(), TargetTransform.GetRotation(),
 	//	DeltaTime, GhostPositionInterpolationSpeed);
-	//FQuat NewRotation = FQuat::MakeFromRotationVector(targetTransform.GetRotation());
 	
 	// Interpolate scale
 	FVector NewScale = FMath::VInterpTo(currentTransform.GetScale3D(), TargetTransform.GetScale3D(),
