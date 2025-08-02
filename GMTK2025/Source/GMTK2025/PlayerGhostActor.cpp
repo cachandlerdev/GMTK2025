@@ -58,10 +58,6 @@ void APlayerGhostActor::Tick(float DeltaTime)
 
 	if (ShouldApplyCorrectionFactor())
 	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Apply correction factor"));
-		}
 		// Correct for movement changes
 		ApplyCorrectionFactor(DeltaTime);
 	}
@@ -124,11 +120,6 @@ void APlayerGhostActor::ApplyGhostPhysicsMovement(int32 FollowIndex)
 
 void APlayerGhostActor::ApplyCorrectionFactor(float DeltaTime)
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,FString::Printf(TEXT("follow index %i"), CurrentFollowIndex));
-	}
-	
 	FTransform currentTransform = GetActorTransform();
 	FTransform targetTransform = GameInstance->PlayerTransforms[FollowLoopNumber].ArrayOfTransforms[CurrentFollowIndex];
 	
