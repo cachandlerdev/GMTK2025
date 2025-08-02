@@ -125,6 +125,12 @@ void AMyGameModeBase::FinishThisLoop()
 		int32 playerTime = GetCurrentLoopTimeInSeconds();
 		if (playerTime > BestLoopTimeInSeconds)
 		{
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Player lost this round")
+				);
+			}
+			
 			// Player loses one "heart"/"chance"
 			CurrentNumberOfPlayerFailures++;
 			if (CurrentNumberOfPlayerFailures >= NumberOfPlayerFailuresTolerated)
@@ -137,6 +143,12 @@ void AMyGameModeBase::FinishThisLoop()
 		else
 		{
 			// Player won again
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Player won this round")
+				);
+			}
+			BestLoopTimeInSeconds = playerTime;
 		}
 		
 		OnFinishThisLoopBP();
