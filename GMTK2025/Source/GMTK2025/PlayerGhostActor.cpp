@@ -101,11 +101,14 @@ void APlayerGhostActor::ApplyGhostPhysicsMovement(int32 FollowIndex)
 	float currentWantsForwardOrBackwards = GameInstance->PlayerWantsToGoForwardOrBackwards[FollowLoopNumber].ArrayOfBools[FollowIndex];
 	ESteerDirection currentSteerDirection = GameInstance->PlayerSteerDirections[FollowLoopNumber].ArrayOfDirections[FollowIndex];
 	
+	float MovementAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * Player->PhysicsMovementFramerateCompensation);
+	float RotationAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * Player->PhysicsRotationFramerateCompensation);
+	
 	if (currentWantsForwardOrBackwards)
 	{
 		FVector force = Chassis->GetForwardVector();
-		force.X *= currentSpeed * Player->SpeedMultiplier * Player->PhysicsUpdateTime;
-		force.Y *= currentSpeed * Player->SpeedMultiplier * Player->PhysicsUpdateTime;
+		force.X *= currentSpeed * Player->SpeedMultiplier * Player->PhysicsUpdateTime * MovementAccountForFramerate;
+		force.Y *= currentSpeed * Player->SpeedMultiplier * Player->PhysicsUpdateTime * MovementAccountForFramerate;
 		force.Z = Player->HoverAmount;
 		
 		BoxCollision->AddForce(force, "", true);
@@ -113,7 +116,7 @@ void APlayerGhostActor::ApplyGhostPhysicsMovement(int32 FollowIndex)
 
 	if (currentSteerDirection != ESteerDirection::STRAIGHT)
 	{
-		FVector torque = FVector(0, 0, currentSteering * Player->SteeringMultiplier * Player->PhysicsUpdateTime);
+		FVector torque = FVector(0, 0, currentSteering * Player->SteeringMultiplier * Player->PhysicsUpdateTime * RotationAccountForFramerate);
 		BoxCollision->AddTorqueInDegrees(torque, "", true);
 	}
 }

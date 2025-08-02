@@ -105,11 +105,17 @@ bool AHoverVehiclePawn::ShouldApplyMovement()
 
 void AHoverVehiclePawn::ApplyPlayerMovement()
 {
+	float MovementAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsMovementFramerateCompensation);
+	float RotationAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsRotationFramerateCompensation);
 	if (bWantsToGoForwardOrBackwards)
 	{
 		FVector force = Chassis->GetForwardVector();
-		force.X *= Speed * PhysicsUpdateTime * SpeedMultiplier;
-		force.Y *= Speed * PhysicsUpdateTime * SpeedMultiplier;
+		//force.X *= Speed * PhysicsUpdateTime * SpeedMultiplier;
+		//force.Y *= Speed * PhysicsUpdateTime * SpeedMultiplier;
+		
+		// Thanks unreal for making physics framerate dependent
+		force.X *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * SpeedMultiplier;
+		force.Y *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * SpeedMultiplier;
 		force.Z = HoverAmount;
 		
 		BoxCollision->AddForce(force, "", true);
@@ -117,7 +123,8 @@ void AHoverVehiclePawn::ApplyPlayerMovement()
 
 	if (MySteerDirection != ESteerDirection::STRAIGHT)
 	{
-		FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * SteeringMultiplier);
+		//FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * SteeringMultiplier);
+		FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * RotationAccountForFramerate * SteeringMultiplier);
 		BoxCollision->AddTorqueInDegrees(torque, "", true);
 	}
 }
@@ -230,9 +237,6 @@ void AHoverVehiclePawn::EndEMP()
 
 void AHoverVehiclePawn::StopMovement()
 {
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Stop movement"));
-	
 	Speed = 0;
 	Steering = 0;
 	bWantsToGoForwardOrBackwards = false;
@@ -345,9 +349,6 @@ void AHoverVehiclePawn::OnActivateReset(const FInputActionValue& value)
 {
 	const float axisValue = value.Get<float>();
 	
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Reset loop"));
-
 	if (axisValue != 0)
 	{
 		if (GameMode)
