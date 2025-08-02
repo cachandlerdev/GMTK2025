@@ -226,7 +226,14 @@ void AHoverVehiclePawn::AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemCla
 	}
 	
 	UVehicleItems* NewVehicleItem = NewObject<UVehicleItems>(this, VehicleItemClass);
-	VehicleItem = NewVehicleItem;
+	if (NewVehicleItem)
+	{
+		NewVehicleItem->RegisterComponent();
+		VehicleItem = NewVehicleItem;
+
+		UE_LOG(LogTemp, Log, TEXT("Added VehicleItem: %s to %s"), *NewVehicleItem->GetName(), *GetName());
+	}
+	
 }
 
 void AHoverVehiclePawn::OnActivateThrottle(const FInputActionValue& value)
@@ -317,7 +324,6 @@ void AHoverVehiclePawn::OnActivateUseItem(const FInputActionValue& value)
 		
 		if (VehicleItem)
 		{
-			VehicleItem->RegisterComponent();
 			VehicleItem->UseItem();
 		}
 	}
