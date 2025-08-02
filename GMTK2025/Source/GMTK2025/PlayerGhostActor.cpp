@@ -15,7 +15,7 @@ APlayerGhostActor::APlayerGhostActor()
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 	SetRootComponent(BoxCollision);
 	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
-	BoxCollision->SetSimulatePhysics(true);
+	BoxCollision->SetSimulatePhysics(false);
 	BoxCollision->SetCollisionProfileName(TEXT("Vehicle"));
 	BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
 	BoxCollision->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
@@ -45,9 +45,10 @@ void APlayerGhostActor::BeginPlay()
 	GameInstance = Cast<UMyGameInstance>(GetGameInstance());
 	Player = Cast<AHoverVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	PlayerMaxDistanceToFloor = Player->MaxDistanceToFloor;
-	
+
+	BoxCollision->SetSimulatePhysics(true);
 	GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &APlayerGhostActor::UpdateMovementPhysics,
-		Player->PhysicsUpdateTime, true);	
+		Player->PhysicsUpdateTime, true);
 }
 
 // Called every frame
@@ -57,8 +58,12 @@ void APlayerGhostActor::Tick(float DeltaTime)
 
 	if (ShouldApplyCorrectionFactor())
 	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Apply correction factor"));
+		}
 		// Correct for movement changes
-		ApplyCorrectionFactor(CurrentFollowIndex);
+		ApplyCorrectionFactor(DeltaTime);
 	}
 }
 
@@ -117,30 +122,33 @@ void APlayerGhostActor::ApplyGhostPhysicsMovement(int32 FollowIndex)
 	}
 }
 
-void APlayerGhostActor::ApplyGhostUpdate(int32 FollowIndex)
+void APlayerGhostActor::ApplyCorrectionFactor(float DeltaTime)
 {
-	ApplyGhostPhysicsMovement(FollowIndex);
-}
-
-void APlayerGhostActor::ApplyCorrectionFactor(int32 FollowIndex)
-{
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,FString::Printf(TEXT("follow index %i"), CurrentFollowIndex));
+	}
+	
 	FTransform currentTransform = GetActorTransform();
-	FTransform targetTransform = GameInstance->PlayerTransforms[FollowLoopNumber].ArrayOfTransforms[FollowIndex];
+	FTransform targetTransform = GameInstance->PlayerTransforms[FollowLoopNumber].ArrayOfTransforms[CurrentFollowIndex];
 	
 	// Interpolate transform
-	FVector NewLocation = FMath::VInterpTo(currentTransform.GetLocation(),
-		targetTransform.GetLocation(), Player->PhysicsUpdateTime,
-		GhostPositionInterpolationSpeed);
+	//FVector NewLocation = FMath::VInterpTo(currentTransform.GetLocation(),
+	//	targetTransform.GetLocation(), DeltaTime,
+	//	GhostPositionInterpolationSpeed);
+	FVector NewLocation = targetTransform.GetLocation();
 	
 	//Interpolate rotation (using quaternions for smoother results)
-	FQuat NewRotation = FMath::QInterpTo(currentTransform.GetRotation(), TargetTransform.GetRotation(),
-		Player->PhysicsUpdateTime, GhostPositionInterpolationSpeed);
+	//FQuat NewRotation = FMath::QInterpTo(currentTransform.GetRotation(), TargetTransform.GetRotation(),
+	//	DeltaTime, GhostPositionInterpolationSpeed);
+	//FQuat NewRotation = FQuat::MakeFromRotationVector(targetTransform.GetRotation());
 	
 	// Interpolate scale
 	FVector NewScale = FMath::VInterpTo(currentTransform.GetScale3D(), TargetTransform.GetScale3D(),
-		Player->PhysicsUpdateTime, GhostPositionInterpolationSpeed);
+		DeltaTime, GhostPositionInterpolationSpeed);
 	
-	FTransform NewTransform(NewRotation, NewLocation, NewScale);
+	//FTransform NewTransform(NewRotation, NewLocation, NewScale);
+	FTransform NewTransform(targetTransform.GetRotation(), NewLocation, NewScale);
 	SetActorTransform(NewTransform);
 }
 
@@ -148,7 +156,7 @@ bool APlayerGhostActor::ShouldApplyCorrectionFactor()
 {
 	// Protect against index out of bound issues.
 
-	if (GameInstance || GameInstance->PlayerTransforms.Num() == 0 ||
+	if (GameInstance == nullptr || GameInstance->PlayerTransforms.Num() == 0 ||
 		GameInstance->PlayerTransforms.Num() <= FollowLoopNumber ||
 		GameInstance->PlayerTransforms[FollowLoopNumber].ArrayOfTransforms.Num() <= CurrentFollowIndex)
 	{
@@ -187,7 +195,7 @@ void APlayerGhostActor::UpdateGhostLocation(int32 FollowIndex)
 	
 	if (ShouldUpdateGhostLocation())
 	{
-		ApplyGhostUpdate(FollowIndex);
+		ApplyGhostPhysicsMovement(FollowIndex);
 	}
 }
 
@@ -205,7 +213,10 @@ void APlayerGhostActor::UpdateMovementPhysics()
 	int32 numOfStoredValues = GameInstance->PlayerSpeed[FollowLoopNumber].ArrayOfFloats.Num();
 	if (numOfStoredValues > 0 && numOfStoredValues > CurrentFollowIndex)
 	{
-		UpdateGhostLocation(CurrentFollowIndex);
+		if (bUsePlayerPhysicsForMovement)
+		{
+			UpdateGhostLocation(CurrentFollowIndex);
+		}
 
 		//update current transform index
 		CurrentFollowIndex++;
