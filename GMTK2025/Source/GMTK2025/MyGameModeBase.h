@@ -30,6 +30,15 @@ public:
 	UPROPERTY(EditAnywhere, Category="Loop")
 	float DelayTimePerLoopForPlayer = 0.2f;
 
+	UPROPERTY(BlueprintReadOnly, Category="Loop")
+	int32 BestLoopTimeInSeconds = TNumericLimits<int32>::Max();
+	
+	UPROPERTY(EditAnywhere, Category="Loop")
+	int32 NumberOfPlayerFailuresTolerated = 3;
+
+	UPROPERTY(BlueprintReadOnly, Category="Loop")
+	int32 CurrentNumberOfPlayerFailures = 0;
+
 protected:
 
 	// There can only be one start location per level.
@@ -82,11 +91,16 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category="Loop")
 	void OnFinishThisLoopBP();
 
-	UFUNCTION(BlueprintCallable, Category = "Loop")
+	UFUNCTION(BlueprintImplementableEvent, Category="Loop")
+	void OnLoseGameBP();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Loop")
 	int32 GetCurrentLoopTimeInSeconds();
 
 private:
 	bool CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActor*> endActors);
 
 	void SetupPlayerForLoop();
+
+	void OnLoseGame();
 };

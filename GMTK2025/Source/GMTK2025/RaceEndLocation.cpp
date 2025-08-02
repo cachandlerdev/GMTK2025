@@ -49,6 +49,11 @@ void ARaceEndLocation::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 			// The player has reached the end location.
 			if (GameMode)
 			{
+				if (GEngine)
+				{
+					GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("The loop should finish")
+					);
+				}
 				GameMode->FinishThisLoop();
 			}
 		}
