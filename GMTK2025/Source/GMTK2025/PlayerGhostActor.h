@@ -24,6 +24,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
 	UBoxComponent* BoxCollision;
 
+	// Whether this object is moved via physics or just setting the location.
+	UPROPERTY(EditDefaultsOnly, Category = "Ghost")
+	bool bUsePlayerPhysicsForMovement = true;
+
 	UPROPERTY(EditAnywhere, Category = "Ghost")
 	float GhostPositionInterpolationSpeed = 1.0f;
 	
@@ -97,10 +101,8 @@ private:
 
 	bool ShouldUpdateGhostLocation();
 	
-	void ApplyGhostUpdate(int32 FollowIndex);
-
 	void ApplyGhostPhysicsMovement(int32 FollowIndex);
-	void ApplyCorrectionFactor(int32 FollowIndex);
+	void ApplyCorrectionFactor(float DeltaTime);
 	
 	bool ShouldApplyCorrectionFactor();
 };
