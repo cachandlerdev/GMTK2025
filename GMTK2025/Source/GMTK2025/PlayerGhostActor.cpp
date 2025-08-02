@@ -4,6 +4,7 @@
 #include "PlayerGhostActor.h"
 #include "MyGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 APlayerGhostActor::APlayerGhostActor()
@@ -51,6 +52,12 @@ void APlayerGhostActor::BeginPlay()
 void APlayerGhostActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (ShouldApplyCorrectionFactor())
+	{
+		// Correct for movement changes
+		ApplyCorrectionFactor(CurrentFollowIndex);
+	}
 }
 
 void APlayerGhostActor::SetFollowLoopNumber(int32 LoopNumber)
@@ -84,18 +91,16 @@ void APlayerGhostActor::RestartThisLoop(FVector StartLocation, FRotator StartRot
 	CurrentFollowIndex = 0;
 }
 
-void APlayerGhostActor::ApplyGhostUpdate(int32 FollowIndex)
+void APlayerGhostActor::ApplyGhostPhysicsMovement(int32 FollowIndex)
 {
 	float currentSteering = GameInstance->PlayerSteering[FollowLoopNumber].ArrayOfFloats[FollowIndex];
 	float currentSpeed = GameInstance->PlayerSpeed[FollowLoopNumber].ArrayOfFloats[FollowIndex];
 	float currentWantsForwardOrBackwards = GameInstance->PlayerWantsToGoForwardOrBackwards[FollowLoopNumber].ArrayOfBools[FollowIndex];
 	ESteerDirection currentSteerDirection = GameInstance->PlayerSteerDirections[FollowLoopNumber].ArrayOfDirections[FollowIndex];
-
+	
 	if (currentWantsForwardOrBackwards)
 	{
 		FVector force = Chassis->GetForwardVector();
-		//force.X *= currentSpeed * FollowUpdateForcePhysicsStrength * Player->GhostUpdateSeconds;
-		//force.Y *= currentSpeed * FollowUpdateForcePhysicsStrength * Player->GhostUpdateSeconds;
 		force.X *= currentSpeed * Player->SpeedMultiplier * Player->PhysicsUpdateTime;
 		force.Y *= currentSpeed * Player->SpeedMultiplier * Player->PhysicsUpdateTime;
 		force.Z = Player->HoverAmount;
@@ -108,6 +113,66 @@ void APlayerGhostActor::ApplyGhostUpdate(int32 FollowIndex)
 		FVector torque = FVector(0, 0, currentSteering * Player->SteeringMultiplier * Player->PhysicsUpdateTime);
 		BoxCollision->AddTorqueInDegrees(torque, "", true);
 	}
+}
+
+void APlayerGhostActor::ApplyGhostUpdate(int32 FollowIndex)
+{
+	ApplyGhostPhysicsMovement(FollowIndex);
+}
+
+void APlayerGhostActor::ApplyCorrectionFactor(int32 FollowIndex)
+{
+	FTransform currentTransform = GetActorTransform();
+	FTransform targetTransform = GameInstance->PlayerTransforms[FollowLoopNumber].ArrayOfTransforms[FollowIndex];
+	
+	// Interpolate transform
+	FVector NewLocation = FMath::VInterpTo(currentTransform.GetLocation(),
+		targetTransform.GetLocation(), Player->PhysicsUpdateTime,
+		GhostPositionInterpolationSpeed);
+	
+	//Interpolate rotation (using quaternions for smoother results)
+	FQuat NewRotation = FMath::QInterpTo(currentTransform.GetRotation(), TargetTransform.GetRotation(),
+		Player->PhysicsUpdateTime, GhostPositionInterpolationSpeed);
+	
+	// Interpolate scale
+	FVector NewScale = FMath::VInterpTo(currentTransform.GetScale3D(), TargetTransform.GetScale3D(),
+		Player->PhysicsUpdateTime, GhostPositionInterpolationSpeed);
+	
+	FTransform NewTransform(NewRotation, NewLocation, NewScale);
+	SetActorTransform(NewTransform);
+}
+
+bool APlayerGhostActor::ShouldApplyCorrectionFactor()
+{
+	// Protect against index out of bound issues.
+
+	if (GameInstance || GameInstance->PlayerTransforms.Num() == 0 ||
+		GameInstance->PlayerTransforms.Num() <= FollowLoopNumber ||
+		GameInstance->PlayerTransforms[FollowLoopNumber].ArrayOfTransforms.Num() <= CurrentFollowIndex)
+	{
+		return false;
+	}
+	
+	FTransform currentTransform = GetActorTransform();
+	FTransform targetTransform = GameInstance->PlayerTransforms[FollowLoopNumber].ArrayOfTransforms[CurrentFollowIndex];
+
+	// Check distance
+	bool distanceCheck = FVector::Distance(currentTransform.GetLocation(), targetTransform.GetLocation()) > LocationCorrectionFactorThreshold;
+
+	// Check rotation along x axis
+	FVector currentXAxis = currentTransform.GetRotation().GetAxisX();
+	FVector targetXAxis = targetTransform.GetRotation().GetAxisX();
+	float lengths = currentXAxis.Length() + targetXAxis.Length();
+	float xRotationDifference = FVector::DotProduct(currentXAxis, targetXAxis) / lengths;
+	// xRotationDifference will be 0 if the two are direct opposites
+	// 1 if they're exactly the same rotation
+
+	// Make the difference seem more logical by inverting it. 180 degree if opposites, 0 if same
+	float xRotationDegreeDifference = 180 - (xRotationDifference * 180);
+	
+	bool rotationCheck = xRotationDegreeDifference > RotationCorrectionFactorThreshold;
+
+	return distanceCheck || rotationCheck;
 }
 
 void APlayerGhostActor::UpdateGhostLocation(int32 FollowIndex)

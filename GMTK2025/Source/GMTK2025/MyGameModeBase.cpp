@@ -57,18 +57,7 @@ void AMyGameModeBase::StartNextLoop()
 	
 
 	// Add the data arrays to track this loop
-	FInnerFloatArray speedThisLoop;
-	FInnerFloatArray steeringThisLoop;
-	FInnerBoolArray wantsToGoForwardOrBackwardsThisLoop;
-	FInnerSteerDirectionArray steerDirectionThisLoop;
-	FInnerTransformArray transformsThisLoop;
-	
-	GameInstance->PlayerSpeed.Add(speedThisLoop);
-	GameInstance->PlayerSteering.Add(steeringThisLoop);
-	GameInstance->PlayerWantsToGoForwardOrBackwards.Add(wantsToGoForwardOrBackwardsThisLoop);
-	GameInstance->PlayerSteerDirections.Add(steerDirectionThisLoop);
-	
-	GameInstance->PlayerTransforms.Add(transformsThisLoop);
+	GameInstance->InitNewLoopData();
 
 	for (int32 i = 0; i < Ghosts.Num(); i++)
 	{
