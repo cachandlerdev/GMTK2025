@@ -420,3 +420,13 @@ void AHoverVehiclePawn::SetFOVSettings(float FOV, float InterpSpeed)
 	float newFOV = UKismetMathLibrary::FInterpTo(currentFOV, FOV, GetWorld()->DeltaTimeSeconds, InterpSpeed);
 	Camera->SetFieldOfView(newFOV);
 }
+
+void AHoverVehiclePawn::AddCoins()
+{
+	Coins++;
+	if (Coins == 10)
+	{
+		Boost(2.5);
+		Coins = 0;
+	}
+}
