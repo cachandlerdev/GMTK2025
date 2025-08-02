@@ -62,13 +62,6 @@ public:
 
 	// Ghost logic
 
-	// OLD
-	//Stores the player position over time
-	//UPROPERTY(BlueprintReadOnly, Category = "Ghost")
-	//TArray<FTransform> PlayerPositions;
-
-	// NEW
-	
 	TArray<FInnerTransformArray> PlayerTransforms;
 	TArray<FInnerFloatArray> PlayerSpeed;
 	TArray<FInnerFloatArray> PlayerSteering;
@@ -76,6 +69,9 @@ public:
 	TArray<FInnerSteerDirectionArray> PlayerSteerDirections;
 
 	void InitNewLoopData();
+
+	UFUNCTION(BlueprintCallable, Category="Loop")
+	void ClearPlayerMovementData();
 
 private:
 	UPROPERTY()

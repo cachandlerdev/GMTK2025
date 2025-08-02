@@ -105,3 +105,12 @@ void UMyGameInstance::InitNewLoopData()
 	
 	PlayerTransforms.Add(transformsThisLoop);
 }
+
+void UMyGameInstance::ClearPlayerMovementData()
+{
+	PlayerTransforms.Empty();
+	PlayerSpeed.Empty();
+	PlayerSteering.Empty();
+	PlayerWantsToGoForwardOrBackwards.Empty();
+	PlayerSteerDirections.Empty();
+}

@@ -40,6 +40,7 @@ void AMyGameModeBase::InitRaceLogic()
 
 		CurrentLoopNumber = -1;
 		bHasInitializedRace = true;
+		GameInstance->ClearPlayerMovementData();
 	}
 }
 
