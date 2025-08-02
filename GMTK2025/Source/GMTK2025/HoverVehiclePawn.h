@@ -183,7 +183,12 @@ public:
 	void AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemClass);
 
 	UVehicleItems* VehicleItem;
+
+	UFUNCTION(BlueprintCallable, Category = "Coins")
+	void AddCoins();
 	
+	int32 Coins = 0;
+
 private:
 	bool ShouldApplyMovement();
 
