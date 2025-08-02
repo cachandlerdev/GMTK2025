@@ -86,6 +86,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float PhysicsUpdateTime = 0.05;
 
+	// The larger this value is, the less of a compensation effect we apply to account for framerate dependent physics
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float PhysicsFramerateCompensation = 100.0f;
 
 protected:
 	// Called when the game starts or when spawned

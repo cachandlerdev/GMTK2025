@@ -104,6 +104,11 @@ void AHoverVehiclePawn::ApplyPlayerMovement()
 		FVector force = Chassis->GetForwardVector();
 		force.X *= Speed * PhysicsUpdateTime * SpeedMultiplier;
 		force.Y *= Speed * PhysicsUpdateTime * SpeedMultiplier;
+		
+		// Thanks unreal for making physics framerate dependent
+		float accountForSlowFpsGoingFaster = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsFramerateCompensation);
+		force.X *= Speed * PhysicsUpdateTime * accountForSlowFpsGoingFaster * SpeedMultiplier;
+		force.Y *= Speed * PhysicsUpdateTime * accountForSlowFpsGoingFaster * SpeedMultiplier;
 		force.Z = HoverAmount;
 		
 		BoxCollision->AddForce(force, "", true);
@@ -209,9 +214,6 @@ void AHoverVehiclePawn::LongBoost(float BoostStrength, float Duration)
 
 void AHoverVehiclePawn::StopMovement()
 {
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Stop movement"));
-	
 	Speed = 0;
 	Steering = 0;
 	bWantsToGoForwardOrBackwards = false;
@@ -324,9 +326,6 @@ void AHoverVehiclePawn::OnActivateReset(const FInputActionValue& value)
 {
 	const float axisValue = value.Get<float>();
 	
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Reset loop"));
-
 	if (axisValue != 0)
 	{
 		if (GameMode)
