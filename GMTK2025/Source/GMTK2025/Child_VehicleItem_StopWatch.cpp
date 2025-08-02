@@ -7,7 +7,7 @@
 
 void UChild_VehicleItem_StopWatch::BeginPlay()
 {
-	
+	UChild_VehicleItem_StopWatch::UseItem();
 }
 
 void UChild_VehicleItem_StopWatch::UseItem()
