@@ -88,3 +88,20 @@ USoundBase* UMyGameInstance::GetNextMusicTrack()
 	int newTrackIndex = FMath::RandRange(0, InGameMusicTracks.Num() - 1);
 	return InGameMusicTracks[newTrackIndex];
 }
+
+void UMyGameInstance::InitNewLoopData()
+{
+	// Add the data arrays to track this loop
+	FInnerFloatArray speedThisLoop;
+	FInnerFloatArray steeringThisLoop;
+	FInnerBoolArray wantsToGoForwardOrBackwardsThisLoop;
+	FInnerSteerDirectionArray steerDirectionThisLoop;
+	FInnerTransformArray transformsThisLoop;
+	
+	PlayerSpeed.Add(speedThisLoop);
+	PlayerSteering.Add(steeringThisLoop);
+	PlayerWantsToGoForwardOrBackwards.Add(wantsToGoForwardOrBackwardsThisLoop);
+	PlayerSteerDirections.Add(steerDirectionThisLoop);
+	
+	PlayerTransforms.Add(transformsThisLoop);
+}

@@ -123,6 +123,8 @@ void AHoverVehiclePawn::RecordPlayerInfo()
 		GameInstance->PlayerSteering[loopNum].ArrayOfFloats.Emplace(Steering);
 		GameInstance->PlayerWantsToGoForwardOrBackwards[loopNum].ArrayOfBools.Emplace(bWantsToGoForwardOrBackwards);
 		GameInstance->PlayerSteerDirections[loopNum].ArrayOfDirections.Emplace(MySteerDirection);
+		
+		GameInstance->PlayerTransforms[loopNum].ArrayOfTransforms.Emplace(GetActorTransform());
 	}
 }
 
