@@ -2,6 +2,7 @@
 
 
 #include "VehicleItems.h"
+#include "HoverVehiclePawn.h"
 
 // Sets default values for this component's properties
 UVehicleItems::UVehicleItems()
@@ -38,7 +39,14 @@ void UVehicleItems::UseItem()
 
 void UVehicleItems::RemoveItem()
 {
-	// Implement item removal logic here
+	AActor* Player = GetOwner();
+
+	AHoverVehiclePawn* VehiclePawn = Cast<AHoverVehiclePawn>(Player);
+	if (VehiclePawn)
+	{
+		VehiclePawn->VehicleItem = nullptr; // Clear the vehicle item reference
+	}
+
 	DestroyComponent();
 }
 

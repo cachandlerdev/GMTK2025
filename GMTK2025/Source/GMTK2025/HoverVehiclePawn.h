@@ -86,6 +86,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float PhysicsUpdateTime = 0.05;
 
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -154,8 +155,6 @@ private:
 
 	AMyGameModeBase* GameMode;
 
-	UVehicleItems* VehicleItem;
-
 	FTimerHandle PhysicsUpdateHandle;
 	
 	FTimerHandle LongBoostDurationHandle;
@@ -192,7 +191,14 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
 	void AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemClass);
+
+	UVehicleItems* VehicleItem;
+
+	UFUNCTION(BlueprintCallable, Category = "Coins")
+	void AddCoins();
 	
+	int32 Coins = 0;
+
 private:
 	bool ShouldApplyMovement();
 
