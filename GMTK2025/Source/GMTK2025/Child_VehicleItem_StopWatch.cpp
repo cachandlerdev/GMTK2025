@@ -28,6 +28,6 @@ void UChild_VehicleItem_StopWatch::UseItem()
 void UChild_VehicleItem_StopWatch::RemoveItem()
 {
 	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f); // Reset time dilation to normal speed
-	Super::RemoveItem();
+	DestroyComponent();
 }
 
