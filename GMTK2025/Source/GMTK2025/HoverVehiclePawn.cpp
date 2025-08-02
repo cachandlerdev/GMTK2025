@@ -142,6 +142,19 @@ void AHoverVehiclePawn::UpdateMovementPhysics()
 	RecordPlayerInfo();
 }
 
+void AHoverVehiclePawn::ApplyLongBoost()
+{
+	if (RemainingLongBoostTime <= 0)
+	{
+		GetWorldTimerManager().ClearTimer(LongBoostDurationHandle);
+	}
+	else
+	{
+		Boost(LongBoostStrengthMultiplier);
+		RemainingLongBoostTime = RemainingLongBoostTime - LongBoostUpdateTime;
+	}
+}
+
 // Called to bind functionality to input
 void AHoverVehiclePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -183,6 +196,17 @@ void AHoverVehiclePawn::Boost(float BoostStrength)
 	BoxCollision->AddForce(direction * BoostStrength * baseBoostMultiplier, "", true);
 }
 
+void AHoverVehiclePawn::LongBoost(float BoostStrength, float Duration)
+{
+	if (RemainingLongBoostTime <= 0)
+	{
+		RemainingLongBoostTime = Duration;
+		LongBoostStrengthMultiplier = BoostStrength;
+		GetWorldTimerManager().SetTimer(LongBoostDurationHandle, this, &AHoverVehiclePawn::ApplyLongBoost,
+			LongBoostUpdateTime, true);	
+	}
+}
+
 void AHoverVehiclePawn::StopMovement()
 {
 	if (GEngine)
@@ -193,8 +217,6 @@ void AHoverVehiclePawn::StopMovement()
 	bWantsToGoForwardOrBackwards = false;
 	MySteerDirection = ESteerDirection::STRAIGHT;
 
-	//BoxCollision->SetAllPhysicsLinearVelocity(FVector(0, 0, 0));
-	//BoxCollision->SetAllPhysicsAngularVelocityInDegrees(FVector(0, 0, 0));
 	BoxCollision->SetSimulatePhysics(false);
 	BoxCollision->SetSimulatePhysics(true);
 }

@@ -136,17 +136,11 @@ void APlayerGhostActor::ApplyCorrectionFactor(float DeltaTime)
 	FVector NewLocation = FMath::VInterpTo(currentTransform.GetLocation(),
 		targetTransform.GetLocation(), DeltaTime,
 		GhostPositionInterpolationSpeed);
-	//FVector NewLocation = targetTransform.GetLocation();
-	
-	//Interpolate rotation (using quaternions for smoother results)
-	//FQuat NewRotation = FMath::QInterpTo(currentTransform.GetRotation(), TargetTransform.GetRotation(),
-	//	DeltaTime, GhostPositionInterpolationSpeed);
 	
 	// Interpolate scale
 	FVector NewScale = FMath::VInterpTo(currentTransform.GetScale3D(), TargetTransform.GetScale3D(),
 		DeltaTime, GhostPositionInterpolationSpeed);
 	
-	//FTransform NewTransform(NewRotation, NewLocation, NewScale);
 	FTransform NewTransform(targetTransform.GetRotation(), NewLocation, NewScale);
 	SetActorTransform(NewTransform);
 }

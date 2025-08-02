@@ -40,6 +40,7 @@ void AMyGameModeBase::InitRaceLogic()
 
 		CurrentLoopNumber = -1;
 		bHasInitializedRace = true;
+		CurrentNumberOfPlayerFailures = 0;
 		GameInstance->ClearPlayerMovementData();
 	}
 }
@@ -55,7 +56,6 @@ void AMyGameModeBase::StartNextLoop()
 	
 	GetWorldTimerManager().SetTimer(SlowTimeHandle, this, &AMyGameModeBase::SetupPlayerForLoop,
 		DelayTimePerLoopForPlayer, false);	
-	
 
 	// Add the data arrays to track this loop
 	GameInstance->InitNewLoopData();
@@ -122,13 +122,24 @@ void AMyGameModeBase::FinishThisLoop()
 {
 	if (bHasInitializedRace)
 	{
-		// todo: maybe setup some intermediate logic before starting the next loop
-		if (GEngine)
+		int32 playerTime = GetCurrentLoopTimeInSeconds();
+		if (playerTime > BestLoopTimeInSeconds)
 		{
-			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Start next loop"));
+			// Player loses one "heart"/"chance"
+			CurrentNumberOfPlayerFailures++;
+			if (CurrentNumberOfPlayerFailures >= NumberOfPlayerFailuresTolerated)
+			{
+				// Player loses game
+				OnLoseGame();
+				return;	
+			}
 		}
+		else
+		{
+			// Player won again
+		}
+		
 		OnFinishThisLoopBP();
-
 		StartNextLoop();
 	}
 }
@@ -198,4 +209,15 @@ void AMyGameModeBase::SetupPlayerForLoop()
 			player->SetActorRotation(StartLocation->GetActorRotation());
 		}
 	}
+}
+
+void AMyGameModeBase::OnLoseGame()
+{
+	// todo
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Yellow,TEXT("Player lost. End of race."));
+	}
+	OnLoseGameBP();
 }
