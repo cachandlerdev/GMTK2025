@@ -10,7 +10,7 @@ void AChild_PickupType_Coin::HandlePickup(AActor* PickupInstigator)
 
 	if (player)
 	{
-		//player->AddCoins();
+		player->AddCoins();
 	}
 	Super::HandlePickup(PickupInstigator);
 }
