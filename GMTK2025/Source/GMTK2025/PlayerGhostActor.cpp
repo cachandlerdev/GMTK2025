@@ -225,3 +225,33 @@ bool APlayerGhostActor::ShouldUpdateGhostLocation()
 	);
 }
 
+void APlayerGhostActor::Boost(float BoostStrength)
+{
+	const float baseBoostMultiplier = 100000.0f;
+	FVector direction = RootComponent->GetForwardVector();
+	BoxCollision->AddForce(direction * BoostStrength * baseBoostMultiplier, "", true);
+}
+
+void APlayerGhostActor::LongBoost(float BoostStrength, float Duration)
+{
+	if (RemainingLongBoostTime <= 0)
+	{
+		RemainingLongBoostTime = Duration;
+		LongBoostStrengthMultiplier = BoostStrength;
+		GetWorldTimerManager().SetTimer(LongBoostDurationHandle, this, &APlayerGhostActor::ApplyLongBoost,
+			LongBoostUpdateTime, true);
+	}
+}
+
+void APlayerGhostActor::ApplyLongBoost()
+{
+	if (RemainingLongBoostTime <= 0)
+	{
+		GetWorldTimerManager().ClearTimer(LongBoostDurationHandle);
+	}
+	else
+	{
+		Boost(LongBoostStrengthMultiplier);
+		RemainingLongBoostTime = RemainingLongBoostTime - LongBoostUpdateTime;
+	}
+}

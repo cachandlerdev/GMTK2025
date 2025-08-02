@@ -48,6 +48,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Ghost")
 	float RotationCorrectionFactorThreshold = 30.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float LongBoostUpdateTime = 0.1f;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -79,6 +82,10 @@ private:
 	
 	FTimerHandle PhysicsUpdateHandle;
 
+	FTimerHandle LongBoostDurationHandle;
+	float RemainingLongBoostTime = 0.0f;
+	float LongBoostStrengthMultiplier = 1.0f;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -91,6 +98,14 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="Loop")
 	void RestartThisLoop(FVector StartLocation, FRotator StartRotation);
+
+	// Boost the vehicle forward.
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void Boost(float BoostStrength);
+
+	// Boost the vehicle for a certain duration.
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void LongBoost(float BoostStrength, float Duration);
 
 private:
 	void UpdateGhostLocation(int32 FollowIndex);
@@ -105,4 +120,6 @@ private:
 	void ApplyCorrectionFactor(float DeltaTime);
 	
 	bool ShouldApplyCorrectionFactor();
+
+	void ApplyLongBoost();
 };
