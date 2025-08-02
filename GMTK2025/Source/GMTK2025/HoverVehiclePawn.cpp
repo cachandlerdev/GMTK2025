@@ -220,7 +220,7 @@ TArray<int> AHoverVehiclePawn::GetItems()
 
 void AHoverVehiclePawn::AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemClass)
 {
-	if (VehicleItem != nullptr)
+	if (IsValid(VehicleItem))
 	{
 		VehicleItem->RemoveItem();
 	}
@@ -322,7 +322,7 @@ void AHoverVehiclePawn::OnActivateUseItem(const FInputActionValue& value)
 		
 		//Boost(BoostSpeedMultiplier);
 		
-		if (VehicleItem != nullptr)
+		if (IsValid(VehicleItem))
 		{
 			VehicleItem->UseItem();
 		}
