@@ -99,8 +99,12 @@ void AMyGameModeBase::RestartThisLoop()
 		{
 			player->StopMovement();
 		}
+		player->CameraBoom->bEnableCameraLag = false;
+		player->CameraBoom->bEnableCameraRotationLag = false;
 		player->SetActorLocation(StartLocation->GetActorLocation());
 		player->SetActorRotation(StartLocation->GetActorRotation());
+		//player->CameraBoom->bEnableCameraLag = true;
+		//player->CameraBoom->bEnableCameraRotationLag = true;
 		
 		for (int32 i = 0; i < Ghosts.Num(); i++)
 		{
