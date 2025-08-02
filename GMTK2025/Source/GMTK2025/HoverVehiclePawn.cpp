@@ -225,7 +225,7 @@ void AHoverVehiclePawn::EndEMP()
 {
 	IsEMPd = false;
 
-	GetWorldTimerManager().ClearTimer(LongBoostDurationHandle);
+	GetWorldTimerManager().ClearTimer(EMPDurationHandle);
 }
 
 void AHoverVehiclePawn::StopMovement()
