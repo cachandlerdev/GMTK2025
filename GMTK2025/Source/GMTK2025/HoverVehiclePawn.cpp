@@ -99,16 +99,17 @@ bool AHoverVehiclePawn::ShouldApplyMovement()
 
 void AHoverVehiclePawn::ApplyPlayerMovement()
 {
+	float MovementAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsMovementFramerateCompensation);
+	float RotationAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsRotationFramerateCompensation);
 	if (bWantsToGoForwardOrBackwards)
 	{
 		FVector force = Chassis->GetForwardVector();
-		force.X *= Speed * PhysicsUpdateTime * SpeedMultiplier;
-		force.Y *= Speed * PhysicsUpdateTime * SpeedMultiplier;
+		//force.X *= Speed * PhysicsUpdateTime * SpeedMultiplier;
+		//force.Y *= Speed * PhysicsUpdateTime * SpeedMultiplier;
 		
 		// Thanks unreal for making physics framerate dependent
-		float accountForSlowFpsGoingFaster = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsFramerateCompensation);
-		force.X *= Speed * PhysicsUpdateTime * accountForSlowFpsGoingFaster * SpeedMultiplier;
-		force.Y *= Speed * PhysicsUpdateTime * accountForSlowFpsGoingFaster * SpeedMultiplier;
+		force.X *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * SpeedMultiplier;
+		force.Y *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * SpeedMultiplier;
 		force.Z = HoverAmount;
 		
 		BoxCollision->AddForce(force, "", true);
@@ -116,7 +117,8 @@ void AHoverVehiclePawn::ApplyPlayerMovement()
 
 	if (MySteerDirection != ESteerDirection::STRAIGHT)
 	{
-		FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * SteeringMultiplier);
+		//FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * SteeringMultiplier);
+		FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * RotationAccountForFramerate * SteeringMultiplier);
 		BoxCollision->AddTorqueInDegrees(torque, "", true);
 	}
 }
