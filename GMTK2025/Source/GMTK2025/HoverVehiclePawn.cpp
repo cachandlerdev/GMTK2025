@@ -247,13 +247,20 @@ TArray<int> AHoverVehiclePawn::GetItems()
 
 void AHoverVehiclePawn::AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemClass)
 {
-	if (VehicleItem)
+	if (VehicleItem != nullptr)
 	{
 		VehicleItem->RemoveItem();
 	}
 	
 	UVehicleItems* NewVehicleItem = NewObject<UVehicleItems>(this, VehicleItemClass);
-	VehicleItem = NewVehicleItem;
+	if (NewVehicleItem)
+	{
+		NewVehicleItem->RegisterComponent();
+		VehicleItem = NewVehicleItem;
+
+		UE_LOG(LogTemp, Log, TEXT("Added VehicleItem: %s to %s"), *NewVehicleItem->GetName(), *GetName());
+	}
+	
 }
 
 void AHoverVehiclePawn::OnActivateThrottle(const FInputActionValue& value)
@@ -342,9 +349,8 @@ void AHoverVehiclePawn::OnActivateUseItem(const FInputActionValue& value)
 		
 		//Boost(BoostSpeedMultiplier);
 		
-		if (VehicleItem)
+		if (VehicleItem != nullptr)
 		{
-			VehicleItem->RegisterComponent();
 			VehicleItem->UseItem();
 		}
 	}
@@ -440,4 +446,19 @@ void AHoverVehiclePawn::SetFOVSettings(float FOV, float InterpSpeed)
 	float currentFOV = Camera->FieldOfView;
 	float newFOV = UKismetMathLibrary::FInterpTo(currentFOV, FOV, GetWorld()->DeltaTimeSeconds, InterpSpeed);
 	Camera->SetFieldOfView(newFOV);
+}
+
+void AHoverVehiclePawn::AddCoins()
+{
+	Coins++;
+	if (Coins == 10)
+	{
+		Boost(3);
+		Coins = 0;
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Boosted!"));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Coins: %d"), Coins));
+	}
 }
