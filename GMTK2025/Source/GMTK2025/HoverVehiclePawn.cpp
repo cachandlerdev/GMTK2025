@@ -29,7 +29,10 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 	Chassis = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Chassis"));
 	Chassis->SetupAttachment(BoxCollision);
 	Chassis->SetSimulatePhysics(true);
-	Chassis->SetMassOverrideInKg("", 50000.0);
+	
+	Chassis->BodyInstance.bOverrideMass = true;
+	//Chassis->SetMassOverrideInKg("", 50000.0);
+	Chassis->GetBodyInstance()->SetMassOverride(50000.0, true);
 	Chassis->SetLinearDamping(1.0);
 	Chassis->SetAngularDamping(1.0);
 
@@ -123,6 +126,8 @@ void AHoverVehiclePawn::RecordPlayerInfo()
 		GameInstance->PlayerSteering[loopNum].ArrayOfFloats.Emplace(Steering);
 		GameInstance->PlayerWantsToGoForwardOrBackwards[loopNum].ArrayOfBools.Emplace(bWantsToGoForwardOrBackwards);
 		GameInstance->PlayerSteerDirections[loopNum].ArrayOfDirections.Emplace(MySteerDirection);
+		
+		GameInstance->PlayerTransforms[loopNum].ArrayOfTransforms.Emplace(GetActorTransform());
 	}
 }
 
@@ -135,6 +140,19 @@ void AHoverVehiclePawn::UpdateMovementPhysics()
 
 	//Store player info to game instance for the ghost, every second
 	RecordPlayerInfo();
+}
+
+void AHoverVehiclePawn::ApplyLongBoost()
+{
+	if (RemainingLongBoostTime <= 0)
+	{
+		GetWorldTimerManager().ClearTimer(LongBoostDurationHandle);
+	}
+	else
+	{
+		Boost(LongBoostStrengthMultiplier);
+		RemainingLongBoostTime = RemainingLongBoostTime - LongBoostUpdateTime;
+	}
 }
 
 // Called to bind functionality to input
@@ -178,6 +196,17 @@ void AHoverVehiclePawn::Boost(float BoostStrength)
 	BoxCollision->AddForce(direction * BoostStrength * baseBoostMultiplier, "", true);
 }
 
+void AHoverVehiclePawn::LongBoost(float BoostStrength, float Duration)
+{
+	if (RemainingLongBoostTime <= 0)
+	{
+		RemainingLongBoostTime = Duration;
+		LongBoostStrengthMultiplier = BoostStrength;
+		GetWorldTimerManager().SetTimer(LongBoostDurationHandle, this, &AHoverVehiclePawn::ApplyLongBoost,
+			LongBoostUpdateTime, true);	
+	}
+}
+
 void AHoverVehiclePawn::StopMovement()
 {
 	if (GEngine)
@@ -188,8 +217,6 @@ void AHoverVehiclePawn::StopMovement()
 	bWantsToGoForwardOrBackwards = false;
 	MySteerDirection = ESteerDirection::STRAIGHT;
 
-	//BoxCollision->SetAllPhysicsLinearVelocity(FVector(0, 0, 0));
-	//BoxCollision->SetAllPhysicsAngularVelocityInDegrees(FVector(0, 0, 0));
 	BoxCollision->SetSimulatePhysics(false);
 	BoxCollision->SetSimulatePhysics(true);
 }

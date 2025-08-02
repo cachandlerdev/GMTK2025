@@ -54,7 +54,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float BoostSpeedMultiplier = 1.2f;
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float LongBoostUpdateTime = 0.1f;
+	
 	// 1.0 lets it stop on a dime, 0 makes it never stop.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float BrakeSpeed = 0.5f;
@@ -153,6 +156,10 @@ private:
 	AMyGameModeBase* GameMode;
 
 	FTimerHandle PhysicsUpdateHandle;
+	
+	FTimerHandle LongBoostDurationHandle;
+	float RemainingLongBoostTime = 0.0f;
+	float LongBoostStrengthMultiplier = 1.0f;
 
 public:	
 	// Called every frame
@@ -162,9 +169,12 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	// Boost the vehicle forward.
-	
 	UFUNCTION(BlueprintCallable, Category="Vehicle")
 	void Boost(float BoostStrength);
+	
+	// Boost the vehicle for a certain duration.
+	UFUNCTION(BlueprintCallable, Category="Vehicle")
+	void LongBoost(float BoostStrength, float Duration);
 
 	UFUNCTION(BlueprintCallable, Category="Vehicle")
 	void StopMovement();
@@ -197,4 +207,6 @@ private:
 	void RecordPlayerInfo();
 
 	void UpdateMovementPhysics();
+
+	void ApplyLongBoost();
 };

@@ -24,6 +24,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
 	UBoxComponent* BoxCollision;
 
+	// Whether this object is moved via physics or just setting the location.
+	UPROPERTY(EditDefaultsOnly, Category = "Ghost")
+	bool bUsePlayerPhysicsForMovement = true;
+
 	UPROPERTY(EditAnywhere, Category = "Ghost")
 	float GhostPositionInterpolationSpeed = 1.0f;
 	
@@ -35,6 +39,14 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Ghost")
 	float CollisionOffAfterRestartDuration = 5.0f;
+
+	// Max distance allowed between the ghost's current location and its target "player recorded" location.
+	UPROPERTY(EditAnywhere, Category = "Ghost")
+	float LocationCorrectionFactorThreshold = 100.0f;
+
+	// Max degree distance allowed between the ghost's current rotation and its target "player recorded" rotation.
+	UPROPERTY(EditAnywhere, Category = "Ghost")
+	float RotationCorrectionFactorThreshold = 30.0f;
 
 protected:
 	// Called when the game starts or when spawned
@@ -67,7 +79,7 @@ private:
 	
 	FTimerHandle PhysicsUpdateHandle;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -89,5 +101,8 @@ private:
 
 	bool ShouldUpdateGhostLocation();
 	
-	void ApplyGhostUpdate(int32 FollowIndex);
+	void ApplyGhostPhysicsMovement(int32 FollowIndex);
+	void ApplyCorrectionFactor(float DeltaTime);
+	
+	bool ShouldApplyCorrectionFactor();
 };

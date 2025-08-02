@@ -40,6 +40,8 @@ void AMyGameModeBase::InitRaceLogic()
 
 		CurrentLoopNumber = -1;
 		bHasInitializedRace = true;
+		CurrentNumberOfPlayerFailures = 0;
+		GameInstance->ClearPlayerMovementData();
 	}
 }
 
@@ -54,18 +56,9 @@ void AMyGameModeBase::StartNextLoop()
 	
 	GetWorldTimerManager().SetTimer(SlowTimeHandle, this, &AMyGameModeBase::SetupPlayerForLoop,
 		DelayTimePerLoopForPlayer, false);	
-	
 
 	// Add the data arrays to track this loop
-	FInnerFloatArray speedThisLoop;
-	FInnerFloatArray steeringThisLoop;
-	FInnerBoolArray wantsToGoForwardOrBackwardsThisLoop;
-	FInnerSteerDirectionArray steerDirectionThisLoop;
-	
-	GameInstance->PlayerSpeed.Add(speedThisLoop);
-	GameInstance->PlayerSteering.Add(steeringThisLoop);
-	GameInstance->PlayerWantsToGoForwardOrBackwards.Add(wantsToGoForwardOrBackwardsThisLoop);
-	GameInstance->PlayerSteerDirections.Add(steerDirectionThisLoop);
+	GameInstance->InitNewLoopData();
 
 	for (int32 i = 0; i < Ghosts.Num(); i++)
 	{
@@ -77,8 +70,8 @@ void AMyGameModeBase::StartNextLoop()
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		APlayerGhostActor* newGhost =
-			GetWorld()->SpawnActor<APlayerGhostActor>(GhostBPClass, StartLocation->GetActorLocation(),
-				StartLocation->GetActorRotation(), SpawnParams);
+			GetWorld()->SpawnActor<APlayerGhostActor>(GhostBPClass, FVector(0, 0, 0),
+				FRotator(0, 0, 0), SpawnParams);
 		newGhost->SetFollowLoopNumber(CurrentLoopNumber - 1);
 		newGhost->RestartThisLoop(StartLocation->GetActorLocation(), StartLocation->GetActorRotation());
 	
@@ -129,13 +122,36 @@ void AMyGameModeBase::FinishThisLoop()
 {
 	if (bHasInitializedRace)
 	{
-		// todo: maybe setup some intermediate logic before starting the next loop
-		if (GEngine)
+		int32 playerTime = GetCurrentLoopTimeInSeconds();
+		if (playerTime > BestLoopTimeInSeconds)
 		{
-			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Start next loop"));
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Player lost this round")
+				);
+			}
+			
+			// Player loses one "heart"/"chance"
+			CurrentNumberOfPlayerFailures++;
+			if (CurrentNumberOfPlayerFailures >= NumberOfPlayerFailuresTolerated)
+			{
+				// Player loses game
+				OnLoseGame();
+				return;	
+			}
 		}
+		else
+		{
+			// Player won again
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Player won this round")
+				);
+			}
+			BestLoopTimeInSeconds = playerTime;
+		}
+		
 		OnFinishThisLoopBP();
-
 		StartNextLoop();
 	}
 }
@@ -205,4 +221,15 @@ void AMyGameModeBase::SetupPlayerForLoop()
 			player->SetActorRotation(StartLocation->GetActorRotation());
 		}
 	}
+}
+
+void AMyGameModeBase::OnLoseGame()
+{
+	// todo
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Yellow,TEXT("Player lost. End of race."));
+	}
+	OnLoseGameBP();
 }

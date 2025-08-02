@@ -62,28 +62,16 @@ public:
 
 	// Ghost logic
 
-	// OLD
-	//Stores the player position over time
-	UPROPERTY(BlueprintReadOnly, Category = "Ghost")
-	TArray<FTransform> PlayerPositions;
-
-	// NEW
-	
-	//UPROPERTY(BlueprintReadOnly, Category = "Ghost")
-	//TArray<float> PlayerSpeed;
+	TArray<FInnerTransformArray> PlayerTransforms;
 	TArray<FInnerFloatArray> PlayerSpeed;
-	
-	//UPROPERTY(BlueprintReadOnly, Category = "Ghost")
-	//TArray<float> PlayerSteering;
 	TArray<FInnerFloatArray> PlayerSteering;
-	
-	//UPROPERTY(BlueprintReadOnly, Category = "Ghost")
-	//TArray<bool> PlayerWantsToGoForwardOrBackwards;
 	TArray<FInnerBoolArray> PlayerWantsToGoForwardOrBackwards;
-	
-	//UPROPERTY(BlueprintReadOnly, Category = "Ghost")
-	//TArray<ESteerDirection> PlayerSteerDirections;
 	TArray<FInnerSteerDirectionArray> PlayerSteerDirections;
+
+	void InitNewLoopData();
+
+	UFUNCTION(BlueprintCallable, Category="Loop")
+	void ClearPlayerMovementData();
 
 private:
 	UPROPERTY()
