@@ -14,6 +14,7 @@
 /**
  * 
  */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFinishedLapDelegate);
 UCLASS()
 class GMTK2025_API AMyGameModeBase : public AGameModeBase
 {
@@ -98,6 +99,13 @@ private:
 	
 	int32 CurrentLoopTimer = 0;
 	int32 CurrentLoopStartTime = 0;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnFinishedLapDelegate OnFinishedLapDelegate;
+
+	// Call this when you want to trigger pickup respawn
+	UFUNCTION(BlueprintCallable, Category = "Loop")
+	void LoopFinishedDelegateCalls();
 	
 	// Used for slowing the player each loop
 	FTimerHandle SlowTimeHandle;
