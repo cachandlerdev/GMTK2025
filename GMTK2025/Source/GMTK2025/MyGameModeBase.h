@@ -10,7 +10,6 @@
 #include "GameFramework/GameModeBase.h"
 #include "MyGameModeBase.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFinishedLapDelegate);
 // To avoid a circular dependency
 /**
  * 
@@ -150,13 +149,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Loop")
 	int32 GetCurrentLoopTimeInSeconds();
-
-	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FOnFinishedLapDelegate OnFinishedLapDelegate;
-
-	// Call this when you want to trigger pickup respawn
-	UFUNCTION(BlueprintCallable, Category = "Loop")
-	void LoopFinishedDelegateCalls();
 
 private:
 	bool CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActor*> endActors);
