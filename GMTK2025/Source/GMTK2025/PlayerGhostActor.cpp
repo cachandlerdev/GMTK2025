@@ -197,18 +197,19 @@ void APlayerGhostActor::ReenableCollision()
 	GetOverlappingActors(OverlappingActors); // Gets all overlapping actors
 
 
-		for (AActor* OverlappingActor : OverlappingActors)//checks to see if we are overlapping with an actor. If not then enable block collision
-		{
-			if (OverlappingActor)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Overlapping with: %s"), *OverlappingActor->GetName());
-				GetWorld()->GetTimerManager().SetTimerForNextTick(this, &APlayerGhostActor::ReenableCollision);
-			}
-			else
-			{
-				BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
-			}
-		}
+	if (OverlappingActors.Num() == 0)
+	{
+		// No overlaps — safe to enable collision
+		BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Collision re-enabled"));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Still overlapping — retrying next tick"));
+		// Try again next tick
+		GetWorld()->GetTimerManager().SetTimerForNextTick(this, &APlayerGhostActor::ReenableCollision);
+	}
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Reenable collision Finsihed"));
 }
 
 void APlayerGhostActor::UpdateMovementPhysics()
