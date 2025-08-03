@@ -33,7 +33,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Loop")
 	int32 BestLoopTimeInSeconds = TNumericLimits<int32>::Max();
 	
-	UPROPERTY(EditAnywhere, Category="Loop")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Loop")
 	int32 NumberOfPlayerFailuresTolerated = 3;
 
 	UPROPERTY(BlueprintReadOnly, Category="Loop")
