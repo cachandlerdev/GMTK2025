@@ -395,9 +395,6 @@ void AHoverVehiclePawn::OnActivateUseItem(const FInputActionValue& value)
 {
 	const float axisValue = value.Get<float>();
 	
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Use item."));
-	
 	if (axisValue != 0)
 	{
 		// TODO: add use item logic
