@@ -34,14 +34,14 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Loop")
 	int32 BestLoopTimeInSeconds = TNumericLimits<int32>::Max();
 	
-	UPROPERTY(EditAnywhere, Category="Loop")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Loop")
 	int32 NumberOfPlayerFailuresTolerated = 3;
 
 	UPROPERTY(BlueprintReadOnly, Category="Loop")
 	int32 CurrentNumberOfPlayerFailures = 0;
 
 	UPROPERTY(BlueprintReadOnly, Category="Loop")
-	float InitialCountdownDuration = 3.0f;
+	float InitialCountdownDuration = 2.22f;
 
 	// Sound
 	

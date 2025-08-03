@@ -292,6 +292,8 @@ void AMyGameModeBase::OnLoseGame()
 	// todo
 
 	UGameplayStatics::PlaySound2D(GetWorld(), GameLoseVoiceLine);
+
+	bHasInitializedRace = false;
 	
 	if (GEngine)
 	{

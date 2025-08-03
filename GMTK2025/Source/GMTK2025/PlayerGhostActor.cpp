@@ -15,11 +15,24 @@ APlayerGhostActor::APlayerGhostActor()
 	
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 	SetRootComponent(BoxCollision);
-	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
+	BoxCollision->SetBoxExtent(FVector(132.808112f, 79.510442, 86.426227));
 	BoxCollision->SetSimulatePhysics(false);
 	BoxCollision->SetCollisionProfileName(TEXT("Vehicle"));
 	BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
 	BoxCollision->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	
+	// spheres
+	FrontSphere = CreateDefaultSubobject<USphereComponent>(TEXT("FrontSphereCollision"));
+	FrontSphere->SetSphereRadius(90.0f);
+	FrontSphere->SetupAttachment(BoxCollision);
+	FrontSphere->SetGenerateOverlapEvents(false);
+	FrontSphere->SetRelativeLocation(FVector(106.0f, 0.0f, 0.0f));
+	
+	BackSphere = CreateDefaultSubobject<USphereComponent>(TEXT("BackSphereCollision"));
+	BackSphere->SetSphereRadius(90.0f);
+	BackSphere->SetupAttachment(BoxCollision);
+	BackSphere->SetGenerateOverlapEvents(false);
+	BackSphere->SetRelativeLocation(FVector(-133.0f, 0.0f, 0.0f));
 
 	Chassis = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Chassis"));
 	Chassis->SetSimulatePhysics(false);
@@ -98,6 +111,7 @@ void APlayerGhostActor::RestartThisLoop(FVector StartLocation, FRotator StartRot
 	SetActorRotation(StartRotation);
 	
 	CurrentFollowIndex = 0;
+	OnRestartLoopBP();
 }
 
 void APlayerGhostActor::ApplyGhostPhysicsMovement(int32 FollowIndex)
@@ -199,6 +213,7 @@ void APlayerGhostActor::ReenableCollision()
 		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Reenable collision"));
 	}
 	BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
+	OnReenableCollisionBP();
 }
 
 void APlayerGhostActor::UpdateMovementPhysics()
