@@ -182,7 +182,10 @@ void AHoverVehiclePawn::ApplyLongBoost()
 	}
 	else
 	{
-		Boost(LongBoostStrengthMultiplier);
+		const float baseBoostMultiplier = 100000.0f;
+		FVector direction = RootComponent->GetForwardVector();
+		BoxCollision->AddForce(direction * LongBoostStrengthMultiplier * baseBoostMultiplier, "", true);
+		
 		RemainingLongBoostTime = RemainingLongBoostTime - LongBoostUpdateTime;
 	}
 }
