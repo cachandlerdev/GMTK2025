@@ -30,6 +30,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FString ItemName;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	USoundBase* UseSound;
 
 	UFUNCTION(BlueprintCallable, Category = "UseItem")
 	virtual void UseItem();

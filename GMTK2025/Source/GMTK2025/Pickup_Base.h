@@ -14,6 +14,9 @@ class GMTK2025_API APickup_Base : public AActor
 public:	
 	// Sets default values for this actor's properties
 	APickup_Base();
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	USoundBase* PickupSound;
 
 protected:
 	// Called when the game starts or when spawned
