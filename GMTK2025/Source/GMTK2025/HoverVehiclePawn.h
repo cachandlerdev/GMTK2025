@@ -88,10 +88,13 @@ public:
 
 	// The larger this value is, the less of a compensation effect we apply to account for framerate dependent physics
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	float PhysicsMovementFramerateCompensation = 1000000.0;
+	float PhysicsMovementFramerateCompensation = 60;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	float PhysicsRotationFramerateCompensation = 1.0;
+	float PhysicsRotationFramerateCompensation = 60;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Items")
+	int32 Coins = 0;
 
 protected:
 	// Called when the game starts or when spawned
@@ -216,10 +219,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Coins")
 	void AddCoins();
-	
-	int32 Coins = 0;
 
-	
 private:
 	bool ShouldApplyMovement();
 
