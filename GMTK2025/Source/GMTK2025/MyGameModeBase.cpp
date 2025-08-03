@@ -139,7 +139,7 @@ void AMyGameModeBase::StartNextLoop()
 	CurrentLoopStartTime = GetWorld()->TimeSeconds;
 
 	// reset coins/items? (tbd)
-
+	LoopFinishedDelegateCalls();
 	OnStartNextLoopBP();
 }
 
@@ -172,6 +172,7 @@ void AMyGameModeBase::RestartThisLoop()
 		CurrentLoopStartTime = GetWorld()->TimeSeconds;
 		
 		UGameplayStatics::PlaySound2D(GetWorld(), RestartLoopSound);
+		LoopFinishedDelegateCalls();
 		OnRestartThisLoopBP();
 	}
 }
@@ -297,4 +298,8 @@ void AMyGameModeBase::OnLoseGame()
 		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Yellow,TEXT("Player lost. End of race."));
 	}
 	OnLoseGameBP();
+}
+void AMyGameModeBase::LoopFinishedDelegateCalls()
+{
+	OnFinishedLapDelegate.Broadcast();
 }
