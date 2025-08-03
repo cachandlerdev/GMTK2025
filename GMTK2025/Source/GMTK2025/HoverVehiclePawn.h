@@ -12,6 +12,7 @@
 #include "MyEnums.h"
 #include "MyGameInstance.h"
 #include "VehicleItems.h"
+#include "Components/SphereComponent.h"
 #include "HoverVehiclePawn.generated.h"
 
 class AMyGameModeBase;
@@ -36,6 +37,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	UStaticMeshComponent* Chassis;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	USphereComponent* FrontSphere;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	USphereComponent* BackSphere;
 
 	// Sound stuff
 	

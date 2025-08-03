@@ -22,7 +22,7 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 	RootComponent = BoxCollision;
-	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
+	BoxCollision->SetBoxExtent(FVector(132.808112f, 79.510442, 86.426227));
 	BoxCollision->SetSimulatePhysics(true);
 	BoxCollision->SetCollisionProfileName(TEXT("Vehicle"));
 	BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
@@ -36,6 +36,19 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 	Chassis->GetBodyInstance()->SetMassOverride(50000.0, true);
 	Chassis->SetLinearDamping(1.0);
 	Chassis->SetAngularDamping(1.0);
+
+	// spheres
+	FrontSphere = CreateDefaultSubobject<USphereComponent>(TEXT("FrontSphereCollision"));
+	FrontSphere->SetSphereRadius(90.0f);
+	FrontSphere->SetupAttachment(BoxCollision);
+	FrontSphere->SetGenerateOverlapEvents(false);
+	FrontSphere->SetRelativeLocation(FVector(106.0f, 0.0f, 0.0f));
+	
+	BackSphere = CreateDefaultSubobject<USphereComponent>(TEXT("BackSphereCollision"));
+	BackSphere->SetSphereRadius(90.0f);
+	BackSphere->SetupAttachment(BoxCollision);
+	BackSphere->SetGenerateOverlapEvents(false);
+	BackSphere->SetRelativeLocation(FVector(-133.0f, 0.0f, 0.0f));
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);

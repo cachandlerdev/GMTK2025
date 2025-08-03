@@ -24,6 +24,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
 	UBoxComponent* BoxCollision;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	USphereComponent* FrontSphere;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	USphereComponent* BackSphere;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 	UAudioComponent* CarWindComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
@@ -127,6 +132,12 @@ public:
 	// Disable the vehicle for a certain duration.
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
 	void EMP(float Duration);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Vehicle")
+	void OnRestartLoopBP();
+	
+	UFUNCTION(BlueprintImplementableEvent, Category = "Vehicle")
+	void OnReenableCollisionBP();
 
 private:
 	void UpdateGhostLocation(int32 FollowIndex);

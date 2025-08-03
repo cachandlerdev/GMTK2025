@@ -40,7 +40,7 @@ public:
 	int32 CurrentNumberOfPlayerFailures = 0;
 
 	UPROPERTY(BlueprintReadOnly, Category="Loop")
-	float InitialCountdownDuration = 3.0f;
+	float InitialCountdownDuration = 2.22f;
 
 	// Sound
 	
