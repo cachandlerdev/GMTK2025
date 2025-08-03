@@ -212,6 +212,12 @@ void APlayerGhostActor::UpdateMovementPhysics()
 
 bool APlayerGhostActor::ShouldUpdateGhostLocation()
 {
+	//Check if the vehicle is EMP'd
+	if (IsEMPd)
+	{
+		return false;
+	}
+
 	FHitResult HitResult;
 	FVector TraceStart = GetActorLocation();
 	FVector TraceEnd = TraceStart;
@@ -257,4 +263,19 @@ void APlayerGhostActor::ApplyLongBoost()
 		Boost(LongBoostStrengthMultiplier);
 		RemainingLongBoostTime = RemainingLongBoostTime - LongBoostUpdateTime;
 	}
+}
+
+void APlayerGhostActor::EMP(float Duration)
+{
+	IsEMPd = true;
+
+	GetWorldTimerManager().SetTimer(GhostEMPDurationHandle, this, &APlayerGhostActor::EndEMP,
+		Duration, false);
+}
+
+void APlayerGhostActor::EndEMP()
+{
+	IsEMPd = false;
+
+	GetWorldTimerManager().ClearTimer(GhostEMPDurationHandle);
 }

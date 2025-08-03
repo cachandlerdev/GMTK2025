@@ -79,6 +79,13 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 
 bool AHoverVehiclePawn::ShouldApplyMovement()
 {
+	
+	//Check if the vehicle is EMP'd
+	if (IsEMPd)
+	{
+		return false;
+	}
+	
 	FHitResult HitResult;
 	FVector TraceStart = GetActorLocation();
 	FVector TraceEnd = TraceStart;
@@ -93,7 +100,7 @@ bool AHoverVehiclePawn::ShouldApplyMovement()
 		ECC_Visibility,
 		QueryParams
 	);
-	
+
 	return bHit;
 }
 
@@ -214,6 +221,42 @@ void AHoverVehiclePawn::LongBoost(float BoostStrength, float Duration)
 	}
 }
 
+void AHoverVehiclePawn::EMP(float Duration)
+{
+	if(!IsEMPd) 
+	{
+		IsEMPd = true;
+
+		GetWorldTimerManager().SetTimer(EMPDurationHandle, this, &AHoverVehiclePawn::EndEMP,
+			Duration, false);
+	}	
+}
+
+void AHoverVehiclePawn::EndEMP()
+{
+	IsEMPd = false;
+
+	GetWorldTimerManager().ClearTimer(EMPDurationHandle);
+}
+
+void AHoverVehiclePawn::Inverter(float Duration)
+{
+	if (!IsInverted)
+	{
+		IsInverted = true;
+
+		GetWorldTimerManager().SetTimer(InverterDurationHandle, this, &AHoverVehiclePawn::EndInverter,
+			Duration, false);
+	}
+}
+
+void AHoverVehiclePawn::EndInverter()
+{
+	IsInverted = false;
+
+	GetWorldTimerManager().ClearTimer(InverterDurationHandle);
+}
+
 void AHoverVehiclePawn::StopMovement()
 {
 	Speed = 0;
@@ -287,11 +330,12 @@ void AHoverVehiclePawn::OnActivateHandbrake(const FInputActionValue& value)
 
 void AHoverVehiclePawn::OnActivateSteer(const FInputActionValue& value)
 {
-	const float axisValue = value.Get<float>();
+	//Invert the controls if affected by inverter
+	const float axisValue = IsInverted ? -value.Get<float>() : value.Get<float>();
 	Steering = SteeringMultiplier * axisValue;
-	
+
 	// Not very clean but if it works
-	if (Speed >= 0)
+	if (Speed >= 0 && !IsInverted)
 	{
 		if (axisValue > 0)
 		{

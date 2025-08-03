@@ -169,7 +169,13 @@ private:
 	FTimerHandle LongBoostDurationHandle;
 	float RemainingLongBoostTime = 0.0f;
 	float LongBoostStrengthMultiplier = 1.0f;
+	
+	bool IsEMPd = false;
+	FTimerHandle EMPDurationHandle;
 
+	bool IsInverted = false;
+	FTimerHandle InverterDurationHandle;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -184,7 +190,15 @@ public:
 	// Boost the vehicle for a certain duration.
 	UFUNCTION(BlueprintCallable, Category="Vehicle")
 	void LongBoost(float BoostStrength, float Duration);
+	
+	// Disable the vehicle for a certain duration.
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void EMP(float Duration);
 
+	// Invert the steering axis of the vehicle for a certain duration.
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void Inverter(float Duration);
+	
 	UFUNCTION(BlueprintCallable, Category="Vehicle")
 	void StopMovement();
 	
@@ -205,7 +219,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Coins")
 	void AddCoins();
-	
+
 private:
 	bool ShouldApplyMovement();
 
@@ -216,4 +230,8 @@ private:
 	void UpdateMovementPhysics();
 
 	void ApplyLongBoost();
+
+	void EndEMP();
+
+	void EndInverter();
 };
