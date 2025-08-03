@@ -495,16 +495,16 @@ void AHoverVehiclePawn::SetFOVSettings(float FOV, float InterpSpeed)
 
 void AHoverVehiclePawn::AddCoins()
 {
-	Coins++;
-	if (Coins == 10)//this boosts player, go back in later and turn the boost amount
-		//into a variable so it can be changed in the editor
+	if (MaxSpeed <= 14000.0f)
 	{
-		Boost(3);
-		Coins = 0;
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Boosted!"));
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Coins: %d"), Coins));
+		Coins++;
+		MaxSpeed += 1000.0f;
+		SpeedMultiplier += 4.5f;
+		// Example: Increase max speed by 100 for each coin collected
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Max Speed increased to: %f"), MaxSpeed));
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Speed Multiplier increased to: %f"), SpeedMultiplier));
+		}
 	}
 }
