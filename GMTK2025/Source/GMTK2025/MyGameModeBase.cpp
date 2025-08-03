@@ -237,3 +237,7 @@ void AMyGameModeBase::OnLoseGame()
 	}
 	OnLoseGameBP();
 }
+void AMyGameModeBase::LoopFinishedDelegateCalls()
+{
+	OnFinishedLapDelegate.Broadcast();
+}
