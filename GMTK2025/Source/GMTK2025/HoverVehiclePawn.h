@@ -237,10 +237,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
 	void AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemClass);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Item")
 	UVehicleItems* VehicleItem;
 
 	UFUNCTION(BlueprintCallable, Category = "Coins")
 	void AddCoins();
+	
+	UFUNCTION(BlueprintImplementableEvent, Category = "Items")
+	void OnUseItemBP(UVehicleItems* Item);
 
 private:
 	bool ShouldApplyMovement();

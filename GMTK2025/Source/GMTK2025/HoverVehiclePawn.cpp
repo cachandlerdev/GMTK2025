@@ -324,6 +324,10 @@ void AHoverVehiclePawn::AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemCla
 	{
 		VehicleItem->RemoveItem();
 	}
+	if (GEngine)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s"), VehicleItemClass->GetName());
+	}
 	
 	UVehicleItems* NewVehicleItem = NewObject<UVehicleItems>(this, VehicleItemClass);
 	if (NewVehicleItem)
@@ -415,10 +419,9 @@ void AHoverVehiclePawn::OnActivateUseItem(const FInputActionValue& value)
 	{
 		// TODO: add use item logic
 		
-		//Boost(BoostSpeedMultiplier);
-		
 		if (VehicleItem != nullptr)
 		{
+			OnUseItemBP(VehicleItem);
 			VehicleItem->UseItem();
 		}
 	}
