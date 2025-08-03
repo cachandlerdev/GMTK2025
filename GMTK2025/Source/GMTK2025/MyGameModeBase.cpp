@@ -3,6 +3,7 @@
 
 #include "MyGameModeBase.h"
 
+#include "MyPlayerController.h"
 #include "PlayerGhostActor.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -45,17 +46,63 @@ void AMyGameModeBase::InitRaceLogic()
 	}
 }
 
+void AMyGameModeBase::PlayTutorialLines()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), TutorialVoiceLines);
+}
+
+void AMyGameModeBase::StartFirstLoopWithCountdown()
+{
+	// Disable player controls
+	// Play countdown timer
+	// Display UI stuff (via the blueprint)
+	// Have a timer that waits before then calling start next loop
+
+	PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (PlayerController)
+	{
+		PlayerPawn = PlayerController->GetPawn();
+		if (PlayerPawn)
+		{
+			PlayerPawn->DisableInput(PlayerController);
+		}
+	}
+	
+	SetupPlayerForLoop();
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), FirstLoopSound, PlayerPawn->GetActorLocation(), PlayerPawn->GetActorRotation());
+	
+	GetWorldTimerManager().SetTimer(FirstLoopCountdownHandle, this, &AMyGameModeBase::StartNextLoop,
+		InitialCountdownDuration, false);	
+}
+
+void AMyGameModeBase::SetLevelBaselineTime(int32 Seconds)
+{
+	if (Seconds > 0)
+	{
+		BestLoopTimeInSeconds = Seconds;
+	}
+}
+
 void AMyGameModeBase::StartNextLoop()
 {
+	if (PlayerController && PlayerPawn)
+	{
+		if (!PlayerPawn->InputEnabled())
+		{
+			PlayerPawn->EnableInput(PlayerController);
+		}
+	}
+	
 	CurrentLoopNumber++;
 	
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,FString::Printf(TEXT("Start loop %i"), CurrentLoopNumber));
 	}
-	
-	GetWorldTimerManager().SetTimer(SlowTimeHandle, this, &AMyGameModeBase::SetupPlayerForLoop,
-		DelayTimePerLoopForPlayer, false);	
+
+	SetupPlayerForLoop();
+	//GetWorldTimerManager().SetTimer(SlowTimeHandle, this, &AMyGameModeBase::SetupPlayerForLoop,
+	//	DelayTimePerLoopForPlayer, false);	
 
 	// Add the data arrays to track this loop
 	GameInstance->InitNewLoopData();
@@ -81,6 +128,12 @@ void AMyGameModeBase::StartNextLoop()
 		}
 	
 		Ghosts.Add(newGhost);
+		
+		UGameplayStatics::PlaySound2D(GetWorld(), NewLoopSound);
+	}
+	else
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), NoRecordedTimesVoiceLine);
 	}
 
 	CurrentLoopStartTime = GetWorld()->TimeSeconds;
@@ -103,8 +156,8 @@ void AMyGameModeBase::RestartThisLoop()
 		player->CameraBoom->bEnableCameraRotationLag = false;
 		player->SetActorLocation(StartLocation->GetActorLocation());
 		player->SetActorRotation(StartLocation->GetActorRotation());
-		//player->CameraBoom->bEnableCameraLag = true;
-		//player->CameraBoom->bEnableCameraRotationLag = true;
+		player->CameraBoom->bEnableCameraLag = true;
+		player->CameraBoom->bEnableCameraRotationLag = true;
 		
 		for (int32 i = 0; i < Ghosts.Num(); i++)
 		{
@@ -118,6 +171,7 @@ void AMyGameModeBase::RestartThisLoop()
 		
 		CurrentLoopStartTime = GetWorld()->TimeSeconds;
 		
+		UGameplayStatics::PlaySound2D(GetWorld(), RestartLoopSound);
 		OnRestartThisLoopBP();
 	}
 }
@@ -143,6 +197,10 @@ void AMyGameModeBase::FinishThisLoop()
 				OnLoseGame();
 				return;	
 			}
+			
+			// Player keeps going
+			OnLoseRoundBP();
+			UGameplayStatics::PlaySound2D(GetWorld(), RoundLostVoiceLine);
 		}
 		else
 		{
@@ -152,6 +210,7 @@ void AMyGameModeBase::FinishThisLoop()
 				GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Player won this round")
 				);
 			}
+			CurrentNumberOfPlayerFailures = 0; // We count consecutive failures
 			BestLoopTimeInSeconds = playerTime;
 		}
 		
@@ -231,6 +290,8 @@ void AMyGameModeBase::OnLoseGame()
 {
 	// todo
 
+	UGameplayStatics::PlaySound2D(GetWorld(), GameLoseVoiceLine);
+	
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Yellow,TEXT("Player lost. End of race."));
