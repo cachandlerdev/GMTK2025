@@ -196,9 +196,44 @@ void APlayerGhostActor::ReenableCollision()
 {
 	if (GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Reenable collision"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Reenable collision"));
 	}
-	BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
+
+	TArray<AActor*> OverlappingActors;
+	GetOverlappingActors(OverlappingActors);
+
+	bool bStillOverlappingImportantActors = false;
+
+	for (AActor* Actor : OverlappingActors)
+	{
+		if (Actor && (Actor->IsA(APawn::StaticClass()) || Actor->IsA(APlayerGhostActor::StaticClass())))
+		{
+			bStillOverlappingImportantActors = true;
+			break;
+		}
+	}
+
+	if (!bStillOverlappingImportantActors)
+	{
+		BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Collision re-enabled"));
+		}
+	}
+	else
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Still overlapping important actors — retrying next tick"));
+		}
+		GetWorld()->GetTimerManager().SetTimerForNextTick(this, &APlayerGhostActor::ReenableCollision);
+	}
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Reenable collision finished"));
+	}
 }
 
 void APlayerGhostActor::UpdateMovementPhysics()
