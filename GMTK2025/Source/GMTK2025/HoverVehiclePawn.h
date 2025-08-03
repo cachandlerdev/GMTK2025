@@ -166,7 +166,10 @@ private:
 	FTimerHandle LongBoostDurationHandle;
 	float RemainingLongBoostTime = 0.0f;
 	float LongBoostStrengthMultiplier = 1.0f;
-
+	
+	
+	FTimerHandle EMPDurationHandle;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -181,7 +184,11 @@ public:
 	// Boost the vehicle for a certain duration.
 	UFUNCTION(BlueprintCallable, Category="Vehicle")
 	void LongBoost(float BoostStrength, float Duration);
-
+	
+	// Disable the vehicle for a certain duration.
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void EMP(float Duration);
+	
 	UFUNCTION(BlueprintCallable, Category="Vehicle")
 	void StopMovement();
 	
@@ -205,6 +212,10 @@ public:
 	
 	int32 Coins = 0;
 
+	
+	bool IsEMPd = false;
+	
+	void EndEMP();
 private:
 	bool ShouldApplyMovement();
 
@@ -215,4 +226,6 @@ private:
 	void UpdateMovementPhysics();
 
 	void ApplyLongBoost();
+
+	
 };
