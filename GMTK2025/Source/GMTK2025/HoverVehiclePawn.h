@@ -88,10 +88,13 @@ public:
 
 	// The larger this value is, the less of a compensation effect we apply to account for framerate dependent physics
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	float PhysicsMovementFramerateCompensation = 1000000.0;
+	float PhysicsMovementFramerateCompensation = 60;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	float PhysicsRotationFramerateCompensation = 1.0;
+	float PhysicsRotationFramerateCompensation = 60;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Items")
+	int32 Coins = 0;
 
 protected:
 	// Called when the game starts or when spawned
@@ -166,7 +169,13 @@ private:
 	FTimerHandle LongBoostDurationHandle;
 	float RemainingLongBoostTime = 0.0f;
 	float LongBoostStrengthMultiplier = 1.0f;
+	
+	bool IsEMPd = false;
+	FTimerHandle EMPDurationHandle;
 
+	bool IsInverted = false;
+	FTimerHandle InverterDurationHandle;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -181,7 +190,15 @@ public:
 	// Boost the vehicle for a certain duration.
 	UFUNCTION(BlueprintCallable, Category="Vehicle")
 	void LongBoost(float BoostStrength, float Duration);
+	
+	// Disable the vehicle for a certain duration.
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void EMP(float Duration);
 
+	// Invert the steering axis of the vehicle for a certain duration.
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void Inverter(float Duration);
+	
 	UFUNCTION(BlueprintCallable, Category="Vehicle")
 	void StopMovement();
 	
@@ -202,8 +219,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Coins")
 	void AddCoins();
-	
-	int32 Coins = 0;
 
 private:
 	bool ShouldApplyMovement();
@@ -215,4 +230,8 @@ private:
 	void UpdateMovementPhysics();
 
 	void ApplyLongBoost();
+
+	void EndEMP();
+
+	void EndInverter();
 };

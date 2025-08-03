@@ -86,6 +86,9 @@ private:
 	float RemainingLongBoostTime = 0.0f;
 	float LongBoostStrengthMultiplier = 1.0f;
 
+	bool IsEMPd = false;
+	FTimerHandle GhostEMPDurationHandle;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -107,6 +110,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
 	void LongBoost(float BoostStrength, float Duration);
 
+	// Disable the vehicle for a certain duration.
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void EMP(float Duration);
+
 private:
 	void UpdateGhostLocation(int32 FollowIndex);
 
@@ -122,4 +129,6 @@ private:
 	bool ShouldApplyCorrectionFactor();
 
 	void ApplyLongBoost();
+
+	void EndEMP();
 };
