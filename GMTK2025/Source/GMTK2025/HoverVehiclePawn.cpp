@@ -11,6 +11,7 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "MyGameInstance.h"
+#include "Components/AudioComponent.h"
 
 
 // Sets default values
@@ -55,6 +56,10 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 
 	OriginalFOV = Camera->FieldOfView;
 
+	CarWindComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("CarWindComponent"));
+	CarWindComponent->SetupAttachment(RootComponent);
+	CarEngineLoopComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("CarEngineLoopComponent"));
+	CarEngineLoopComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -66,7 +71,7 @@ void AHoverVehiclePawn::BeginPlay()
 	GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 
 	GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &AHoverVehiclePawn::UpdateMovementPhysics,
-		PhysicsUpdateTime, true);	
+		PhysicsUpdateTime, true);
 }
 
 // Called every frame
@@ -205,6 +210,7 @@ void AHoverVehiclePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void AHoverVehiclePawn::Boost(float BoostStrength)
 {
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), EngineShortBoostSound, GetActorLocation());
 	const float baseBoostMultiplier = 100000.0f;
 	FVector direction = RootComponent->GetForwardVector();
 	BoxCollision->AddForce(direction * BoostStrength * baseBoostMultiplier, "", true);
@@ -212,8 +218,10 @@ void AHoverVehiclePawn::Boost(float BoostStrength)
 
 void AHoverVehiclePawn::LongBoost(float BoostStrength, float Duration)
 {
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), EngineLongBoostSound, GetActorLocation());
 	if (RemainingLongBoostTime <= 0)
 	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), EngineLongBoostSound, GetActorLocation());
 		RemainingLongBoostTime = Duration;
 		LongBoostStrengthMultiplier = BoostStrength;
 		GetWorldTimerManager().SetTimer(LongBoostDurationHandle, this, &AHoverVehiclePawn::ApplyLongBoost,
@@ -223,9 +231,11 @@ void AHoverVehiclePawn::LongBoost(float BoostStrength, float Duration)
 
 void AHoverVehiclePawn::EMP(float Duration)
 {
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), SlowDownPadSound, GetActorLocation());
 	if(!IsEMPd) 
 	{
 		IsEMPd = true;
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), SlowDownPadSound, GetActorLocation());
 
 		GetWorldTimerManager().SetTimer(EMPDurationHandle, this, &AHoverVehiclePawn::EndEMP,
 			Duration, false);
@@ -495,6 +505,7 @@ void AHoverVehiclePawn::SetFOVSettings(float FOV, float InterpSpeed)
 
 void AHoverVehiclePawn::AddCoins()
 {
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), GetCollectableSound, GetActorLocation());
 	Coins++;
 	if (Coins == 10)
 	{
