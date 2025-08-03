@@ -79,9 +79,13 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 
 bool AHoverVehiclePawn::ShouldApplyMovement()
 {
+	
 	//Check if the vehicle is EMP'd
 	if (IsEMPd)
 	{
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("EMPd!"));
+
 		return false;
 	}
 	
@@ -222,10 +226,16 @@ void AHoverVehiclePawn::LongBoost(float BoostStrength, float Duration)
 
 void AHoverVehiclePawn::EMP(float Duration)
 {
-	IsEMPd = true;
+	if(!IsEMPd) 
+	{
+	
+		IsEMPd = true;
 
-	GetWorldTimerManager().SetTimer(EMPDurationHandle, this, &AHoverVehiclePawn::EndEMP,
-		Duration, false);
+		GetWorldTimerManager().SetTimer(EMPDurationHandle, this, &AHoverVehiclePawn::EndEMP,
+			Duration, false);
+	
+	}
+	
 }
 
 void AHoverVehiclePawn::EndEMP()
