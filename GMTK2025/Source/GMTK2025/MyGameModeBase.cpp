@@ -139,7 +139,7 @@ void AMyGameModeBase::StartNextLoop()
 	CurrentLoopStartTime = GetWorld()->TimeSeconds;
 
 	// reset coins/items? (tbd)
-
+	LoopFinishedDelegateCalls();
 	OnStartNextLoopBP();
 }
 
@@ -172,6 +172,7 @@ void AMyGameModeBase::RestartThisLoop()
 		CurrentLoopStartTime = GetWorld()->TimeSeconds;
 		
 		UGameplayStatics::PlaySound2D(GetWorld(), RestartLoopSound);
+		LoopFinishedDelegateCalls();
 		OnRestartThisLoopBP();
 	}
 }
