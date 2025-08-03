@@ -17,6 +17,7 @@ ARaceEndLocation::ARaceEndLocation()
 	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
 	BoxCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 	BoxCollision->SetGenerateOverlapEvents(true);
+	BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Overlap);
 
 	SetRootComponent(BoxCollision);
 }
@@ -48,6 +49,11 @@ void ARaceEndLocation::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 			// The player has reached the end location.
 			if (GameMode)
 			{
+				if (GEngine)
+				{
+					GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("The loop should finish")
+					);
+				}
 				GameMode->FinishThisLoop();
 			}
 		}

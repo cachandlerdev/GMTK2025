@@ -4,6 +4,7 @@
 #include "PlayerGhostActor.h"
 #include "MyGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 APlayerGhostActor::APlayerGhostActor()
@@ -14,16 +15,21 @@ APlayerGhostActor::APlayerGhostActor()
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 	SetRootComponent(BoxCollision);
 	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
-	BoxCollision->SetSimulatePhysics(true);
+	BoxCollision->SetSimulatePhysics(false);
 	BoxCollision->SetCollisionProfileName(TEXT("Vehicle"));
+	BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
+	BoxCollision->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 
 	Chassis = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Chassis"));
 	Chassis->SetSimulatePhysics(false);
-	//Chassis->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Chassis->SetCollisionProfileName(TEXT("NoCollision"));
+	Chassis->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
+	Chassis->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	Chassis->SetupAttachment(BoxCollision);
-	
-	//Chassis->SetSimulatePhysics(true);
-	Chassis->SetMassOverrideInKg("", 50000.0);
+
+	Chassis->BodyInstance.bOverrideMass = true;
+	//Chassis->SetMassOverrideInKg("", 50000.0);
+	Chassis->GetBodyInstance()->SetMassOverride(50000.0, true);
 	Chassis->SetLinearDamping(1.0);
 	Chassis->SetAngularDamping(1.0);
 }
@@ -34,13 +40,15 @@ void APlayerGhostActor::BeginPlay()
 	Super::BeginPlay();
 	
 	//Initiate timer
-	GhostSnapshotTimer = GetWorld()->TimeSeconds;
-
 	CurrentFollowIndex = 0;
 
 	GameInstance = Cast<UMyGameInstance>(GetGameInstance());
 	Player = Cast<AHoverVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	PlayerMaxDistanceToFloor = Player->MaxDistanceToFloor;
+
+	BoxCollision->SetSimulatePhysics(true);
+	GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &APlayerGhostActor::UpdateMovementPhysics,
+		Player->PhysicsUpdateTime, true);
 }
 
 // Called every frame
@@ -48,54 +56,168 @@ void APlayerGhostActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//Update target transform every second
-	if (GetWorld()->TimeSeconds - GhostSnapshotTimer >= Player->GhostUpdateSeconds)
+	if (ShouldApplyCorrectionFactor())
 	{
-		if (GameInstance->PlayerPositions.Num() > 0 && GameInstance->PlayerPositions.Num() > CurrentFollowIndex)
-		{
-			if (GameInstance->PlayerPositions[CurrentFollowIndex].IsValid())
-			{
-				//TargetTransform = GameInstance->PlayerPositions[CurrentFollowIndex];
-				UpdateGhostLocation(CurrentFollowIndex);
+		// Correct for movement changes
+		ApplyCorrectionFactor(DeltaTime);
+	}
+}
 
-				//update timer
-				GhostSnapshotTimer = GetWorld()->TimeSeconds;
+void APlayerGhostActor::SetFollowLoopNumber(int32 LoopNumber)
+{
+	FollowLoopNumber = LoopNumber;
+}
 
-				//update current transform index
-				CurrentFollowIndex++;
-			}
-		}
+void APlayerGhostActor::StartNextLoop(FVector StartLocation, FRotator StartRotation)
+{
+	RestartThisLoop(StartLocation, StartRotation);
+}
+
+void APlayerGhostActor::RestartThisLoop(FVector StartLocation, FRotator StartRotation)
+{
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Disable collision"));
+	}
+
+	BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
+
+	GetWorldTimerManager().SetTimer(CollisionHandle, this, &APlayerGhostActor::ReenableCollision,
+		CollisionOffAfterRestartDuration, false);	
+	
+	BoxCollision->SetPhysicsLinearVelocity(FVector(0, 0, 0));
+	BoxCollision->SetPhysicsAngularVelocityInDegrees(FVector(0, 0, 0));
+	
+	SetActorLocation(StartLocation);
+	SetActorRotation(StartRotation);
+	
+	CurrentFollowIndex = 0;
+}
+
+void APlayerGhostActor::ApplyGhostPhysicsMovement(int32 FollowIndex)
+{
+	float currentSteering = GameInstance->PlayerSteering[FollowLoopNumber].ArrayOfFloats[FollowIndex];
+	float currentSpeed = GameInstance->PlayerSpeed[FollowLoopNumber].ArrayOfFloats[FollowIndex];
+	float currentWantsForwardOrBackwards = GameInstance->PlayerWantsToGoForwardOrBackwards[FollowLoopNumber].ArrayOfBools[FollowIndex];
+	ESteerDirection currentSteerDirection = GameInstance->PlayerSteerDirections[FollowLoopNumber].ArrayOfDirections[FollowIndex];
+	
+	float MovementAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * Player->PhysicsMovementFramerateCompensation);
+	float RotationAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * Player->PhysicsRotationFramerateCompensation);
+	
+	if (currentWantsForwardOrBackwards)
+	{
+		FVector force = Chassis->GetForwardVector();
+		force.X *= currentSpeed * Player->SpeedMultiplier * Player->PhysicsUpdateTime * MovementAccountForFramerate;
+		force.Y *= currentSpeed * Player->SpeedMultiplier * Player->PhysicsUpdateTime * MovementAccountForFramerate;
+		force.Z = Player->HoverAmount;
+		
+		BoxCollision->AddForce(force, "", true);
+	}
+
+	if (currentSteerDirection != ESteerDirection::STRAIGHT)
+	{
+		FVector torque = FVector(0, 0, currentSteering * Player->SteeringMultiplier * Player->PhysicsUpdateTime * RotationAccountForFramerate);
+		BoxCollision->AddTorqueInDegrees(torque, "", true);
+	}
+}
+
+void APlayerGhostActor::ApplyCorrectionFactor(float DeltaTime)
+{
+	FTransform currentTransform = GetActorTransform();
+	FTransform targetTransform = GameInstance->PlayerTransforms[FollowLoopNumber].ArrayOfTransforms[CurrentFollowIndex];
+	
+	// Interpolate transform
+	FVector NewLocation = FMath::VInterpTo(currentTransform.GetLocation(),
+		targetTransform.GetLocation(), DeltaTime,
+		GhostPositionInterpolationSpeed);
+	
+	// Interpolate scale
+	FVector NewScale = FMath::VInterpTo(currentTransform.GetScale3D(), TargetTransform.GetScale3D(),
+		DeltaTime, GhostPositionInterpolationSpeed);
+	
+	FTransform NewTransform(targetTransform.GetRotation(), NewLocation, NewScale);
+	SetActorTransform(NewTransform);
+}
+
+bool APlayerGhostActor::ShouldApplyCorrectionFactor()
+{
+	// Protect against index out of bound issues.
+
+	if (GameInstance == nullptr || GameInstance->PlayerTransforms.Num() == 0 ||
+		GameInstance->PlayerTransforms.Num() <= FollowLoopNumber ||
+		GameInstance->PlayerTransforms[FollowLoopNumber].ArrayOfTransforms.Num() <= CurrentFollowIndex)
+	{
+		return false;
 	}
 	
+	FTransform currentTransform = GetActorTransform();
+	FTransform targetTransform = GameInstance->PlayerTransforms[FollowLoopNumber].ArrayOfTransforms[CurrentFollowIndex];
 
-	// Old transformation code
+	// Check distance
+	bool distanceCheck = FVector::Distance(currentTransform.GetLocation(), targetTransform.GetLocation()) > LocationCorrectionFactorThreshold;
+
+	// Check rotation along x axis
+	FVector currentXAxis = currentTransform.GetRotation().GetAxisX();
+	FVector targetXAxis = targetTransform.GetRotation().GetAxisX();
+	float lengths = currentXAxis.Length() + targetXAxis.Length();
+	float xRotationDifference = FVector::DotProduct(currentXAxis, targetXAxis) / lengths;
+	// xRotationDifference will be 0 if the two are direct opposites
+	// 1 if they're exactly the same rotation
+
+	// Make the difference seem more logical by inverting it. 180 degree if opposites, 0 if same
+	float xRotationDegreeDifference = 180 - (xRotationDifference * 180);
 	
-	//interpolate current ghost transform to target transform
-	//FTransform CurrentTransform = GetActorTransform();
+	bool rotationCheck = xRotationDegreeDifference > RotationCorrectionFactorThreshold;
 
-	//// Interpolate Translation
-	//FVector NewLocation = FMath::VInterpTo(CurrentTransform.GetLocation(), TargetTransform.GetLocation(), DeltaTime, GhostPositionInterpolationSpeed);
-
-	//// Interpolate Rotation (using Quaternions for smoother results)
-	//FQuat NewRotation = FMath::QInterpTo(CurrentTransform.GetRotation(), TargetTransform.GetRotation(), DeltaTime, GhostPositionInterpolationSpeed);
-
-	//// Interpolate Scale (if needed)
-	//FVector NewScale = FMath::VInterpTo(CurrentTransform.GetScale3D(), TargetTransform.GetScale3D(), DeltaTime, GhostPositionInterpolationSpeed);
-
-	//// Combine into a new FTransform
-	//FTransform NewTransform(NewRotation, NewLocation, NewScale);
-
-	////FTransform NewTransform = FMath::FInterpTo(CurrentTransform, TargetTransform, DeltaTime, InterpSpeed);
-	//SetActorTransform(NewTransform);
+	return distanceCheck || rotationCheck;
 }
 
 void APlayerGhostActor::UpdateGhostLocation(int32 FollowIndex)
 {
-	if (GEngine)
+	// Protect against index out of bound issues.
+	if (GameInstance->PlayerSteering[FollowLoopNumber].ArrayOfFloats.Num() <= FollowIndex)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Update ghost location"));
+		return;
 	}
 	
+	if (ShouldUpdateGhostLocation())
+	{
+		ApplyGhostPhysicsMovement(FollowIndex);
+	}
+}
+
+void APlayerGhostActor::ReenableCollision()
+{
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Reenable collision"));
+	}
+	BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
+}
+
+void APlayerGhostActor::UpdateMovementPhysics()
+{
+	int32 numOfStoredValues = GameInstance->PlayerSpeed[FollowLoopNumber].ArrayOfFloats.Num();
+	if (numOfStoredValues > 0 && numOfStoredValues > CurrentFollowIndex)
+	{
+		if (bUsePlayerPhysicsForMovement)
+		{
+			UpdateGhostLocation(CurrentFollowIndex);
+		}
+
+		//update current transform index
+		CurrentFollowIndex++;
+	}
+}
+
+bool APlayerGhostActor::ShouldUpdateGhostLocation()
+{
+	//Check if the vehicle is EMP'd
+	if (IsEMPd)
+	{
+		return false;
+	}
+
 	FHitResult HitResult;
 	FVector TraceStart = GetActorLocation();
 	FVector TraceEnd = TraceStart;
@@ -103,40 +225,57 @@ void APlayerGhostActor::UpdateGhostLocation(int32 FollowIndex)
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
 
-	bool bHit = GetWorld()->LineTraceSingleByChannel(
+	return GetWorld()->LineTraceSingleByChannel(
 		HitResult,
 		TraceStart,
 		TraceEnd,
 		ECC_Visibility,
 		QueryParams
 	);
+}
 
-	float currentSteering = GameInstance->PlayerSteering[FollowIndex];
-	float currentSpeed = GameInstance->PlayerSpeed[FollowIndex];
-	bool currentWantsForwardOrBackwards = GameInstance->PlayerWantsToGoForwardOrBackwards[FollowIndex];
-	ESteerDirection currentSteerDirection = GameInstance->PlayerSteerDirections[FollowIndex];
-	
-	if (bHit)
+void APlayerGhostActor::Boost(float BoostStrength)
+{
+	const float baseBoostMultiplier = 100000.0f;
+	FVector direction = RootComponent->GetForwardVector();
+	BoxCollision->AddForce(direction * BoostStrength * baseBoostMultiplier, "", true);
+}
+
+void APlayerGhostActor::LongBoost(float BoostStrength, float Duration)
+{
+	if (RemainingLongBoostTime <= 0)
 	{
-		FVector torque = FVector(0, 0, currentSteering * FollowUpdateTorquePhysicsStrength);
-
-		if (currentWantsForwardOrBackwards)
-		{
-			FVector force = Chassis->GetForwardVector();
-			force.X *= currentSpeed * FollowUpdateForcePhysicsStrength;
-			force.Y *= currentSpeed * FollowUpdateForcePhysicsStrength;
-			force.Z = Player->HoverAmount;
-		
-			BoxCollision->AddForce(force, "", true);
-		}
-		BoxCollision->AddTorqueInDegrees(torque, "", true);
-	}
-
-	if (currentSteerDirection == ESteerDirection::STRAIGHT)
-	{
-		//RotationLerp = 0;
-		FVector counterTorque = FVector(0, 0, -1 * currentSteering);
-		BoxCollision->AddTorqueInDegrees(counterTorque, "", true);
+		RemainingLongBoostTime = Duration;
+		LongBoostStrengthMultiplier = BoostStrength;
+		GetWorldTimerManager().SetTimer(LongBoostDurationHandle, this, &APlayerGhostActor::ApplyLongBoost,
+			LongBoostUpdateTime, true);
 	}
 }
 
+void APlayerGhostActor::ApplyLongBoost()
+{
+	if (RemainingLongBoostTime <= 0)
+	{
+		GetWorldTimerManager().ClearTimer(LongBoostDurationHandle);
+	}
+	else
+	{
+		Boost(LongBoostStrengthMultiplier);
+		RemainingLongBoostTime = RemainingLongBoostTime - LongBoostUpdateTime;
+	}
+}
+
+void APlayerGhostActor::EMP(float Duration)
+{
+	IsEMPd = true;
+
+	GetWorldTimerManager().SetTimer(GhostEMPDurationHandle, this, &APlayerGhostActor::EndEMP,
+		Duration, false);
+}
+
+void APlayerGhostActor::EndEMP()
+{
+	IsEMPd = false;
+
+	GetWorldTimerManager().ClearTimer(GhostEMPDurationHandle);
+}

@@ -11,6 +11,7 @@
 #include "Components/BoxComponent.h"
 #include "MyEnums.h"
 #include "MyGameInstance.h"
+#include "VehicleItems.h"
 #include "HoverVehiclePawn.generated.h"
 
 class AMyGameModeBase;
@@ -19,7 +20,6 @@ class UInputMappingContext;
 class UInputAction;
 
 UCLASS()
-//class GMTK2025_API AHoverVehiclePawn : public AWheeledVehiclePawn
 class GMTK2025_API AHoverVehiclePawn : public APawn
 {
 	GENERATED_BODY()
@@ -54,7 +54,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float BoostSpeedMultiplier = 1.2f;
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float LongBoostUpdateTime = 0.1f;
+	
 	// 1.0 lets it stop on a dime, 0 makes it never stop.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float BrakeSpeed = 0.5f;
@@ -65,12 +68,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float FastVelocityThreshold = 500.0f;
 	
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	//float SteeringVisualRotationMultiplier = 0.05f;
-	//
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	//float SteeringVisualMaxRotation = 10.0f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	float CameraLeanAmount = 5.0f;
 	
@@ -83,6 +80,21 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ghost")
 	float GhostUpdateSeconds = 0.2;
+
+	// How often this vehicle will have force applied (in seconds).
+	// Had to switch away from tick to ensure consistent movement
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float PhysicsUpdateTime = 0.05;
+
+	// The larger this value is, the less of a compensation effect we apply to account for framerate dependent physics
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float PhysicsMovementFramerateCompensation = 60;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float PhysicsRotationFramerateCompensation = 60;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Items")
+	int32 Coins = 0;
 
 protected:
 	// Called when the game starts or when spawned
@@ -147,14 +159,23 @@ private:
 	float OriginalFOV = 90;
 	float SpeedFOV = OriginalFOV * (1 + (SpeedFOVEffect / 1000));;
 
-	//Ghost Snapshot Timer
-	double GhostSnapshotTimer;
-
 	//Game instance reference
 	UMyGameInstance* GameInstance;
 
 	AMyGameModeBase* GameMode;
 
+	FTimerHandle PhysicsUpdateHandle;
+	
+	FTimerHandle LongBoostDurationHandle;
+	float RemainingLongBoostTime = 0.0f;
+	float LongBoostStrengthMultiplier = 1.0f;
+	
+	bool IsEMPd = false;
+	FTimerHandle EMPDurationHandle;
+
+	bool IsInverted = false;
+	FTimerHandle InverterDurationHandle;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -163,8 +184,54 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	// Boost the vehicle forward.
-	
 	UFUNCTION(BlueprintCallable, Category="Vehicle")
 	void Boost(float BoostStrength);
+	
+	// Boost the vehicle for a certain duration.
+	UFUNCTION(BlueprintCallable, Category="Vehicle")
+	void LongBoost(float BoostStrength, float Duration);
+	
+	// Disable the vehicle for a certain duration.
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void EMP(float Duration);
 
+	// Invert the steering axis of the vehicle for a certain duration.
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void Inverter(float Duration);
+	
+	UFUNCTION(BlueprintCallable, Category="Vehicle")
+	void StopMovement();
+	
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	float GetSpeed();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Vehicle")
+	float GetCurrentVelocityInKMPerHour();
+
+	//TODO: Change this to an array of pickable items
+	UFUNCTION(BlueprintCallable, Category = "Items")
+	TArray<int> GetItems();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemClass);
+
+	UVehicleItems* VehicleItem;
+
+	UFUNCTION(BlueprintCallable, Category = "Coins")
+	void AddCoins();
+
+private:
+	bool ShouldApplyMovement();
+
+	void ApplyPlayerMovement();
+
+	void RecordPlayerInfo();
+
+	void UpdateMovementPhysics();
+
+	void ApplyLongBoost();
+
+	void EndEMP();
+
+	void EndInverter();
 };

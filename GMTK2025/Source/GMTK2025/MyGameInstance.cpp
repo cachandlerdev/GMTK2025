@@ -13,7 +13,7 @@ void UMyGameInstance::Init()
 
 void UMyGameInstance::SetMusicVolume(float Volume)
 {
-	MusicVolume = Volume;
+	MusicVolume = FMath::Clamp(Volume, 0.1f, 10.0f);
 	if (CurrentAudioComponent != nullptr)
 	{
 		CurrentAudioComponent->AdjustVolume(1, MusicVolume);
@@ -27,7 +27,7 @@ void UMyGameInstance::PlayMainMenuMusic()
 
 void UMyGameInstance::PlayMusic()
 {
-	if (CurrentAudioComponent == nullptr)
+	if (CurrentAudioComponent == nullptr || !CurrentAudioComponent->IsPlaying())
 	{
 		GoToNextMusicTrack();
 	}
@@ -52,14 +52,15 @@ void UMyGameInstance::PlayMusicTrack(USoundBase* Track)
 	float volume = MusicVolume * Track->GetVolumeMultiplier();
 	CurrentAudioComponent = UGameplayStatics::CreateSound2D(GetWorld(), Track,
 		volume, 1, 0.0, nullptr, true);
-	TrackFinished.BindUFunction(this, "GoToNextMusicTrack");
+	CurrentAudioComponent->bIsUISound = true;
 	if (CurrentAudioComponent == nullptr)
 	{
 		return;
 	}
-	CurrentAudioComponent->OnAudioFinished.Add(TrackFinished);
+	CurrentAudioComponent->OnAudioFinished.AddDynamic(this, &UMyGameInstance::GoToNextMusicTrack);
 
-	CurrentAudioComponent->Activate();
+	CurrentAudioComponent->bAutoActivate = false;
+	CurrentAudioComponent->RegisterComponentWithWorld(GetWorld());
 	CurrentAudioComponent->Play(0.0);
 }
 
@@ -69,6 +70,7 @@ void UMyGameInstance::PauseMusic()
 	{
 		return;
 	}
+
 	CurrentAudioComponent->SetPaused(true);
 }
 
@@ -79,10 +81,37 @@ void UMyGameInstance::GoToNextMusicTrack()
 
 USoundBase* UMyGameInstance::GetNextMusicTrack()
 {
-	int newTrackIndex = FMath::RandRange(0, InGameMusicTracks.Num() - 1);
-	if (newTrackIndex < 0)
+	if (InGameMusicTracks.Num() == 0)
 	{
 		return nullptr;
 	}
+	
+	int newTrackIndex = FMath::RandRange(0, InGameMusicTracks.Num() - 1);
 	return InGameMusicTracks[newTrackIndex];
+}
+
+void UMyGameInstance::InitNewLoopData()
+{
+	// Add the data arrays to track this loop
+	FInnerFloatArray speedThisLoop;
+	FInnerFloatArray steeringThisLoop;
+	FInnerBoolArray wantsToGoForwardOrBackwardsThisLoop;
+	FInnerSteerDirectionArray steerDirectionThisLoop;
+	FInnerTransformArray transformsThisLoop;
+	
+	PlayerSpeed.Add(speedThisLoop);
+	PlayerSteering.Add(steeringThisLoop);
+	PlayerWantsToGoForwardOrBackwards.Add(wantsToGoForwardOrBackwardsThisLoop);
+	PlayerSteerDirections.Add(steerDirectionThisLoop);
+	
+	PlayerTransforms.Add(transformsThisLoop);
+}
+
+void UMyGameInstance::ClearPlayerMovementData()
+{
+	PlayerTransforms.Empty();
+	PlayerSpeed.Empty();
+	PlayerSteering.Empty();
+	PlayerWantsToGoForwardOrBackwards.Empty();
+	PlayerSteerDirections.Empty();
 }

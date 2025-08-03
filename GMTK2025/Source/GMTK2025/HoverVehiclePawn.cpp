@@ -24,25 +24,24 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
 	BoxCollision->SetSimulatePhysics(true);
 	BoxCollision->SetCollisionProfileName(TEXT("Vehicle"));
+	BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
 
 	Chassis = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Chassis"));
-	//SetRootComponent(Chassis);
 	Chassis->SetupAttachment(BoxCollision);
 	Chassis->SetSimulatePhysics(true);
-	Chassis->SetMassOverrideInKg("", 50000.0);
+	
+	Chassis->BodyInstance.bOverrideMass = true;
+	//Chassis->SetMassOverrideInKg("", 50000.0);
+	Chassis->GetBodyInstance()->SetMassOverride(50000.0, true);
 	Chassis->SetLinearDamping(1.0);
 	Chassis->SetAngularDamping(1.0);
 
-	//Chassis->SetCollisionProfileName(TEXT("Vehicle"));
-
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	//CameraBoom->SetupAttachment(Chassis);
 	CameraBoom->SetupAttachment(RootComponent);
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
-
-	//CameraBoom->bUsePawnControlRotation = false;
+	
 	CameraBoom->bUsePawnControlRotation = false;
 	CameraBoom->bInheritYaw = true;
 	CameraBoom->bInheritPitch = false;
@@ -55,6 +54,7 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 	CameraBoom->SocketOffset.Z = 140.0f;
 
 	OriginalFOV = Camera->FieldOfView;
+
 }
 
 // Called when the game starts or when spawned
@@ -62,13 +62,11 @@ void AHoverVehiclePawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-
-	//Initiate timer
-	GhostSnapshotTimer = GetWorld()->TimeSeconds;
-
 	GameInstance = Cast<UMyGameInstance>(GetGameInstance());
 	GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 
+	GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &AHoverVehiclePawn::UpdateMovementPhysics,
+		PhysicsUpdateTime, true);	
 }
 
 // Called every frame
@@ -76,10 +74,20 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// This is very poor design, but if it works, it works
+	RunCameraEffects();
+}
+
+bool AHoverVehiclePawn::ShouldApplyMovement()
+{
+	
+	//Check if the vehicle is EMP'd
+	if (IsEMPd)
+	{
+		return false;
+	}
+	
 	FHitResult HitResult;
 	FVector TraceStart = GetActorLocation();
-	//FVector TraceEnd = TraceStart + GetActorForwardVector() * 1000.0f;
 	FVector TraceEnd = TraceStart;
 	TraceEnd.Z -= MaxDistanceToFloor;
 	FCollisionQueryParams QueryParams;
@@ -93,49 +101,72 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 		QueryParams
 	);
 
-	if (bHit)
-	{
-		FVector torque = FVector(0, 0, Steering);
+	return bHit;
+}
 
-		if (bWantsToGoForwardOrBackwards)
-		{
-			FVector force = Chassis->GetForwardVector();
-			force.X *= Speed;
-			force.Y *= Speed;
-			force.Z = HoverAmount;
+void AHoverVehiclePawn::ApplyPlayerMovement()
+{
+	float MovementAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsMovementFramerateCompensation);
+	float RotationAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsRotationFramerateCompensation);
+	if (bWantsToGoForwardOrBackwards)
+	{
+		FVector force = Chassis->GetForwardVector();
+		//force.X *= Speed * PhysicsUpdateTime * SpeedMultiplier;
+		//force.Y *= Speed * PhysicsUpdateTime * SpeedMultiplier;
 		
-			BoxCollision->AddForce(force, "", true);
-		}
+		// Thanks unreal for making physics framerate dependent
+		force.X *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * SpeedMultiplier;
+		force.Y *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * SpeedMultiplier;
+		force.Z = HoverAmount;
+		
+		BoxCollision->AddForce(force, "", true);
+	}
+
+	if (MySteerDirection != ESteerDirection::STRAIGHT)
+	{
+		//FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * SteeringMultiplier);
+		FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * RotationAccountForFramerate * SteeringMultiplier);
 		BoxCollision->AddTorqueInDegrees(torque, "", true);
 	}
+}
 
-	if (MySteerDirection == ESteerDirection::STRAIGHT)
+void AHoverVehiclePawn::RecordPlayerInfo()
+{
+	int32 loopNum = GameMode->GetCurrentLoopNumber();
+		
+	if (loopNum > -1)
 	{
-		//RotationLerp = 0;
-		FVector counterTorque = FVector(0, 0, -1 * Steering);
-		BoxCollision->AddTorqueInDegrees(counterTorque, "", true);
+		GameInstance->PlayerSpeed[loopNum].ArrayOfFloats.Emplace(Speed);
+		GameInstance->PlayerSteering[loopNum].ArrayOfFloats.Emplace(Steering);
+		GameInstance->PlayerWantsToGoForwardOrBackwards[loopNum].ArrayOfBools.Emplace(bWantsToGoForwardOrBackwards);
+		GameInstance->PlayerSteerDirections[loopNum].ArrayOfDirections.Emplace(MySteerDirection);
+		
+		GameInstance->PlayerTransforms[loopNum].ArrayOfTransforms.Emplace(GetActorTransform());
+	}
+}
+
+void AHoverVehiclePawn::UpdateMovementPhysics()
+{
+	if (ShouldApplyMovement())
+	{
+		ApplyPlayerMovement();
 	}
 
-	//Store player transform to game instance for the ghost, every second
-	if (GetWorld()->TimeSeconds - GhostSnapshotTimer >= GhostUpdateSeconds)
+	//Store player info to game instance for the ghost, every second
+	RecordPlayerInfo();
+}
+
+void AHoverVehiclePawn::ApplyLongBoost()
+{
+	if (RemainingLongBoostTime <= 0)
 	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red, TEXT("Storing Position!"));
-		}
-		GameInstance->PlayerPositions.Add(GetActorTransform());
-
-		GameInstance->PlayerSpeed.Add(Speed);
-		GameInstance->PlayerSteering.Add(Steering);
-		GameInstance->PlayerWantsToGoForwardOrBackwards.Add(bWantsToGoForwardOrBackwards);
-		GameInstance->PlayerSteerDirections.Add(MySteerDirection);
-
-		//update timer
-		GhostSnapshotTimer = GetWorld()->TimeSeconds;
+		GetWorldTimerManager().ClearTimer(LongBoostDurationHandle);
 	}
-
-
-	RunCameraEffects();
+	else
+	{
+		Boost(LongBoostStrengthMultiplier);
+		RemainingLongBoostTime = RemainingLongBoostTime - LongBoostUpdateTime;
+	}
 }
 
 // Called to bind functionality to input
@@ -162,6 +193,8 @@ void AHoverVehiclePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnActivateSteer);
 		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Started, this, &AHoverVehiclePawn::OnActivateHandbrake);
 		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnActivateHandbrake);
+		EnhancedInputComponent->BindAction(LookAroundAction, ETriggerEvent::Started, this, &AHoverVehiclePawn::OnActivateSteer);
+		EnhancedInputComponent->BindAction(LookAroundAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnReleaseSteer);
 		
 		EnhancedInputComponent->BindAction(ResetAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateReset);
 		EnhancedInputComponent->BindAction(UseItemAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateUseItem);
@@ -177,6 +210,106 @@ void AHoverVehiclePawn::Boost(float BoostStrength)
 	BoxCollision->AddForce(direction * BoostStrength * baseBoostMultiplier, "", true);
 }
 
+void AHoverVehiclePawn::LongBoost(float BoostStrength, float Duration)
+{
+	if (RemainingLongBoostTime <= 0)
+	{
+		RemainingLongBoostTime = Duration;
+		LongBoostStrengthMultiplier = BoostStrength;
+		GetWorldTimerManager().SetTimer(LongBoostDurationHandle, this, &AHoverVehiclePawn::ApplyLongBoost,
+			LongBoostUpdateTime, true);	
+	}
+}
+
+void AHoverVehiclePawn::EMP(float Duration)
+{
+	if(!IsEMPd) 
+	{
+		IsEMPd = true;
+
+		GetWorldTimerManager().SetTimer(EMPDurationHandle, this, &AHoverVehiclePawn::EndEMP,
+			Duration, false);
+	}	
+}
+
+void AHoverVehiclePawn::EndEMP()
+{
+	IsEMPd = false;
+
+	GetWorldTimerManager().ClearTimer(EMPDurationHandle);
+}
+
+void AHoverVehiclePawn::Inverter(float Duration)
+{
+	if (!IsInverted)
+	{
+		IsInverted = true;
+
+		GetWorldTimerManager().SetTimer(InverterDurationHandle, this, &AHoverVehiclePawn::EndInverter,
+			Duration, false);
+	}
+}
+
+void AHoverVehiclePawn::EndInverter()
+{
+	IsInverted = false;
+
+	GetWorldTimerManager().ClearTimer(InverterDurationHandle);
+}
+
+void AHoverVehiclePawn::StopMovement()
+{
+	Speed = 0;
+	Steering = 0;
+	bWantsToGoForwardOrBackwards = false;
+	MySteerDirection = ESteerDirection::STRAIGHT;
+
+	BoxCollision->SetSimulatePhysics(false);
+	BoxCollision->SetSimulatePhysics(true);
+}
+float AHoverVehiclePawn::GetSpeed()
+{
+	return Speed;
+}
+
+float AHoverVehiclePawn::GetCurrentVelocityInKMPerHour()
+{
+	FVector VelocityVector = GetVelocity();
+
+	double VelocityInCmPerSecond = VelocityVector.Length();
+
+	double VelocityInKMPerHour = VelocityInCmPerSecond * 0.036;
+
+	return VelocityInKMPerHour;
+}
+
+TArray<int> AHoverVehiclePawn::GetItems()
+{
+	TArray<int> Items;
+	Items.Init(1, 2);
+
+	return Items;
+
+}
+
+void AHoverVehiclePawn::AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemClass)
+{
+	if (VehicleItem != nullptr)
+	{
+		VehicleItem->RemoveItem();
+	}
+	
+	UVehicleItems* NewVehicleItem = NewObject<UVehicleItems>(this, VehicleItemClass);
+	if (NewVehicleItem)
+	{
+		NewVehicleItem->RegisterComponent();
+		VehicleItem = NewVehicleItem;
+
+		UE_LOG(LogTemp, Log, TEXT("Added VehicleItem: %s to %s"), *NewVehicleItem->GetName(), *GetName());
+	}
+	
+}
+
 void AHoverVehiclePawn::OnActivateThrottle(const FInputActionValue& value)
 {
 	bWantsToGoForwardOrBackwards = true;
@@ -187,7 +320,6 @@ void AHoverVehiclePawn::OnActivateThrottle(const FInputActionValue& value)
 void AHoverVehiclePawn::OnActivateBrake(const FInputActionValue& value)
 {
 	bWantsToGoForwardOrBackwards = true;
-	const float axisValue = value.Get<float>();
 	Speed *= FMath::Clamp(-1 * BrakeSpeed, -1.0f, -1 * MaxSpeed);
 }
 
@@ -198,11 +330,12 @@ void AHoverVehiclePawn::OnActivateHandbrake(const FInputActionValue& value)
 
 void AHoverVehiclePawn::OnActivateSteer(const FInputActionValue& value)
 {
-	const float axisValue = value.Get<float>();
+	//Invert the controls if affected by inverter
+	const float axisValue = IsInverted ? -value.Get<float>() : value.Get<float>();
 	Steering = SteeringMultiplier * axisValue;
-	
+
 	// Not very clean but if it works
-	if (Speed >= 0)
+	if (Speed >= 0 && !IsInverted)
 	{
 		if (axisValue > 0)
 		{
@@ -239,9 +372,6 @@ void AHoverVehiclePawn::OnActivateReset(const FInputActionValue& value)
 {
 	const float axisValue = value.Get<float>();
 	
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Reset loop"));
-
 	if (axisValue != 0)
 	{
 		if (GameMode)
@@ -261,7 +391,13 @@ void AHoverVehiclePawn::OnActivateUseItem(const FInputActionValue& value)
 	if (axisValue != 0)
 	{
 		// TODO: add use item logic
-		Boost(BoostSpeedMultiplier);
+		
+		//Boost(BoostSpeedMultiplier);
+		
+		if (VehicleItem != nullptr)
+		{
+			VehicleItem->UseItem();
+		}
 	}
 }
 
@@ -355,4 +491,19 @@ void AHoverVehiclePawn::SetFOVSettings(float FOV, float InterpSpeed)
 	float currentFOV = Camera->FieldOfView;
 	float newFOV = UKismetMathLibrary::FInterpTo(currentFOV, FOV, GetWorld()->DeltaTimeSeconds, InterpSpeed);
 	Camera->SetFieldOfView(newFOV);
+}
+
+void AHoverVehiclePawn::AddCoins()
+{
+	Coins++;
+	if (Coins == 10)
+	{
+		Boost(3);
+		Coins = 0;
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Boosted!"));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Coins: %d"), Coins));
+	}
 }

@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MyGameInstance.h"
+#include "PlayerGhostActor.h"
 #include "RaceEndLocation.h"
 #include "RaceStartLocation.h"
 #include "GameFramework/GameModeBase.h"
@@ -21,6 +23,21 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="Loop")
 	int32 NumOfLoops = 5;
+	
+	UPROPERTY(EditAnywhere, Category="Loop")
+	TSubclassOf<APlayerGhostActor> GhostBPClass;
+
+	UPROPERTY(EditAnywhere, Category="Loop")
+	float DelayTimePerLoopForPlayer = 0.2f;
+
+	UPROPERTY(BlueprintReadOnly, Category="Loop")
+	int32 BestLoopTimeInSeconds = TNumericLimits<int32>::Max();
+	
+	UPROPERTY(EditAnywhere, Category="Loop")
+	int32 NumberOfPlayerFailuresTolerated = 3;
+
+	UPROPERTY(BlueprintReadOnly, Category="Loop")
+	int32 CurrentNumberOfPlayerFailures = 0;
 
 protected:
 
@@ -35,7 +52,18 @@ protected:
 private:
 
 	bool bHasInitializedRace = false;
-	int32 CurrentLoopNumber = 0;
+	// The first "active recording" loop number is 0
+	int32 CurrentLoopNumber = -1;
+	
+	TArray<APlayerGhostActor*> Ghosts;
+
+	UMyGameInstance* GameInstance;
+	
+	int32 CurrentLoopTimer = 0;
+	int32 CurrentLoopStartTime = 0;
+	
+	// Used for slowing the player each loop
+	FTimerHandle SlowTimeHandle;
 
 public:
 	
@@ -63,7 +91,16 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category="Loop")
 	void OnFinishThisLoopBP();
 
+	UFUNCTION(BlueprintImplementableEvent, Category="Loop")
+	void OnLoseGameBP();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Loop")
+	int32 GetCurrentLoopTimeInSeconds();
+
 private:
 	bool CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActor*> endActors);
-	
+
+	void SetupPlayerForLoop();
+
+	void OnLoseGame();
 };

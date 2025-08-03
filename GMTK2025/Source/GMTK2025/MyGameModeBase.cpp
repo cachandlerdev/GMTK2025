@@ -2,10 +2,22 @@
 
 
 #include "MyGameModeBase.h"
+
+#include "PlayerGhostActor.h"
 #include "Kismet/GameplayStatics.h"
 
 void AMyGameModeBase::InitRaceLogic()
 {
+	GameInstance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+	if (!GameInstance)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Error: Couldn't get game instance."));
+		}
+	}
+	
 	TArray<AActor*> startActors;
 	TArray<AActor*> endActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ARaceStartLocation::StaticClass(), startActors);
@@ -26,20 +38,53 @@ void AMyGameModeBase::InitRaceLogic()
 			return;
 		}
 
-		CurrentLoopNumber = 0;
+		CurrentLoopNumber = -1;
 		bHasInitializedRace = true;
+		CurrentNumberOfPlayerFailures = 0;
+		GameInstance->ClearPlayerMovementData();
 	}
 }
 
 void AMyGameModeBase::StartNextLoop()
 {
 	CurrentLoopNumber++;
-	APawn* player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	player->SetActorLocation(StartLocation->GetActorLocation());
-	player->SetActorRotation(StartLocation->GetActorRotation());
+	
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,FString::Printf(TEXT("Start loop %i"), CurrentLoopNumber));
+	}
+	
+	GetWorldTimerManager().SetTimer(SlowTimeHandle, this, &AMyGameModeBase::SetupPlayerForLoop,
+		DelayTimePerLoopForPlayer, false);	
 
-	// todo: save player path and create a new ghost
-	// reset all ghosts
+	// Add the data arrays to track this loop
+	GameInstance->InitNewLoopData();
+
+	for (int32 i = 0; i < Ghosts.Num(); i++)
+	{
+		Ghosts[i]->StartNextLoop(StartLocation->GetActorLocation(), StartLocation->GetActorRotation());
+	}
+
+	if (CurrentLoopNumber > 0)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		APlayerGhostActor* newGhost =
+			GetWorld()->SpawnActor<APlayerGhostActor>(GhostBPClass, FVector(0, 0, 0),
+				FRotator(0, 0, 0), SpawnParams);
+		newGhost->SetFollowLoopNumber(CurrentLoopNumber - 1);
+		newGhost->RestartThisLoop(StartLocation->GetActorLocation(), StartLocation->GetActorRotation());
+	
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Added new ghost"));
+		}
+	
+		Ghosts.Add(newGhost);
+	}
+
+	CurrentLoopStartTime = GetWorld()->TimeSeconds;
+
 	// reset coins/items? (tbd)
 
 	OnStartNextLoopBP();
@@ -49,9 +94,30 @@ void AMyGameModeBase::RestartThisLoop()
 {
 	if (bHasInitializedRace)
 	{
-		APawn* player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+		AHoverVehiclePawn* player = Cast<AHoverVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+		if (player)
+		{
+			player->StopMovement();
+		}
+		player->CameraBoom->bEnableCameraLag = false;
+		player->CameraBoom->bEnableCameraRotationLag = false;
 		player->SetActorLocation(StartLocation->GetActorLocation());
 		player->SetActorRotation(StartLocation->GetActorRotation());
+		//player->CameraBoom->bEnableCameraLag = true;
+		//player->CameraBoom->bEnableCameraRotationLag = true;
+		
+		for (int32 i = 0; i < Ghosts.Num(); i++)
+		{
+			Ghosts[i]->RestartThisLoop(StartLocation->GetActorLocation(), StartLocation->GetActorRotation());
+		}
+
+		GameInstance->PlayerSpeed[CurrentLoopNumber].ArrayOfFloats.Reset();
+		GameInstance->PlayerSteering[CurrentLoopNumber].ArrayOfFloats.Reset();
+		GameInstance->PlayerWantsToGoForwardOrBackwards[CurrentLoopNumber].ArrayOfBools.Reset();
+		GameInstance->PlayerSteerDirections[CurrentLoopNumber].ArrayOfDirections.Reset();
+		
+		CurrentLoopStartTime = GetWorld()->TimeSeconds;
+		
 		OnRestartThisLoopBP();
 	}
 }
@@ -60,18 +126,48 @@ void AMyGameModeBase::FinishThisLoop()
 {
 	if (bHasInitializedRace)
 	{
-		// todo: maybe setup some intermediate logic before starting the next loop
-		if (GEngine)
+		int32 playerTime = GetCurrentLoopTimeInSeconds();
+		if (playerTime > BestLoopTimeInSeconds)
 		{
-			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Start next loop"));
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Player lost this round")
+				);
+			}
+			
+			// Player loses one "heart"/"chance"
+			CurrentNumberOfPlayerFailures++;
+			if (CurrentNumberOfPlayerFailures >= NumberOfPlayerFailuresTolerated)
+			{
+				// Player loses game
+				OnLoseGame();
+				return;	
+			}
 		}
+		else
+		{
+			// Player won again
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Player won this round")
+				);
+			}
+			BestLoopTimeInSeconds = playerTime;
+		}
+		
 		OnFinishThisLoopBP();
+		StartNextLoop();
 	}
 }
 
 int32 AMyGameModeBase::GetCurrentLoopNumber()
 {
 	return CurrentLoopNumber;
+}
+
+int32 AMyGameModeBase::GetCurrentLoopTimeInSeconds()
+{
+	return GetWorld()->TimeSeconds - CurrentLoopStartTime;
 }
 
 bool AMyGameModeBase::CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActor*> endActors)
@@ -90,7 +186,7 @@ bool AMyGameModeBase::CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActo
 	{
 		if (GEngine)
 		{
-			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Error: Couldn't find race start location.")
+			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Error: Couldn't find race end location.")
 			);
 		}
 		return false;
@@ -115,4 +211,29 @@ bool AMyGameModeBase::CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActo
 	}
 
 	return true;
+}
+
+void AMyGameModeBase::SetupPlayerForLoop()
+{
+	AHoverVehiclePawn* player = Cast<AHoverVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	if (player)
+	{
+		player->StopMovement();
+		if (StartLocation)
+		{
+			player->SetActorLocation(StartLocation->GetActorLocation());
+			player->SetActorRotation(StartLocation->GetActorRotation());
+		}
+	}
+}
+
+void AMyGameModeBase::OnLoseGame()
+{
+	// todo
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Yellow,TEXT("Player lost. End of race."));
+	}
+	OnLoseGameBP();
 }
