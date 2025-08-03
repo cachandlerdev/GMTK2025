@@ -211,6 +211,13 @@ void AMyGameModeBase::FinishThisLoop()
 				GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Player won this round")
 				);
 			}
+
+			if (CurrentNumberOfPlayerFailures > 0)
+			{
+				// Player recovered, chances reset
+				OnResetCurrentNumOfFailuresBP();
+			}
+			
 			CurrentNumberOfPlayerFailures = 0; // We count consecutive failures
 			BestLoopTimeInSeconds = playerTime;
 		}

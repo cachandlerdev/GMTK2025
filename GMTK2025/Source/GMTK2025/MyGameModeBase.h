@@ -155,6 +155,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category="Loop")
 	void OnLoseGameBP();
 
+	UFUNCTION(BlueprintImplementableEvent, Category="Loop")
+	void OnResetCurrentNumOfFailuresBP();
+
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Loop")
 	int32 GetCurrentLoopTimeInSeconds();
 
