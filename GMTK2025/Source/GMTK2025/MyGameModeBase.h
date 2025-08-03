@@ -10,7 +10,6 @@
 #include "GameFramework/GameModeBase.h"
 #include "MyGameModeBase.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFinishedLapDelegate);
 // To avoid a circular dependency
 /**
  * 
@@ -40,6 +39,43 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Loop")
 	int32 CurrentNumberOfPlayerFailures = 0;
 
+	UPROPERTY(BlueprintReadOnly, Category="Loop")
+	float InitialCountdownDuration = 3.0f;
+
+	// Sound
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* FirstLoopSound;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* NewLoopSound;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* RestartLoopSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* GameLoseSound;
+
+	// Voice lines
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* TutorialVoiceLines;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* SystemInitializingVoiceLine;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* NoRecordedTimesVoiceLine;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* TimeUpdatedVoiceLine;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* RoundLostVoiceLine;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* GameLoseVoiceLine;
+
 protected:
 
 	// There can only be one start location per level.
@@ -65,11 +101,24 @@ private:
 	
 	// Used for slowing the player each loop
 	FTimerHandle SlowTimeHandle;
+	// Used for the initial countdown
+	FTimerHandle FirstLoopCountdownHandle;
+	APlayerController* PlayerController;
+	APawn* PlayerPawn;
 
 public:
 	
 	UFUNCTION(BlueprintCallable, Category="Loop")
 	void InitRaceLogic();
+	
+	UFUNCTION(BlueprintCallable, Category="Loop")
+	void PlayTutorialLines();
+	
+	UFUNCTION(BlueprintCallable, Category="Loop")
+	void StartFirstLoopWithCountdown();
+	
+	UFUNCTION(BlueprintCallable, Category="Loop")
+	void SetLevelBaselineTime(int32 Seconds);
 
 	UFUNCTION(BlueprintCallable, Category="Loop")
 	void StartNextLoop();
@@ -91,19 +140,15 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Loop")
 	void OnFinishThisLoopBP();
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="Loop")
+	void OnLoseRoundBP();
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Loop")
 	void OnLoseGameBP();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Loop")
 	int32 GetCurrentLoopTimeInSeconds();
-
-	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FOnFinishedLapDelegate OnFinishedLapDelegate;
-
-	// Call this when you want to trigger pickup respawn
-	UFUNCTION(BlueprintCallable, Category = "Loop")
-	void LoopFinishedDelegateCalls();
 
 private:
 	bool CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActor*> endActors);

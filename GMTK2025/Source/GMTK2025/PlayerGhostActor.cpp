@@ -3,6 +3,7 @@
 
 #include "PlayerGhostActor.h"
 #include "MyGameInstance.h"
+#include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -32,6 +33,11 @@ APlayerGhostActor::APlayerGhostActor()
 	Chassis->GetBodyInstance()->SetMassOverride(50000.0, true);
 	Chassis->SetLinearDamping(1.0);
 	Chassis->SetAngularDamping(1.0);
+	
+	CarWindComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("CarWindComponent"));
+	CarWindComponent->SetupAttachment(RootComponent);
+	CarEngineLoopComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("CarEngineLoopComponent"));
+	CarEngineLoopComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -190,44 +196,9 @@ void APlayerGhostActor::ReenableCollision()
 {
 	if (GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Reenable collision"));
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Reenable collision"));
 	}
-
-	TArray<AActor*> OverlappingActors;
-	GetOverlappingActors(OverlappingActors);
-
-	bool bStillOverlappingImportantActors = false;
-
-	for (AActor* Actor : OverlappingActors)
-	{
-		if (Actor && (Actor->IsA(APawn::StaticClass()) || Actor->IsA(APlayerGhostActor::StaticClass())))
-		{
-			bStillOverlappingImportantActors = true;
-			break;
-		}
-	}
-
-	if (!bStillOverlappingImportantActors)
-	{
-		BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Collision re-enabled"));
-		}
-	}
-	else
-	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Still overlapping important actors — retrying next tick"));
-		}
-		GetWorld()->GetTimerManager().SetTimerForNextTick(this, &APlayerGhostActor::ReenableCollision);
-	}
-
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Reenable collision finished"));
-	}
+	BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
 }
 
 void APlayerGhostActor::UpdateMovementPhysics()
@@ -271,6 +242,7 @@ bool APlayerGhostActor::ShouldUpdateGhostLocation()
 
 void APlayerGhostActor::Boost(float BoostStrength)
 {
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), EngineShortBoostSound, GetActorLocation());
 	const float baseBoostMultiplier = 100000.0f;
 	FVector direction = RootComponent->GetForwardVector();
 	BoxCollision->AddForce(direction * BoostStrength * baseBoostMultiplier, "", true);
@@ -280,6 +252,7 @@ void APlayerGhostActor::LongBoost(float BoostStrength, float Duration)
 {
 	if (RemainingLongBoostTime <= 0)
 	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), EngineLongBoostSound, GetActorLocation());
 		RemainingLongBoostTime = Duration;
 		LongBoostStrengthMultiplier = BoostStrength;
 		GetWorldTimerManager().SetTimer(LongBoostDurationHandle, this, &APlayerGhostActor::ApplyLongBoost,
@@ -302,10 +275,13 @@ void APlayerGhostActor::ApplyLongBoost()
 
 void APlayerGhostActor::EMP(float Duration)
 {
-	IsEMPd = true;
-
-	GetWorldTimerManager().SetTimer(GhostEMPDurationHandle, this, &APlayerGhostActor::EndEMP,
-		Duration, false);
+	if (!IsEMPd)
+	{
+		IsEMPd = true;
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), SlowDownPadSound, GetActorLocation());
+		GetWorldTimerManager().SetTimer(GhostEMPDurationHandle, this, &APlayerGhostActor::EndEMP,
+			Duration, false);
+	}
 }
 
 void APlayerGhostActor::EndEMP()

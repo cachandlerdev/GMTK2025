@@ -12,7 +12,7 @@ void UChild_VehicleItem_Booster::UseItem()
 	AActor* Player = GetOwner();
 
 	AHoverVehiclePawn* VehiclePawn = Cast<AHoverVehiclePawn>(Player);
-	VehiclePawn->Boost(4.25); //to tweak boost multiplier just change the value in the function here
+	VehiclePawn->Boost(4); //to tweak boost multiplier just change the value in the function here
 
 	RemoveItem();
 }

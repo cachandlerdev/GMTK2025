@@ -37,6 +37,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	UStaticMeshComponent* Chassis;
 
+	// Sound stuff
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	UAudioComponent* CarWindComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	UAudioComponent* CarEngineLoopComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* EngineShortBoostSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* EngineLongBoostSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* SlowDownPadSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* GetCollectableSound;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
 	UBoxComponent* BoxCollision;
 
