@@ -52,16 +52,15 @@ void UMyGameInstance::PlayMusicTrack(USoundBase* Track)
 	float volume = MusicVolume * Track->GetVolumeMultiplier();
 	CurrentAudioComponent = UGameplayStatics::CreateSound2D(GetWorld(), Track,
 		volume, 1, 0.0, nullptr, true);
-	CurrentAudioComponent->bIsUISound = true;
-	if (CurrentAudioComponent == nullptr)
+	if (CurrentAudioComponent != nullptr)
 	{
-		return;
-	}
-	CurrentAudioComponent->OnAudioFinished.AddDynamic(this, &UMyGameInstance::GoToNextMusicTrack);
+		CurrentAudioComponent->bIsUISound = true;
+		CurrentAudioComponent->OnAudioFinished.AddDynamic(this, &UMyGameInstance::GoToNextMusicTrack);
 
-	CurrentAudioComponent->bAutoActivate = false;
-	CurrentAudioComponent->RegisterComponentWithWorld(GetWorld());
-	CurrentAudioComponent->Play(0.0);
+		CurrentAudioComponent->bAutoActivate = false;
+		CurrentAudioComponent->RegisterComponentWithWorld(GetWorld());
+		CurrentAudioComponent->Play(0.0);
+	}
 }
 
 void UMyGameInstance::PauseMusic()
