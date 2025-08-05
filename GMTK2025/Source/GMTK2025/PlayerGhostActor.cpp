@@ -94,11 +94,6 @@ void APlayerGhostActor::StartNextLoop(FVector StartLocation, FRotator StartRotat
 
 void APlayerGhostActor::RestartThisLoop(FVector StartLocation, FRotator StartRotation)
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Disable collision"));
-	}
-
 	BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
 
 	GetWorldTimerManager().SetTimer(CollisionHandle, this, &APlayerGhostActor::ReenableCollision,
@@ -106,8 +101,10 @@ void APlayerGhostActor::RestartThisLoop(FVector StartLocation, FRotator StartRot
 	
 	BoxCollision->SetPhysicsLinearVelocity(FVector(0, 0, 0));
 	BoxCollision->SetPhysicsAngularVelocityInDegrees(FVector(0, 0, 0));
-	
-	SetActorLocation(StartLocation);
+
+	FVector newLocation = StartLocation;
+	newLocation.Z += BoxCollision->GetScaledBoxExtent().Z;
+	SetActorLocation(newLocation);
 	SetActorRotation(StartRotation);
 	
 	CurrentFollowIndex = 0;

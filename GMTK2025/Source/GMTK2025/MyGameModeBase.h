@@ -114,6 +114,8 @@ private:
 	APlayerController* PlayerController;
 	APawn* PlayerPawn;
 
+	// Used to play the lose sound effect.
+	FTimerHandle GameLoseSoundDelayHandle;
 public:
 	
 	UFUNCTION(BlueprintCallable, Category="Loop")
@@ -166,5 +168,9 @@ private:
 
 	void SetupPlayerForLoop();
 
+	void PlayLoseSound();
 	void OnLoseGame();
+	void MovePawnToStart(APawn* Pawn);
+
+	void AddNewGhost();
 };
