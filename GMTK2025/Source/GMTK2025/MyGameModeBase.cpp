@@ -121,7 +121,7 @@ void AMyGameModeBase::StartNextLoop()
 
 void AMyGameModeBase::RestartThisLoop()
 {
-	if (bHasInitializedRace)
+	if (bHasInitializedRace && CurrentLoopNumber >= 0)
 	{
 		SetupPlayerForLoop();
 		
