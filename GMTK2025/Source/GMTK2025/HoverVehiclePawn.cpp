@@ -247,7 +247,6 @@ void AHoverVehiclePawn::LongBoost(float BoostStrength, float Duration)
 
 void AHoverVehiclePawn::EMP(float Duration)
 {
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), SlowDownPadSound, GetActorLocation());
 	if(!IsEMPd) 
 	{
 		IsEMPd = true;
