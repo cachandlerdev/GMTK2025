@@ -11,6 +11,7 @@
 #include "Components/BoxComponent.h"
 #include "MyEnums.h"
 #include "MyGameInstance.h"
+#include "NiagaraComponent.h"
 #include "VehicleItems.h"
 #include "Components/SphereComponent.h"
 #include "HoverVehiclePawn.generated.h"
@@ -42,6 +43,11 @@ public:
 	USphereComponent* FrontSphere;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	USphereComponent* BackSphere;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Thrusters")
+	UNiagaraComponent* RightThrusterParticleComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Thrusters")
+	UNiagaraComponent* LeftThrusterParticleComponent;
 
 	// Sound stuff
 	
