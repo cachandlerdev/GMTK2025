@@ -335,18 +335,14 @@ void AHoverVehiclePawn::AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemCla
 	{
 		VehicleItem->RemoveItem();
 	}
-	if (GEngine)
-	{
-		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s"), VehicleItemClass->GetName());
-	}
 	
 	UVehicleItems* NewVehicleItem = NewObject<UVehicleItems>(this, VehicleItemClass);
 	if (NewVehicleItem)
 	{
 		NewVehicleItem->RegisterComponent();
 		VehicleItem = NewVehicleItem;
-
-		UE_LOG(LogTemp, Log, TEXT("Added VehicleItem: %s to %s"), *NewVehicleItem->GetName(), *GetName());
+		
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), GetCollectableSound, GetActorLocation());
 	}
 	
 }
