@@ -7,6 +7,7 @@
 
 void UChild_VehicleItem_MolecularShift::UseItem()
 {
+	Super::UseItem();
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerGhostActor::StaticClass(), FoundActors);
 
