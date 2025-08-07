@@ -56,6 +56,18 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
 	
+	RightThrusterParticleComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("RightThruster"));
+	RightThrusterParticleComponent->SetupAttachment(Chassis);
+	RightThrusterParticleComponent->SetRelativeLocation(FVector(-278.666667,34.333334,85.666667));
+	RightThrusterParticleComponent->SetRelativeRotation(FRotator(180, 0, 0));
+	RightThrusterParticleComponent->SetRelativeScale3D(FVector(0.5));
+	
+	LeftThrusterParticleComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("LeftThruster"));
+	LeftThrusterParticleComponent->SetupAttachment(Chassis);
+	LeftThrusterParticleComponent->SetRelativeLocation(FVector(-278.666667,-27.666667,85.666667));
+	LeftThrusterParticleComponent->SetRelativeRotation(FRotator(180, 0, 0));
+	LeftThrusterParticleComponent->SetRelativeScale3D(FVector(0.5));
+	
 	CameraBoom->bUsePawnControlRotation = false;
 	CameraBoom->bInheritYaw = true;
 	CameraBoom->bInheritPitch = false;
@@ -247,7 +259,6 @@ void AHoverVehiclePawn::LongBoost(float BoostStrength, float Duration)
 
 void AHoverVehiclePawn::EMP(float Duration)
 {
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), SlowDownPadSound, GetActorLocation());
 	if(!IsEMPd) 
 	{
 		IsEMPd = true;
@@ -324,18 +335,14 @@ void AHoverVehiclePawn::AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemCla
 	{
 		VehicleItem->RemoveItem();
 	}
-	if (GEngine)
-	{
-		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s"), VehicleItemClass->GetName());
-	}
 	
 	UVehicleItems* NewVehicleItem = NewObject<UVehicleItems>(this, VehicleItemClass);
 	if (NewVehicleItem)
 	{
 		NewVehicleItem->RegisterComponent();
 		VehicleItem = NewVehicleItem;
-
-		UE_LOG(LogTemp, Log, TEXT("Added VehicleItem: %s to %s"), *NewVehicleItem->GetName(), *GetName());
+		
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), GetCollectableSound, GetActorLocation());
 	}
 	
 }

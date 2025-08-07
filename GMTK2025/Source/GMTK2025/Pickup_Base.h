@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "NiagaraComponent.h"
 #include "Pickup_Base.generated.h"
 
 UCLASS()
@@ -17,6 +18,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	USoundBase* PickupSound;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UNiagaraComponent* ParticleComponent;
 
 protected:
 	// Called when the game starts or when spawned
