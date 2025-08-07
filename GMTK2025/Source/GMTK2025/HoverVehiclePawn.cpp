@@ -41,6 +41,8 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 	Chassis->GetBodyInstance()->SetMassOverride(50000.0, true);
 	Chassis->SetLinearDamping(1.0);
 	Chassis->SetAngularDamping(1.0);
+	Chassis->SetUsingAbsoluteRotation(true);
+	Chassis->SetUsingAbsoluteLocation(true);
 
 	// Suspension
 	FrontRightSuspensionPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("FrontRightSuspensionPoint"));
@@ -124,6 +126,9 @@ void AHoverVehiclePawn::BeginPlay()
 
 	GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &AHoverVehiclePawn::UpdateMovementPhysics,
 		PhysicsUpdateTime, true);
+
+	Chassis->SetWorldLocation(RootComponent->GetComponentLocation());
+	Chassis->SetWorldRotation(RootComponent->GetComponentRotation());
 }
 
 // Called every frame
@@ -131,10 +136,13 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FRotator newRotation = Chassis->GetRelativeRotation();
-	newRotation.Roll += DeltaTime * RotateSpeed;
-	Chassis->SetRelativeRotation(newRotation);
-
+	// Make car rotate slightly over time
+	//FRotator newRotation = Chassis->GetRelativeRotation();
+	//newRotation.Roll += DeltaTime * RotateSpeed;
+	//Chassis->SetRelativeRotation(newRotation);
+	
+	LerpChassisToRoot(DeltaTime);
+	
 	RunCameraEffects();
 }
 
@@ -162,6 +170,11 @@ bool AHoverVehiclePawn::ShouldApplyMovement()
 		QueryParams
 	);
 
+	if (bHit)
+	{
+		FloorSurfaceNormal = HitResult.ImpactNormal;
+	}
+
 	return bHit;
 }
 
@@ -171,11 +184,15 @@ void AHoverVehiclePawn::ApplyPlayerMovement()
 	float RotationAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsRotationFramerateCompensation);
 	if (bWantsToGoForwardOrBackwards)
 	{
-		FVector force = Chassis->GetForwardVector();
+		// Always apply the force parallel to the floor axis.
+		FVector forwardVector = Chassis->GetForwardVector();
+		FVector force = FVector::VectorPlaneProject(forwardVector, FloorSurfaceNormal);
+
 		//force.X *= Speed * PhysicsUpdateTime * SpeedMultiplier;
 		//force.Y *= Speed * PhysicsUpdateTime * SpeedMultiplier;
 		
 		// Thanks unreal for making physics framerate dependent
+		// TODO: find a less hacky way of doing this
 		force.X *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * SpeedMultiplier;
 		force.Y *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * SpeedMultiplier;
 		force.Z = HoverAmount;
@@ -213,7 +230,7 @@ void AHoverVehiclePawn::UpdateMovementPhysics()
 		ApplyPlayerMovement();
 	}
 	ApplySuspension();
-
+	
 	//Store player info to game instance for the ghost, every second
 	RecordPlayerInfo();
 }
@@ -346,7 +363,7 @@ void AHoverVehiclePawn::ApplySuspension()
 	ApplySuspensionForceOnPoint(backLeftStartLocation, backLeftEndLocation, BackLeftSuspensionPoint);
 }
 
-void AHoverVehiclePawn::ApplySuspensionForceOnPoint(FVector StartLocation, FVector EndLocation, UArrowComponent* Source)
+void AHoverVehiclePawn::ApplySuspensionForceOnPoint(const FVector& StartLocation, const FVector& EndLocation, UArrowComponent* Source)
 {
 	FHitResult hitResult;
 	FCollisionQueryParams queryParams;
@@ -374,7 +391,7 @@ void AHoverVehiclePawn::ApplySuspensionForceOnPoint(FVector StartLocation, FVect
 		// v is the velocity at the given point.
 		
 		// Calculate compression ratio
-		float compression = 1 - (hitResult.Distance / SuspensionLength); // accounts for the -kx
+		float compression = 1 - (hitResult.Distance / SuspensionLength); // accounts for the -x
 		float pointVelocity = Source->GetComponentVelocity().Z;
 		
 		float force = (compression * SuspensionStiffness) - (SuspensionDamping * pointVelocity);
@@ -383,6 +400,29 @@ void AHoverVehiclePawn::ApplySuspensionForceOnPoint(FVector StartLocation, FVect
 	}
 
 	//DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 1.0f, 0, 1.0f);
+}
+
+void AHoverVehiclePawn::LerpChassisToRoot(float DeltaTime)
+{
+	// Lerp to root component to make rotation smoother
+	FRotator currentRotation = Chassis->GetComponentRotation();
+	FRotator targetRotation = BoxCollision->GetComponentRotation();
+	FRotator newRotation = UKismetMathLibrary::RLerp(currentRotation, targetRotation, DeltaTime * ChassisRotationLerpSpeed, true);
+	Chassis->SetWorldRotation(newRotation);
+
+	// Lerp location as well
+	FVector currentLocation = Chassis->GetComponentLocation();
+	FVector targetLocation = BoxCollision->GetComponentLocation();
+	float newX = FMath::Lerp(currentLocation.X, targetLocation.X, DeltaTime * ChassisXYLerpSpeed);
+	float newY = FMath::Lerp(currentLocation.Y, targetLocation.Y, DeltaTime * ChassisXYLerpSpeed);
+	float newZ = FMath::Lerp(currentLocation.Z, targetLocation.Z + HoverAmount, DeltaTime * ChassisZLerpSpeed);
+
+	//newX = FMath::Clamp(newX, currentLocation.X - LerpChassisLocationTolerance, currentLocation.X + LerpChassisLocationTolerance);
+	//newY = FMath::Clamp(newY, currentLocation.Y - LerpChassisLocationTolerance, currentLocation.Y + LerpChassisLocationTolerance);
+	//newZ = FMath::Clamp(newZ, currentLocation.Z - LerpChassisLocationTolerance, currentLocation.Z + LerpChassisLocationTolerance);
+	
+	FVector newLocation = FVector(newX, newY, newZ);
+	Chassis->SetWorldLocation(newLocation);
 }
 
 void AHoverVehiclePawn::StopMovement()

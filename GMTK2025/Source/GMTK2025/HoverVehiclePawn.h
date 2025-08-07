@@ -54,7 +54,8 @@ public:
 	UArrowComponent* FrontRightSuspensionPoint;
 	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
 	UArrowComponent* FrontLeftSuspensionPoint;
-	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
+	//UPROPERTY(BlueprintReadOnly, Category = "Suspension")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
 	UArrowComponent* BackRightSuspensionPoint;
 	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
 	UArrowComponent* BackLeftSuspensionPoint;
@@ -119,6 +120,17 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float HoverAmount = 150.0f;
+
+	// Lerp chassis
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleLerp")
+	float ChassisRotationLerpSpeed = 5.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleLerp")
+	float ChassisXYLerpSpeed = 5.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleLerp")
+	float ChassisZLerpSpeed = 5.0f;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleLerp")
+	//float LerpChassisLocationTolerance = 500.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float FastVelocityThreshold = 500.0f;
@@ -230,6 +242,10 @@ private:
 
 	bool IsInverted = false;
 	FTimerHandle InverterDurationHandle;
+
+	// This is the normal vector for the ground beneath the player. Used to ensure force when moving is applied
+	// parallel to the ground.
+	FVector FloorSurfaceNormal;
 	
 public:	
 	// Called every frame
@@ -296,5 +312,7 @@ private:
 	
 	void ApplySuspension();
 
-	void ApplySuspensionForceOnPoint(FVector StartLocation, FVector EndLocation, UArrowComponent* Source);
+	void ApplySuspensionForceOnPoint(const FVector& StartLocation, const FVector& EndLocation, UArrowComponent* Source);
+
+	void LerpChassisToRoot(float DeltaTime);
 };

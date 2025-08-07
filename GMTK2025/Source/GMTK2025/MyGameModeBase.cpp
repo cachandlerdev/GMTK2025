@@ -239,11 +239,11 @@ void AMyGameModeBase::SetupPlayerForLoop()
 	if (player)
 	{
 		player->StopMovement();
-		player->CameraBoom->bEnableCameraLag = false;
-		player->CameraBoom->bEnableCameraRotationLag = false;
+		//player->CameraBoom->bEnableCameraLag = false;
+		//player->CameraBoom->bEnableCameraRotationLag = false;
 		MovePawnToStart(player);
-		player->CameraBoom->bEnableCameraLag = true;
-		player->CameraBoom->bEnableCameraRotationLag = true;
+		//player->CameraBoom->bEnableCameraLag = true;
+		//player->CameraBoom->bEnableCameraRotationLag = true;
 	}
 }
 
