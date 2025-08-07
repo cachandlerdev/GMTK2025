@@ -14,6 +14,7 @@
 #include "NiagaraComponent.h"
 #include "VehicleItems.h"
 #include "Components/SphereComponent.h"
+#include "Components/ArrowComponent.h"
 #include "HoverVehiclePawn.generated.h"
 
 class AMyGameModeBase;
@@ -49,6 +50,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Thrusters")
 	UNiagaraComponent* LeftThrusterParticleComponent;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
+	UArrowComponent* FrontRightSuspensionPoint;
+	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
+	UArrowComponent* FrontLeftSuspensionPoint;
+	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
+	UArrowComponent* BackRightSuspensionPoint;
+	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
+	UArrowComponent* BackLeftSuspensionPoint;
+
 	// Sound stuff
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
@@ -73,6 +83,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float SpeedMultiplier = 2500.0;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float RotateSpeed = 50.0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float MaxSpeed = 4000.0f;
@@ -85,6 +98,20 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float LongBoostUpdateTime = 0.1f;
+
+	// Suspension
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
+	float CenterOfMassOffset = 100.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
+	float SuspensionLength = 50.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
+	float SuspensionStiffness = 100000.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
+	float SuspensionDamping = 100.0f;
 	
 	// 1.0 lets it stop on a dime, 0 makes it never stop.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
@@ -266,4 +293,8 @@ private:
 	void EndEMP();
 
 	void EndInverter();
+	
+	void ApplySuspension();
+
+	void ApplySuspensionForceOnPoint(FVector StartLocation, FVector EndLocation, UArrowComponent* Source);
 };
