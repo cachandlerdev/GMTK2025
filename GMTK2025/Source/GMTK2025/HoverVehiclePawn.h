@@ -54,8 +54,7 @@ public:
 	UArrowComponent* FrontRightSuspensionPoint;
 	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
 	UArrowComponent* FrontLeftSuspensionPoint;
-	//UPROPERTY(BlueprintReadOnly, Category = "Suspension")
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
+	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
 	UArrowComponent* BackRightSuspensionPoint;
 	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
 	UArrowComponent* BackLeftSuspensionPoint;
@@ -129,8 +128,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleLerp")
 	float ChassisZLerpSpeed = 5.0f;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleLerp")
-	//float LerpChassisLocationTolerance = 500.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleLerp")
+	float LerpChassisLocationTolerance = 800.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float FastVelocityThreshold = 500.0f;
