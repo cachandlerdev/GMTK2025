@@ -2,13 +2,16 @@
 
 
 #include "Pickup_Base.h"
+#include "NiagaraComponent.h"
 
 // Sets default values
 APickup_Base::APickup_Base()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
+	ParticleComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ParticleComponent"));
+	ParticleComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned

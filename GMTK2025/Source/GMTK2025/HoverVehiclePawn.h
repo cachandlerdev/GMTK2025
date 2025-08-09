@@ -11,7 +11,9 @@
 #include "Components/BoxComponent.h"
 #include "MyEnums.h"
 #include "MyGameInstance.h"
+#include "NiagaraComponent.h"
 #include "VehicleItems.h"
+#include "Components/SphereComponent.h"
 #include "HoverVehiclePawn.generated.h"
 
 class AMyGameModeBase;
@@ -36,6 +38,16 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	UStaticMeshComponent* Chassis;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	USphereComponent* FrontSphere;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	USphereComponent* BackSphere;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Thrusters")
+	UNiagaraComponent* RightThrusterParticleComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Thrusters")
+	UNiagaraComponent* LeftThrusterParticleComponent;
 
 	// Sound stuff
 	
@@ -231,10 +243,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
 	void AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemClass);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Item")
 	UVehicleItems* VehicleItem;
 
 	UFUNCTION(BlueprintCallable, Category = "Coins")
 	void AddCoins();
+	
+	UFUNCTION(BlueprintImplementableEvent, Category = "Items")
+	void OnUseItemBP(UVehicleItems* Item);
 
 private:
 	bool ShouldApplyMovement();

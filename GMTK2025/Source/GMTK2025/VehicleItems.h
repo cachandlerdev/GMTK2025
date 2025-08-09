@@ -24,6 +24,16 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UTexture2D* Icon;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	FString ItemName;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	USoundBase* UseSound;
+
 	UFUNCTION(BlueprintCallable, Category = "UseItem")
 	virtual void UseItem();
 

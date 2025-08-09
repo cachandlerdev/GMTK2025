@@ -45,17 +45,54 @@ void AMyGameModeBase::InitRaceLogic()
 	}
 }
 
-void AMyGameModeBase::StartNextLoop()
+void AMyGameModeBase::PlayTutorialLines()
 {
-	CurrentLoopNumber++;
-	
-	if (GEngine)
+	UGameplayStatics::PlaySound2D(GetWorld(), TutorialVoiceLines);
+}
+
+void AMyGameModeBase::StartFirstLoopWithCountdown()
+{
+	// Disable player controls
+	// Play countdown timer
+	// Display UI stuff (via the blueprint)
+	// Have a timer that waits before then calling start next loop
+
+	PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (PlayerController)
 	{
-		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,FString::Printf(TEXT("Start loop %i"), CurrentLoopNumber));
+		PlayerPawn = PlayerController->GetPawn();
+		if (PlayerPawn)
+		{
+			PlayerPawn->DisableInput(PlayerController);
+		}
 	}
 	
-	GetWorldTimerManager().SetTimer(SlowTimeHandle, this, &AMyGameModeBase::SetupPlayerForLoop,
-		DelayTimePerLoopForPlayer, false);	
+	SetupPlayerForLoop();
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), FirstLoopSound, PlayerPawn->GetActorLocation(), PlayerPawn->GetActorRotation());
+	
+	GetWorldTimerManager().SetTimer(FirstLoopCountdownHandle, this, &AMyGameModeBase::StartNextLoop,
+		InitialCountdownDuration, false);	
+}
+
+void AMyGameModeBase::SetLevelBaselineTime(int32 Seconds)
+{
+	if (Seconds > 0)
+	{
+		BestLoopTimeInSeconds = Seconds;
+	}
+}
+
+void AMyGameModeBase::StartNextLoop()
+{
+	if (PlayerController && PlayerPawn)
+	{
+		if (!PlayerPawn->InputEnabled())
+		{
+			PlayerPawn->EnableInput(PlayerController);
+		}
+	}
+	CurrentLoopNumber++;
+	SetupPlayerForLoop();
 
 	// Add the data arrays to track this loop
 	GameInstance->InitNewLoopData();
@@ -67,20 +104,12 @@ void AMyGameModeBase::StartNextLoop()
 
 	if (CurrentLoopNumber > 0)
 	{
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		APlayerGhostActor* newGhost =
-			GetWorld()->SpawnActor<APlayerGhostActor>(GhostBPClass, FVector(0, 0, 0),
-				FRotator(0, 0, 0), SpawnParams);
-		newGhost->SetFollowLoopNumber(CurrentLoopNumber - 1);
-		newGhost->RestartThisLoop(StartLocation->GetActorLocation(), StartLocation->GetActorRotation());
-	
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Added new ghost"));
-		}
-	
-		Ghosts.Add(newGhost);
+		AddNewGhost();
+		UGameplayStatics::PlaySound2D(GetWorld(), NewLoopSound);
+	}
+	else
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), NoRecordedTimesVoiceLine);
 	}
 
 	CurrentLoopStartTime = GetWorld()->TimeSeconds;
@@ -92,19 +121,9 @@ void AMyGameModeBase::StartNextLoop()
 
 void AMyGameModeBase::RestartThisLoop()
 {
-	if (bHasInitializedRace)
+	if (bHasInitializedRace && CurrentLoopNumber >= 0)
 	{
-		AHoverVehiclePawn* player = Cast<AHoverVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-		if (player)
-		{
-			player->StopMovement();
-		}
-		player->CameraBoom->bEnableCameraLag = false;
-		player->CameraBoom->bEnableCameraRotationLag = false;
-		player->SetActorLocation(StartLocation->GetActorLocation());
-		player->SetActorRotation(StartLocation->GetActorRotation());
-		//player->CameraBoom->bEnableCameraLag = true;
-		//player->CameraBoom->bEnableCameraRotationLag = true;
+		SetupPlayerForLoop();
 		
 		for (int32 i = 0; i < Ghosts.Num(); i++)
 		{
@@ -117,6 +136,8 @@ void AMyGameModeBase::RestartThisLoop()
 		GameInstance->PlayerSteerDirections[CurrentLoopNumber].ArrayOfDirections.Reset();
 		
 		CurrentLoopStartTime = GetWorld()->TimeSeconds;
+		
+		UGameplayStatics::PlaySound2D(GetWorld(), RestartLoopSound);
 		LoopFinishedDelegateCalls();
 		OnRestartThisLoopBP();
 	}
@@ -129,12 +150,6 @@ void AMyGameModeBase::FinishThisLoop()
 		int32 playerTime = GetCurrentLoopTimeInSeconds();
 		if (playerTime > BestLoopTimeInSeconds)
 		{
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Player lost this round")
-				);
-			}
-			
 			// Player loses one "heart"/"chance"
 			CurrentNumberOfPlayerFailures++;
 			if (CurrentNumberOfPlayerFailures >= NumberOfPlayerFailuresTolerated)
@@ -143,15 +158,20 @@ void AMyGameModeBase::FinishThisLoop()
 				OnLoseGame();
 				return;	
 			}
+			
+			// Player keeps going
+			OnLoseRoundBP();
+			UGameplayStatics::PlaySound2D(GetWorld(), RoundLostVoiceLine);
 		}
 		else
 		{
 			// Player won again
-			if (GEngine)
+			if (CurrentNumberOfPlayerFailures > 0)
 			{
-				GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Player won this round")
-				);
+				// Player recovered, chances reset
+				OnResetCurrentNumOfFailuresBP();
 			}
+			CurrentNumberOfPlayerFailures = 0; // We count consecutive failures
 			BestLoopTimeInSeconds = playerTime;
 		}
 		
@@ -219,24 +239,55 @@ void AMyGameModeBase::SetupPlayerForLoop()
 	if (player)
 	{
 		player->StopMovement();
-		if (StartLocation)
-		{
-			player->SetActorLocation(StartLocation->GetActorLocation());
-			player->SetActorRotation(StartLocation->GetActorRotation());
-		}
+		player->CameraBoom->bEnableCameraLag = false;
+		player->CameraBoom->bEnableCameraRotationLag = false;
+		MovePawnToStart(player);
+		player->CameraBoom->bEnableCameraLag = true;
+		player->CameraBoom->bEnableCameraRotationLag = true;
 	}
+}
+
+void AMyGameModeBase::PlayLoseSound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), GameLoseSound);
 }
 
 void AMyGameModeBase::OnLoseGame()
 {
 	// todo
 
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Yellow,TEXT("Player lost. End of race."));
-	}
+	UGameplayStatics::PlaySound2D(GetWorld(), GameLoseVoiceLine);
+	GetWorldTimerManager().SetTimer(GameLoseSoundDelayHandle, this, &AMyGameModeBase::PlayLoseSound,
+		GameLoseVoiceLine->GetDuration(), false);	
+
+	bHasInitializedRace = false;
 	OnLoseGameBP();
 }
+
+void AMyGameModeBase::MovePawnToStart(APawn* Pawn)
+{
+	if (StartLocation)
+	{
+		FVector newLocation = StartLocation->GetActorLocation();
+		newLocation.Z += Pawn->GetDefaultHalfHeight();
+		Pawn->SetActorLocation(newLocation);
+		Pawn->SetActorRotation(StartLocation->GetActorRotation());
+	}
+}
+
+void AMyGameModeBase::AddNewGhost()
+{
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	APlayerGhostActor* newGhost =
+		GetWorld()->SpawnActor<APlayerGhostActor>(GhostBPClass, FVector(0, 0, 0),
+			FRotator(0, 0, 0), SpawnParams);
+	newGhost->SetFollowLoopNumber(CurrentLoopNumber - 1);
+	newGhost->RestartThisLoop(StartLocation->GetActorLocation(), StartLocation->GetActorRotation());
+	
+	Ghosts.Add(newGhost);
+}
+
 void AMyGameModeBase::LoopFinishedDelegateCalls()
 {
 	OnFinishedLapDelegate.Broadcast();

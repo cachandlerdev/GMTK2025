@@ -15,11 +15,24 @@ APlayerGhostActor::APlayerGhostActor()
 	
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 	SetRootComponent(BoxCollision);
-	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
+	BoxCollision->SetBoxExtent(FVector(132.808112f, 79.510442, 86.426227));
 	BoxCollision->SetSimulatePhysics(false);
 	BoxCollision->SetCollisionProfileName(TEXT("Vehicle"));
 	BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
 	BoxCollision->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	
+	// spheres
+	FrontSphere = CreateDefaultSubobject<USphereComponent>(TEXT("FrontSphereCollision"));
+	FrontSphere->SetSphereRadius(90.0f);
+	FrontSphere->SetupAttachment(BoxCollision);
+	FrontSphere->SetGenerateOverlapEvents(false);
+	FrontSphere->SetRelativeLocation(FVector(106.0f, 0.0f, 0.0f));
+	
+	BackSphere = CreateDefaultSubobject<USphereComponent>(TEXT("BackSphereCollision"));
+	BackSphere->SetSphereRadius(90.0f);
+	BackSphere->SetupAttachment(BoxCollision);
+	BackSphere->SetGenerateOverlapEvents(false);
+	BackSphere->SetRelativeLocation(FVector(-133.0f, 0.0f, 0.0f));
 
 	Chassis = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Chassis"));
 	Chassis->SetSimulatePhysics(false);
@@ -81,11 +94,6 @@ void APlayerGhostActor::StartNextLoop(FVector StartLocation, FRotator StartRotat
 
 void APlayerGhostActor::RestartThisLoop(FVector StartLocation, FRotator StartRotation)
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Disable collision"));
-	}
-
 	BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
 
 	GetWorldTimerManager().SetTimer(CollisionHandle, this, &APlayerGhostActor::ReenableCollision,
@@ -93,11 +101,14 @@ void APlayerGhostActor::RestartThisLoop(FVector StartLocation, FRotator StartRot
 	
 	BoxCollision->SetPhysicsLinearVelocity(FVector(0, 0, 0));
 	BoxCollision->SetPhysicsAngularVelocityInDegrees(FVector(0, 0, 0));
-	
-	SetActorLocation(StartLocation);
+
+	FVector newLocation = StartLocation;
+	newLocation.Z += BoxCollision->GetScaledBoxExtent().Z;
+	SetActorLocation(newLocation);
 	SetActorRotation(StartRotation);
 	
 	CurrentFollowIndex = 0;
+	OnRestartLoopBP();
 }
 
 void APlayerGhostActor::ApplyGhostPhysicsMovement(int32 FollowIndex)
@@ -196,44 +207,10 @@ void APlayerGhostActor::ReenableCollision()
 {
 	if (GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Reenable collision"));
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Reenable collision"));
 	}
-
-	TArray<AActor*> OverlappingActors;
-	GetOverlappingActors(OverlappingActors);
-
-	bool bStillOverlappingImportantActors = false;
-
-	for (AActor* Actor : OverlappingActors)
-	{
-		if (Actor && (Actor->IsA(APawn::StaticClass()) || Actor->IsA(APlayerGhostActor::StaticClass())))
-		{
-			bStillOverlappingImportantActors = true;
-			break;
-		}
-	}
-
-	if (!bStillOverlappingImportantActors)
-	{
-		BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Collision re-enabled"));
-		}
-	}
-	else
-	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Still overlapping important actors — retrying next tick"));
-		}
-		GetWorld()->GetTimerManager().SetTimerForNextTick(this, &APlayerGhostActor::ReenableCollision);
-	}
-
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Reenable collision finished"));
-	}
+	BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
+	OnReenableCollisionBP();
 }
 
 void APlayerGhostActor::UpdateMovementPhysics()

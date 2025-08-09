@@ -21,7 +21,7 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 	RootComponent = BoxCollision;
-	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
+	BoxCollision->SetBoxExtent(FVector(132.808112f, 79.510442, 86.426227));
 	BoxCollision->SetSimulatePhysics(true);
 	BoxCollision->SetCollisionProfileName(TEXT("Vehicle"));
 	BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
@@ -36,11 +36,36 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 	Chassis->SetLinearDamping(1.0);
 	Chassis->SetAngularDamping(1.0);
 
+	// spheres
+	FrontSphere = CreateDefaultSubobject<USphereComponent>(TEXT("FrontSphereCollision"));
+	FrontSphere->SetSphereRadius(90.0f);
+	FrontSphere->SetupAttachment(BoxCollision);
+	FrontSphere->SetGenerateOverlapEvents(false);
+	FrontSphere->SetRelativeLocation(FVector(106.0f, 0.0f, 0.0f));
+	
+	BackSphere = CreateDefaultSubobject<USphereComponent>(TEXT("BackSphereCollision"));
+	BackSphere->SetSphereRadius(90.0f);
+	BackSphere->SetupAttachment(BoxCollision);
+	BackSphere->SetGenerateOverlapEvents(false);
+	BackSphere->SetRelativeLocation(FVector(-133.0f, 0.0f, 0.0f));
+
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
+	
+	RightThrusterParticleComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("RightThruster"));
+	RightThrusterParticleComponent->SetupAttachment(Chassis);
+	RightThrusterParticleComponent->SetRelativeLocation(FVector(-278.666667,34.333334,85.666667));
+	RightThrusterParticleComponent->SetRelativeRotation(FRotator(180, 0, 0));
+	RightThrusterParticleComponent->SetRelativeScale3D(FVector(0.5));
+	
+	LeftThrusterParticleComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("LeftThruster"));
+	LeftThrusterParticleComponent->SetupAttachment(Chassis);
+	LeftThrusterParticleComponent->SetRelativeLocation(FVector(-278.666667,-27.666667,85.666667));
+	LeftThrusterParticleComponent->SetRelativeRotation(FRotator(180, 0, 0));
+	LeftThrusterParticleComponent->SetRelativeScale3D(FVector(0.5));
 	
 	CameraBoom->bUsePawnControlRotation = false;
 	CameraBoom->bInheritYaw = true;
@@ -164,7 +189,10 @@ void AHoverVehiclePawn::ApplyLongBoost()
 	}
 	else
 	{
-		Boost(LongBoostStrengthMultiplier);
+		const float baseBoostMultiplier = 100000.0f;
+		FVector direction = RootComponent->GetForwardVector();
+		BoxCollision->AddForce(direction * LongBoostStrengthMultiplier * baseBoostMultiplier, "", true);
+		
 		RemainingLongBoostTime = RemainingLongBoostTime - LongBoostUpdateTime;
 	}
 }
@@ -304,8 +332,8 @@ void AHoverVehiclePawn::AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemCla
 	{
 		NewVehicleItem->RegisterComponent();
 		VehicleItem = NewVehicleItem;
-
-		UE_LOG(LogTemp, Log, TEXT("Added VehicleItem: %s to %s"), *NewVehicleItem->GetName(), *GetName());
+		
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), GetCollectableSound, GetActorLocation());
 	}
 	
 }
@@ -385,17 +413,13 @@ void AHoverVehiclePawn::OnActivateUseItem(const FInputActionValue& value)
 {
 	const float axisValue = value.Get<float>();
 	
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Use item."));
-	
 	if (axisValue != 0)
 	{
 		// TODO: add use item logic
 		
-		//Boost(BoostSpeedMultiplier);
-		
 		if (VehicleItem != nullptr)
 		{
+			OnUseItemBP(VehicleItem);
 			VehicleItem->UseItem();
 		}
 	}

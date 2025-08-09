@@ -8,7 +8,7 @@
 
 void UChild_VehicleItem_Booster::UseItem()
 {
-	
+	Super::UseItem();
 	AActor* Player = GetOwner();
 
 	AHoverVehiclePawn* VehiclePawn = Cast<AHoverVehiclePawn>(Player);

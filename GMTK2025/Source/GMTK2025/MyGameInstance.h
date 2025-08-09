@@ -21,6 +21,10 @@ public:
 	// The volume of the music tracks.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Music")
 	float MusicVolume = 1.0;
+	
+	// The amount of time between music tracks.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Music")
+	float TimeBetweenTracks = 5.0;
 
 	// The track that plays in the main menu
 	UPROPERTY(EditAnywhere, Category="Music")
@@ -80,6 +84,6 @@ private:
 	UPROPERTY()
 	UAudioComponent* CurrentAudioComponent;
 
-	// Used to start the next track after this one finishes.
-	TScriptDelegate<FWeakObjectPtr> TrackFinished;
+	UPROPERTY()
+	FTimerHandle WaitForNextSongHandle;
 };

@@ -3,6 +3,7 @@
 
 #include "VehicleItems.h"
 #include "HoverVehiclePawn.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UVehicleItems::UVehicleItems()
@@ -35,6 +36,7 @@ void UVehicleItems::UseItem()
 {
 	// Implement item usage logic here
 	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, TEXT("Vehicle Items Tick: "));
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), UseSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation());
 }
 
 void UVehicleItems::RemoveItem()

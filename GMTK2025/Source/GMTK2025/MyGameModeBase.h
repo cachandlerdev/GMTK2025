@@ -15,6 +15,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFinishedLapDelegate);
 /**
  * 
  */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFinishedLapDelegate);
 UCLASS()
 class GMTK2025_API AMyGameModeBase : public AGameModeBase
 {
@@ -34,14 +35,14 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Loop")
 	int32 BestLoopTimeInSeconds = TNumericLimits<int32>::Max();
 	
-	UPROPERTY(EditAnywhere, Category="Loop")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Loop")
 	int32 NumberOfPlayerFailuresTolerated = 3;
 
 	UPROPERTY(BlueprintReadOnly, Category="Loop")
 	int32 CurrentNumberOfPlayerFailures = 0;
 
 	UPROPERTY(BlueprintReadOnly, Category="Loop")
-	float InitialCountdownDuration = 3.0f;
+	float InitialCountdownDuration = 2.22f;
 
 	// Sound
 	
@@ -99,6 +100,13 @@ private:
 	
 	int32 CurrentLoopTimer = 0;
 	int32 CurrentLoopStartTime = 0;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnFinishedLapDelegate OnFinishedLapDelegate;
+
+	// Call this when you want to trigger pickup respawn
+	UFUNCTION(BlueprintCallable, Category = "Loop")
+	void LoopFinishedDelegateCalls();
 	
 	// Used for slowing the player each loop
 	FTimerHandle SlowTimeHandle;
@@ -107,6 +115,8 @@ private:
 	APlayerController* PlayerController;
 	APawn* PlayerPawn;
 
+	// Used to play the lose sound effect.
+	FTimerHandle GameLoseSoundDelayHandle;
 public:
 	
 	UFUNCTION(BlueprintCallable, Category="Loop")
@@ -148,6 +158,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category="Loop")
 	void OnLoseGameBP();
 
+	UFUNCTION(BlueprintImplementableEvent, Category="Loop")
+	void OnResetCurrentNumOfFailuresBP();
+
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Loop")
 	int32 GetCurrentLoopTimeInSeconds();
 
@@ -163,5 +176,9 @@ private:
 
 	void SetupPlayerForLoop();
 
+	void PlayLoseSound();
 	void OnLoseGame();
+	void MovePawnToStart(APawn* Pawn);
+
+	void AddNewGhost();
 };
