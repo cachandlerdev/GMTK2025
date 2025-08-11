@@ -170,7 +170,6 @@ private:
 
 	void PlayLoseSound();
 	void OnLoseGame();
-	void MovePawnToStart(APawn* Pawn);
 
 	void AddNewGhost();
 };

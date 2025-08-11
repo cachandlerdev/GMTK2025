@@ -110,6 +110,8 @@ void APlayerGhostActor::RestartThisLoop(FVector StartLocation, FRotator StartRot
 	newLocation.Z += BoxCollision->GetScaledBoxExtent().Z;
 	SetActorLocation(newLocation);
 	SetActorRotation(StartRotation);
+	Chassis->SetWorldLocation(newLocation);
+	Chassis->SetWorldRotation(StartRotation);
 	
 	CurrentFollowIndex = 0;
 	OnRestartLoopBP();
