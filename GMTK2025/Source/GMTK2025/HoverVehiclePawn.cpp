@@ -175,6 +175,8 @@ bool AHoverVehiclePawn::ShouldApplyMovement()
 		FloorSurfaceNormal = HitResult.ImpactNormal;
 	}
 
+	IsOnGround = bHit;
+
 	return bHit;
 }
 
@@ -230,6 +232,7 @@ void AHoverVehiclePawn::UpdateMovementPhysics()
 		ApplyPlayerMovement();
 	}
 	ApplySuspension();
+	ApplyTraction();
 	
 	//Store player info to game instance for the ghost, every second
 	RecordPlayerInfo();
@@ -361,6 +364,20 @@ void AHoverVehiclePawn::ApplySuspension()
 	ApplySuspensionForceOnPoint(frontLeftStartLocation, frontLeftEndLocation, FrontLeftSuspensionPoint);
 	ApplySuspensionForceOnPoint(backRightStartLocation, backRightEndLocation, BackRightSuspensionPoint);
 	ApplySuspensionForceOnPoint(backLeftStartLocation, backLeftEndLocation, BackLeftSuspensionPoint);
+}
+
+void AHoverVehiclePawn::ApplyTraction()
+{
+	if (IsOnGround)
+	{
+		// Credit to https://www.youtube.com/watch?v=LG1CtlFRmpU
+		// We find the local sideways component of the vehicle's velocity,
+		// and apply a counterforce scaled by the traction strength
+		float angle = FVector::DotProduct(GetVelocity(), GetActorRightVector());
+		FVector tractionVectorDirection = GetActorRightVector() * angle * -1;
+		FVector tractionForce = tractionVectorDirection * TractionStrength;
+		BoxCollision->AddForce(tractionForce, "", true);
+	}
 }
 
 void AHoverVehiclePawn::ApplySuspensionForceOnPoint(const FVector& StartLocation, const FVector& EndLocation, UArrowComponent* Source)
@@ -643,16 +660,11 @@ void AHoverVehiclePawn::CameraShake()
 
 void AHoverVehiclePawn::ChangeCameraFOV(float DeltaTime)
 {
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("Velocity: %f"), GetVelocity().Length()));
-
 	float speed = FMath::Abs(GetVelocity().Length());
 	
 	if (speed > FastVelocityThreshold)
 	{
 		float targetFOV = OriginalFOV * (1 + (SpeedFOVEffect * speed / 100000));
-		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Target FOV: %f"), targetFOV));
 		SetFOVSettings(targetFOV, CameraInterpSpeed, DeltaTime);
 	}
 	else
@@ -665,8 +677,6 @@ void AHoverVehiclePawn::SetFOVSettings(float FOV, float InterpSpeed, float Delta
 {
 	float currentFOV = Camera->FieldOfView;
 	float newFOV = UKismetMathLibrary::FInterpTo(currentFOV, FOV, DeltaTime, InterpSpeed);
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("New FOV: %f"), newFOV));
 	Camera->SetFieldOfView(newFOV);
 }
 

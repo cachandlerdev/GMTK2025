@@ -112,6 +112,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
 	float SuspensionDamping = 100.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
+	float TractionStrength = 5.0f;
 	
 	// 1.0 lets it stop on a dime, 0 makes it never stop.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
@@ -240,6 +243,8 @@ private:
 	bool IsInverted = false;
 	FTimerHandle InverterDurationHandle;
 
+	bool IsOnGround = true;
+
 	// This is the normal vector for the ground beneath the player. Used to ensure force when moving is applied
 	// parallel to the ground.
 	FVector FloorSurfaceNormal;
@@ -308,6 +313,9 @@ private:
 	void EndInverter();
 	
 	void ApplySuspension();
+
+	// Helps the vehicle grip the road better by applying a traction/slip reduction effect
+	void ApplyTraction();
 
 	void ApplySuspensionForceOnPoint(const FVector& StartLocation, const FVector& EndLocation, UArrowComponent* Source);
 
