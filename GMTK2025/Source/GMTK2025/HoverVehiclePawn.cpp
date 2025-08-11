@@ -417,9 +417,13 @@ void AHoverVehiclePawn::LerpChassisToRoot(float DeltaTime)
 	float newY = FMath::Lerp(currentLocation.Y, targetLocation.Y, DeltaTime * ChassisXYLerpSpeed);
 	float newZ = FMath::Lerp(currentLocation.Z, targetLocation.Z + HoverAmount, DeltaTime * ChassisZLerpSpeed);
 
-	newX = FMath::Clamp(newX, currentLocation.X - LerpChassisLocationTolerance, currentLocation.X + LerpChassisLocationTolerance);
-	newY = FMath::Clamp(newY, currentLocation.Y - LerpChassisLocationTolerance, currentLocation.Y + LerpChassisLocationTolerance);
-	newZ = FMath::Clamp(newZ, currentLocation.Z - LerpChassisLocationTolerance, currentLocation.Z + LerpChassisLocationTolerance);
+	float xToleranceAmount = FMath::Abs(LerpChassisLocationTolerance * RootComponent->GetComponentVelocity().X);
+	float yToleranceAmount = FMath::Abs(LerpChassisLocationTolerance * RootComponent->GetComponentVelocity().Y);
+	float zToleranceAmount = FMath::Abs(LerpChassisLocationTolerance * RootComponent->GetComponentVelocity().Z);
+
+	newX = FMath::Clamp(newX, currentLocation.X - xToleranceAmount, currentLocation.X + xToleranceAmount);
+	newY = FMath::Clamp(newY, currentLocation.Y - yToleranceAmount, currentLocation.Y + yToleranceAmount);
+	newZ = FMath::Clamp(newZ, currentLocation.Z - zToleranceAmount, currentLocation.Z + zToleranceAmount);
 	
 	FVector newLocation = FVector(newX, newY, newZ);
 	Chassis->SetWorldLocation(newLocation);

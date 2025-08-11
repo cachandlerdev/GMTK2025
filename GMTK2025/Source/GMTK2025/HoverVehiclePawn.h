@@ -122,14 +122,14 @@ public:
 
 	// Lerp chassis
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleLerp")
-	float ChassisRotationLerpSpeed = 5.0f;
+	float ChassisRotationLerpSpeed = 0.2f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleLerp")
-	float ChassisXYLerpSpeed = 5.0f;
+	float ChassisXYLerpSpeed = 10.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleLerp")
-	float ChassisZLerpSpeed = 5.0f;
+	float ChassisZLerpSpeed = 10.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleLerp")
-	float LerpChassisLocationTolerance = 800.0f;
+	float LerpChassisLocationTolerance = 0.1f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float FastVelocityThreshold = 500.0f;
