@@ -143,7 +143,7 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 	
 	LerpChassisToRoot(DeltaTime);
 	
-	RunCameraEffects();
+	RunCameraEffects(DeltaTime);
 }
 
 bool AHoverVehiclePawn::ShouldApplyMovement()
@@ -584,7 +584,7 @@ void AHoverVehiclePawn::OnReleaseSteer(const FInputActionValue& value)
 	MySteerDirection = ESteerDirection::STRAIGHT;
 }
 
-void AHoverVehiclePawn::RunCameraEffects()
+void AHoverVehiclePawn::RunCameraEffects(float DeltaTime)
 {
 	// TODO: Camera shake, motion blur,
 
@@ -595,7 +595,7 @@ void AHoverVehiclePawn::RunCameraEffects()
 
 	LeanCamera();
 	CameraShake();
-	ChangeCameraFOV();
+	ChangeCameraFOV(DeltaTime);
 }
 
 void AHoverVehiclePawn::LeanCamera()
@@ -641,23 +641,32 @@ void AHoverVehiclePawn::CameraShake()
 	}
 }
 
-void AHoverVehiclePawn::ChangeCameraFOV()
+void AHoverVehiclePawn::ChangeCameraFOV(float DeltaTime)
 {
-	if (GetVelocity().Length() > FastVelocityThreshold)
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("Velocity: %f"), GetVelocity().Length()));
+
+	float speed = FMath::Abs(GetVelocity().Length());
+	
+	if (speed > FastVelocityThreshold)
 	{
-		float targetFOV = OriginalFOV * (1 + (SpeedFOVEffect / 1000));
-		SetFOVSettings(SpeedFOV, CameraInterpSpeed);
+		float targetFOV = OriginalFOV * (1 + (SpeedFOVEffect * speed / 100000));
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Target FOV: %f"), targetFOV));
+		SetFOVSettings(targetFOV, CameraInterpSpeed, DeltaTime);
 	}
 	else
 	{
-		SetFOVSettings(OriginalFOV, CameraInterpSpeed);
+		SetFOVSettings(OriginalFOV, CameraInterpSpeed, DeltaTime);
 	}
 }
 
-void AHoverVehiclePawn::SetFOVSettings(float FOV, float InterpSpeed)
+void AHoverVehiclePawn::SetFOVSettings(float FOV, float InterpSpeed, float DeltaTime)
 {
 	float currentFOV = Camera->FieldOfView;
-	float newFOV = UKismetMathLibrary::FInterpTo(currentFOV, FOV, GetWorld()->DeltaTimeSeconds, InterpSpeed);
+	float newFOV = UKismetMathLibrary::FInterpTo(currentFOV, FOV, DeltaTime, InterpSpeed);
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("New FOV: %f"), newFOV));
 	Camera->SetFieldOfView(newFOV);
 }
 
