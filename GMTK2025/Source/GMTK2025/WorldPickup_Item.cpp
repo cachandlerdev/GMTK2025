@@ -11,14 +11,14 @@ void AWorldPickup_Item::HandlePickup(AActor* PickupInstigator)
 {
 	AHoverVehiclePawn* player = Cast<AHoverVehiclePawn>(PickupInstigator);
 	
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickupSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation());
 
-	if (player)
+	if (player && player->IsPlayerControlled())
 	{
-		player->AddVehicleItem(VehicleItemClass);	
-	}
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickupSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation());
 
-	Destroy();
+		player->AddVehicleItem(VehicleItemClass);	
+		Destroy();
+	}
 
 	// Replaced for performance reasons (even if it sacrifices portability somewhat)
 	

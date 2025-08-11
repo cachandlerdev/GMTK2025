@@ -37,6 +37,13 @@ void UVehicleItems::UseItem()
 	// Implement item usage logic here
 	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, TEXT("Vehicle Items Tick: "));
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), UseSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation());
+	AActor* Player = GetOwner();
+
+	AHoverVehiclePawn* VehiclePawn = Cast<AHoverVehiclePawn>(Player);
+	if (VehiclePawn)
+	{
+		VehiclePawn->VehicleItem = nullptr; // Clear the vehicle item reference
+	}
 }
 
 void UVehicleItems::RemoveItem()
