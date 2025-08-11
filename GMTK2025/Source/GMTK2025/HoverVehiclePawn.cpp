@@ -180,10 +180,9 @@ bool AHoverVehiclePawn::ShouldApplyMovement()
 	return bHit;
 }
 
-void AHoverVehiclePawn::ApplyPlayerMovement()
+void AHoverVehiclePawn::ApplyMovementForce()
 {
 	float MovementAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsMovementFramerateCompensation);
-	float RotationAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsRotationFramerateCompensation);
 	if (bWantsToGoForwardOrBackwards)
 	{
 		// Always apply the force parallel to the floor axis.
@@ -200,13 +199,6 @@ void AHoverVehiclePawn::ApplyPlayerMovement()
 		force.Z = HoverAmount;
 		
 		BoxCollision->AddForce(force, "", true);
-	}
-
-	if (MySteerDirection != ESteerDirection::STRAIGHT)
-	{
-		//FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * SteeringMultiplier);
-		FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * RotationAccountForFramerate * SteeringMultiplier);
-		BoxCollision->AddTorqueInDegrees(torque, "", true);
 	}
 }
 
@@ -229,13 +221,34 @@ void AHoverVehiclePawn::UpdateMovementPhysics()
 {
 	if (ShouldApplyMovement())
 	{
-		ApplyPlayerMovement();
+		ApplyMovementForce();
+		ApplyMovementRotation();
 	}
 	ApplySuspension();
 	ApplyTraction();
 	
 	//Store player info to game instance for the ghost, every second
 	RecordPlayerInfo();
+}
+
+void AHoverVehiclePawn::ApplyMovementRotation()
+{
+	float RotationAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsRotationFramerateCompensation);
+	if (MySteerDirection != ESteerDirection::STRAIGHT)
+	{
+		//FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * SteeringMultiplier);
+		
+		// Dynamically change the torque amount based on the speed of the car.
+		// The slower the car, the stronger the torque. As it speeds up, make the torque weaker.
+		float dynamicSteeringStrength = FMath::Abs((1 / GetVelocity().Length())) * SpeedSteeringFactor;
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("OG Dynamic Steer Factor: %f"), dynamicSteeringStrength));
+		dynamicSteeringStrength = FMath::Clamp(dynamicSteeringStrength, MinSteerTorque, MaxSteerTorque); 
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Dynamic Steer Factor: %f"), dynamicSteeringStrength));
+		FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * RotationAccountForFramerate * dynamicSteeringStrength);
+		BoxCollision->AddTorqueInDegrees(torque, "", true);
+	}
 }
 
 void AHoverVehiclePawn::ApplyLongBoost()

@@ -85,19 +85,30 @@ public:
 	float SpeedMultiplier = 600.0;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	float RotateSpeed = 50.0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float MaxSpeed = 4000.0f;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	float SteeringMultiplier = 80.0;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float BoostSpeedMultiplier = 1.2f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float LongBoostUpdateTime = 0.1f;
+
+	// Steering torque
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float RotateSpeed = 50.0;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float SteeringMultiplier = 800.0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float SpeedSteeringFactor = 40000.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float MinSteerTorque = 7.5f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float MaxSteerTorque = 12.0f;
 
 	// Suspension
 
@@ -144,7 +155,7 @@ public:
 	float CameraInterpSpeed = 1.5f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	float SpeedFOVEffect = 2.75;
+	float SpeedFOVEffect = 2.85;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ghost")
 	float GhostUpdateSeconds = 0.2;
@@ -300,7 +311,9 @@ public:
 private:
 	bool ShouldApplyMovement();
 
-	void ApplyPlayerMovement();
+	void ApplyMovementForce();
+	
+	void ApplyMovementRotation();
 
 	void RecordPlayerInfo();
 
