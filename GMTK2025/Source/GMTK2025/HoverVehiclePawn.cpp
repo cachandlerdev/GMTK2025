@@ -114,6 +114,8 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 	CarWindComponent->SetupAttachment(RootComponent);
 	CarEngineLoopComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("CarEngineLoopComponent"));
 	CarEngineLoopComponent->SetupAttachment(RootComponent);
+
+	OriginalTractionStrength = TractionStrength;
 }
 
 // Called when the game starts or when spawned
@@ -197,6 +199,13 @@ void AHoverVehiclePawn::ApplyMovementForce()
 		force.X *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * SpeedMultiplier;
 		force.Y *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * SpeedMultiplier;
 		force.Z = HoverAmount;
+
+		// Don't let the player get stuck at 0 movement because the controls stop working.
+		if (force.X == 0 && force.Y == 0)
+		{
+			force.X = 1;
+			force.Y = 1;
+		}
 		
 		BoxCollision->AddForce(force, "", true);
 	}
@@ -241,11 +250,7 @@ void AHoverVehiclePawn::ApplyMovementRotation()
 		// Dynamically change the torque amount based on the speed of the car.
 		// The slower the car, the stronger the torque. As it speeds up, make the torque weaker.
 		float dynamicSteeringStrength = FMath::Abs((1 / GetVelocity().Length())) * SpeedSteeringFactor;
-		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("OG Dynamic Steer Factor: %f"), dynamicSteeringStrength));
 		dynamicSteeringStrength = FMath::Clamp(dynamicSteeringStrength, MinSteerTorque, MaxSteerTorque); 
-		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Dynamic Steer Factor: %f"), dynamicSteeringStrength));
 		FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * RotationAccountForFramerate * dynamicSteeringStrength);
 		BoxCollision->AddTorqueInDegrees(torque, "", true);
 	}
@@ -290,9 +295,10 @@ void AHoverVehiclePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateSteer);
 		EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnActivateSteer);
 		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Started, this, &AHoverVehiclePawn::OnActivateHandbrake);
-		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnActivateHandbrake);
+		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnReleaseHandbrake);
 		EnhancedInputComponent->BindAction(LookAroundAction, ETriggerEvent::Started, this, &AHoverVehiclePawn::OnActivateSteer);
 		EnhancedInputComponent->BindAction(LookAroundAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnReleaseSteer);
+		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &AHoverVehiclePawn::OnActivatePauseBP);
 		
 		EnhancedInputComponent->BindAction(ResetAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateReset);
 		EnhancedInputComponent->BindAction(UseItemAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateUseItem);
@@ -527,11 +533,21 @@ void AHoverVehiclePawn::OnActivateBrake(const FInputActionValue& value)
 
 void AHoverVehiclePawn::OnActivateHandbrake(const FInputActionValue& value)
 {
-	OnActivateBrake(value);
+	//OnActivateBrake(value);
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Activate Handbrake."));
+	TractionStrength = 0.0f;
+	IsUsingHandbrake = true;
 }
 
 void AHoverVehiclePawn::OnActivateSteer(const FInputActionValue& value)
 {
+	// You can't change steering direction while using the handbrake.
+	if (IsUsingHandbrake)
+	{
+		return;
+	}
+	
 	//Invert the controls if affected by inverter
 	const float axisValue = IsInverted ? -value.Get<float>() : value.Get<float>();
 	Steering = SteeringMultiplier * axisValue;
@@ -607,6 +623,14 @@ void AHoverVehiclePawn::OnReleaseThrottle(const FInputActionValue& value)
 void AHoverVehiclePawn::OnReleaseBrake(const FInputActionValue& value)
 {
 	bWantsToGoForwardOrBackwards = false;
+}
+
+void AHoverVehiclePawn::OnReleaseHandbrake(const FInputActionValue& value)
+{
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Deactivate Handbrake."));
+	TractionStrength = OriginalTractionStrength;
+	IsUsingHandbrake = false;
 }
 
 void AHoverVehiclePawn::OnReleaseSteer(const FInputActionValue& value)

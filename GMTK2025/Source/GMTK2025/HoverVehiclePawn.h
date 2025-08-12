@@ -125,7 +125,7 @@ public:
 	float SuspensionDamping = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
-	float TractionStrength = 5.0f;
+	float TractionStrength = 2.0f;
 	
 	// 1.0 lets it stop on a dime, 0 makes it never stop.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
@@ -202,6 +202,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* UseItemAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* PauseAction;
 
 	void OnActivateThrottle(const FInputActionValue &value);
 	void OnActivateBrake(const FInputActionValue &value);
@@ -212,6 +215,7 @@ protected:
 	
 	void OnReleaseThrottle(const FInputActionValue &value);
 	void OnReleaseBrake(const FInputActionValue &value);
+	void OnReleaseHandbrake(const FInputActionValue &value);
 	void OnReleaseSteer(const FInputActionValue &value);
 
 	void RunCameraEffects(float DeltaTime);
@@ -223,6 +227,9 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Camera")
 	void CameraShakeBP();
+	
+	UFUNCTION(BlueprintImplementableEvent, Category = "Pause")
+	void OnActivatePauseBP();
 
 private:
 	float Speed;
@@ -259,6 +266,9 @@ private:
 	// This is the normal vector for the ground beneath the player. Used to ensure force when moving is applied
 	// parallel to the ground.
 	FVector FloorSurfaceNormal;
+
+	float OriginalTractionStrength;
+	bool IsUsingHandbrake = false;;
 	
 public:	
 	// Called every frame
