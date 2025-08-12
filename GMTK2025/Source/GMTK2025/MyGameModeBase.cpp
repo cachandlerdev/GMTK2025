@@ -239,11 +239,15 @@ void AMyGameModeBase::SetupPlayerForLoop()
 	if (player)
 	{
 		player->StopMovement();
-		player->CameraBoom->bEnableCameraLag = false;
-		player->CameraBoom->bEnableCameraRotationLag = false;
-		MovePawnToStart(player);
-		player->CameraBoom->bEnableCameraLag = true;
-		player->CameraBoom->bEnableCameraRotationLag = true;
+		if (StartLocation)
+		{
+			FVector newLocation = StartLocation->GetActorLocation();
+			newLocation.Z += player->GetDefaultHalfHeight();
+			player->SetActorLocation(newLocation);
+			player->SetActorRotation(StartLocation->GetActorRotation());
+			player->Chassis->SetWorldLocation(newLocation);
+			player->Chassis->SetWorldRotation(StartLocation->GetActorRotation());
+		}
 	}
 }
 
@@ -262,17 +266,6 @@ void AMyGameModeBase::OnLoseGame()
 
 	bHasInitializedRace = false;
 	OnLoseGameBP();
-}
-
-void AMyGameModeBase::MovePawnToStart(APawn* Pawn)
-{
-	if (StartLocation)
-	{
-		FVector newLocation = StartLocation->GetActorLocation();
-		newLocation.Z += Pawn->GetDefaultHalfHeight();
-		Pawn->SetActorLocation(newLocation);
-		Pawn->SetActorRotation(StartLocation->GetActorRotation());
-	}
 }
 
 void AMyGameModeBase::AddNewGhost()

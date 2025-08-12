@@ -15,7 +15,7 @@ APlayerGhostActor::APlayerGhostActor()
 	
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 	SetRootComponent(BoxCollision);
-	BoxCollision->SetBoxExtent(FVector(132.808112f, 79.510442, 86.426227));
+	BoxCollision->SetBoxExtent(FVector(135.0f, 85.0f, 85.0f));
 	BoxCollision->SetSimulatePhysics(false);
 	BoxCollision->SetCollisionProfileName(TEXT("Vehicle"));
 	BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
@@ -80,6 +80,10 @@ void APlayerGhostActor::Tick(float DeltaTime)
 		// Correct for movement changes
 		ApplyCorrectionFactor(DeltaTime);
 	}
+	
+	FRotator newRotation = Chassis->GetRelativeRotation();
+	newRotation.Roll += DeltaTime * RotateSpeed;
+	Chassis->SetRelativeRotation(newRotation);
 }
 
 void APlayerGhostActor::SetFollowLoopNumber(int32 LoopNumber)
@@ -106,6 +110,8 @@ void APlayerGhostActor::RestartThisLoop(FVector StartLocation, FRotator StartRot
 	newLocation.Z += BoxCollision->GetScaledBoxExtent().Z;
 	SetActorLocation(newLocation);
 	SetActorRotation(StartRotation);
+	Chassis->SetWorldLocation(newLocation);
+	Chassis->SetWorldRotation(StartRotation);
 	
 	CurrentFollowIndex = 0;
 	OnRestartLoopBP();

@@ -11,6 +11,8 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "MyGameInstance.h"
+#include "Engine/EngineTypes.h"
+#include "DrawDebugHelpers.h"
 #include "Components/AudioComponent.h"
 
 
@@ -20,24 +22,49 @@ AHoverVehiclePawn::AHoverVehiclePawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Box collision
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 	RootComponent = BoxCollision;
-	BoxCollision->SetBoxExtent(FVector(132.808112f, 79.510442, 86.426227));
+	BoxCollision->SetBoxExtent(FVector(135.0f, 85.0f, 85.0f));
 	BoxCollision->SetSimulatePhysics(true);
 	BoxCollision->SetCollisionProfileName(TEXT("Vehicle"));
 	BoxCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
 
+	// Offset center of mass to keep the vehicle upright
+	BoxCollision->SetCenterOfMass(FVector(0.0f, 0.0f, -1 * CenterOfMassOffset));
+
+	// Chassis
 	Chassis = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Chassis"));
 	Chassis->SetupAttachment(BoxCollision);
 	Chassis->SetSimulatePhysics(true);
-	
 	Chassis->BodyInstance.bOverrideMass = true;
-	//Chassis->SetMassOverrideInKg("", 50000.0);
 	Chassis->GetBodyInstance()->SetMassOverride(50000.0, true);
 	Chassis->SetLinearDamping(1.0);
 	Chassis->SetAngularDamping(1.0);
+	Chassis->SetUsingAbsoluteRotation(true);
+	Chassis->SetUsingAbsoluteLocation(true);
 
-	// spheres
+	// Suspension
+	FrontRightSuspensionPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("FrontRightSuspensionPoint"));
+	FrontLeftSuspensionPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("FrontLeftSuspensionPoint"));
+	BackRightSuspensionPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("BackRightSuspensionPoint"));
+	BackLeftSuspensionPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("BackLeftSuspensionPoint"));
+	FrontRightSuspensionPoint->SetupAttachment(BoxCollision);
+	FrontLeftSuspensionPoint->SetupAttachment(BoxCollision);
+	BackRightSuspensionPoint->SetupAttachment(BoxCollision);
+	BackLeftSuspensionPoint->SetupAttachment(BoxCollision);
+
+	FrontRightSuspensionPoint->SetRelativeLocation(FVector(-185.0f,80.0f, -50.0f));
+	FrontLeftSuspensionPoint->SetRelativeLocation(FVector(185.0f,-80.0f, -50.0f));
+	BackRightSuspensionPoint->SetRelativeLocation(FVector(185.0f,80.0f, -50.0f));
+	BackLeftSuspensionPoint->SetRelativeLocation(FVector(-185.0f,-80.0f, -50.0f));
+
+	FrontRightSuspensionPoint->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
+	FrontLeftSuspensionPoint->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
+	BackRightSuspensionPoint->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
+	BackLeftSuspensionPoint->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
+
+	// Spheres
 	FrontSphere = CreateDefaultSubobject<USphereComponent>(TEXT("FrontSphereCollision"));
 	FrontSphere->SetSphereRadius(90.0f);
 	FrontSphere->SetupAttachment(BoxCollision);
@@ -49,24 +76,25 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 	BackSphere->SetupAttachment(BoxCollision);
 	BackSphere->SetGenerateOverlapEvents(false);
 	BackSphere->SetRelativeLocation(FVector(-133.0f, 0.0f, 0.0f));
-
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-
-	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	Camera->SetupAttachment(CameraBoom);
 	
+	// Thrusters
 	RightThrusterParticleComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("RightThruster"));
 	RightThrusterParticleComponent->SetupAttachment(Chassis);
-	RightThrusterParticleComponent->SetRelativeLocation(FVector(-278.666667,34.333334,85.666667));
+	RightThrusterParticleComponent->SetRelativeLocation(FVector(-224.333333,33.666667,0.333000));
 	RightThrusterParticleComponent->SetRelativeRotation(FRotator(180, 0, 0));
 	RightThrusterParticleComponent->SetRelativeScale3D(FVector(0.5));
 	
 	LeftThrusterParticleComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("LeftThruster"));
 	LeftThrusterParticleComponent->SetupAttachment(Chassis);
-	LeftThrusterParticleComponent->SetRelativeLocation(FVector(-278.666667,-27.666667,85.666667));
+	LeftThrusterParticleComponent->SetRelativeLocation(FVector(-224.333333,-29.000000,0.333000));
 	LeftThrusterParticleComponent->SetRelativeRotation(FRotator(180, 0, 0));
 	LeftThrusterParticleComponent->SetRelativeScale3D(FVector(0.5));
+
+	// Camera
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(RootComponent);
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	Camera->SetupAttachment(CameraBoom);
 	
 	CameraBoom->bUsePawnControlRotation = false;
 	CameraBoom->bInheritYaw = true;
@@ -81,10 +109,13 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 
 	OriginalFOV = Camera->FieldOfView;
 
+	// Audio
 	CarWindComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("CarWindComponent"));
 	CarWindComponent->SetupAttachment(RootComponent);
 	CarEngineLoopComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("CarEngineLoopComponent"));
 	CarEngineLoopComponent->SetupAttachment(RootComponent);
+
+	OriginalTractionStrength = TractionStrength;
 }
 
 // Called when the game starts or when spawned
@@ -97,6 +128,9 @@ void AHoverVehiclePawn::BeginPlay()
 
 	GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &AHoverVehiclePawn::UpdateMovementPhysics,
 		PhysicsUpdateTime, true);
+
+	Chassis->SetWorldLocation(RootComponent->GetComponentLocation());
+	Chassis->SetWorldRotation(RootComponent->GetComponentRotation());
 }
 
 // Called every frame
@@ -104,7 +138,14 @@ void AHoverVehiclePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	RunCameraEffects();
+	// Make car rotate slightly over time
+	//FRotator newRotation = Chassis->GetRelativeRotation();
+	//newRotation.Roll += DeltaTime * RotateSpeed;
+	//Chassis->SetRelativeRotation(newRotation);
+	
+	LerpChassisToRoot(DeltaTime);
+	
+	RunCameraEffects(DeltaTime);
 }
 
 bool AHoverVehiclePawn::ShouldApplyMovement()
@@ -131,32 +172,42 @@ bool AHoverVehiclePawn::ShouldApplyMovement()
 		QueryParams
 	);
 
+	if (bHit)
+	{
+		FloorSurfaceNormal = HitResult.ImpactNormal;
+	}
+
+	IsOnGround = bHit;
+
 	return bHit;
 }
 
-void AHoverVehiclePawn::ApplyPlayerMovement()
+void AHoverVehiclePawn::ApplyMovementForce()
 {
 	float MovementAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsMovementFramerateCompensation);
-	float RotationAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsRotationFramerateCompensation);
 	if (bWantsToGoForwardOrBackwards)
 	{
-		FVector force = Chassis->GetForwardVector();
+		// Always apply the force parallel to the floor axis.
+		FVector forwardVector = Chassis->GetForwardVector();
+		FVector force = FVector::VectorPlaneProject(forwardVector, FloorSurfaceNormal);
+
 		//force.X *= Speed * PhysicsUpdateTime * SpeedMultiplier;
 		//force.Y *= Speed * PhysicsUpdateTime * SpeedMultiplier;
 		
 		// Thanks unreal for making physics framerate dependent
+		// TODO: find a less hacky way of doing this
 		force.X *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * SpeedMultiplier;
 		force.Y *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * SpeedMultiplier;
 		force.Z = HoverAmount;
+
+		// Don't let the player get stuck at 0 movement because the controls stop working.
+		if (force.X == 0 && force.Y == 0)
+		{
+			force.X = 1;
+			force.Y = 1;
+		}
 		
 		BoxCollision->AddForce(force, "", true);
-	}
-
-	if (MySteerDirection != ESteerDirection::STRAIGHT)
-	{
-		//FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * SteeringMultiplier);
-		FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * RotationAccountForFramerate * SteeringMultiplier);
-		BoxCollision->AddTorqueInDegrees(torque, "", true);
 	}
 }
 
@@ -179,11 +230,30 @@ void AHoverVehiclePawn::UpdateMovementPhysics()
 {
 	if (ShouldApplyMovement())
 	{
-		ApplyPlayerMovement();
+		ApplyMovementForce();
+		ApplyMovementRotation();
 	}
-
+	ApplySuspension();
+	ApplyTraction();
+	
 	//Store player info to game instance for the ghost, every second
 	RecordPlayerInfo();
+}
+
+void AHoverVehiclePawn::ApplyMovementRotation()
+{
+	float RotationAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsRotationFramerateCompensation);
+	if (MySteerDirection != ESteerDirection::STRAIGHT)
+	{
+		//FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * SteeringMultiplier);
+		
+		// Dynamically change the torque amount based on the speed of the car.
+		// The slower the car, the stronger the torque. As it speeds up, make the torque weaker.
+		float dynamicSteeringStrength = FMath::Abs((1 / GetVelocity().Length())) * SpeedSteeringFactor;
+		dynamicSteeringStrength = FMath::Clamp(dynamicSteeringStrength, MinSteerTorque, MaxSteerTorque); 
+		FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * RotationAccountForFramerate * dynamicSteeringStrength);
+		BoxCollision->AddTorqueInDegrees(torque, "", true);
+	}
 }
 
 void AHoverVehiclePawn::ApplyLongBoost()
@@ -225,9 +295,10 @@ void AHoverVehiclePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateSteer);
 		EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnActivateSteer);
 		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Started, this, &AHoverVehiclePawn::OnActivateHandbrake);
-		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnActivateHandbrake);
+		EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnReleaseHandbrake);
 		EnhancedInputComponent->BindAction(LookAroundAction, ETriggerEvent::Started, this, &AHoverVehiclePawn::OnActivateSteer);
 		EnhancedInputComponent->BindAction(LookAroundAction, ETriggerEvent::Completed, this, &AHoverVehiclePawn::OnReleaseSteer);
+		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &AHoverVehiclePawn::OnActivatePauseBP);
 		
 		EnhancedInputComponent->BindAction(ResetAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateReset);
 		EnhancedInputComponent->BindAction(UseItemAction, ETriggerEvent::Triggered, this, &AHoverVehiclePawn::OnActivateUseItem);
@@ -292,6 +363,106 @@ void AHoverVehiclePawn::EndInverter()
 	IsInverted = false;
 
 	GetWorldTimerManager().ClearTimer(InverterDurationHandle);
+}
+
+void AHoverVehiclePawn::ApplySuspension()
+{
+	FVector frontRightStartLocation = FrontRightSuspensionPoint->GetComponentLocation();
+	FVector frontLeftStartLocation = FrontLeftSuspensionPoint->GetComponentLocation();
+	FVector backRightStartLocation = BackRightSuspensionPoint->GetComponentLocation();
+	FVector backLeftStartLocation = BackLeftSuspensionPoint->GetComponentLocation();
+	
+	FVector suspensionDirection = GetActorUpVector() * -1;
+
+	FVector frontRightEndLocation = frontRightStartLocation + (suspensionDirection * SuspensionLength);
+	FVector frontLeftEndLocation = frontLeftStartLocation + (suspensionDirection * SuspensionLength);
+	FVector backRightEndLocation = backRightStartLocation + (suspensionDirection * SuspensionLength);
+	FVector backLeftEndLocation = backLeftStartLocation + (suspensionDirection * SuspensionLength);
+
+	ApplySuspensionForceOnPoint(frontRightStartLocation, frontRightEndLocation, FrontRightSuspensionPoint);
+	ApplySuspensionForceOnPoint(frontLeftStartLocation, frontLeftEndLocation, FrontLeftSuspensionPoint);
+	ApplySuspensionForceOnPoint(backRightStartLocation, backRightEndLocation, BackRightSuspensionPoint);
+	ApplySuspensionForceOnPoint(backLeftStartLocation, backLeftEndLocation, BackLeftSuspensionPoint);
+}
+
+void AHoverVehiclePawn::ApplyTraction()
+{
+	if (IsOnGround)
+	{
+		// Credit to https://www.youtube.com/watch?v=LG1CtlFRmpU
+		// We find the local sideways component of the vehicle's velocity,
+		// and apply a counterforce scaled by the traction strength
+		float angle = FVector::DotProduct(GetVelocity(), GetActorRightVector());
+		FVector tractionVectorDirection = GetActorRightVector() * angle * -1;
+		FVector tractionForce = tractionVectorDirection * TractionStrength;
+		BoxCollision->AddForce(tractionForce, "", true);
+	}
+}
+
+void AHoverVehiclePawn::ApplySuspensionForceOnPoint(const FVector& StartLocation, const FVector& EndLocation, UArrowComponent* Source)
+{
+	FHitResult hitResult;
+	FCollisionQueryParams queryParams;
+	queryParams.AddIgnoredActor(this);
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(
+		hitResult,
+		StartLocation,
+		EndLocation,
+		ECC_Visibility,
+		queryParams
+	);
+
+	if (bHit)
+	{
+		// Credit to https://www.youtube.com/watch?v=LG1CtlFRmpU
+		// and https://en.wikipedia.org/wiki/Mass-spring-damper_model
+		// Thanks physics guys from several centuries ago!
+		
+		// Uses the mass-spring-damper model to calculate the force.
+		// F = - kx - bv
+		// k is the spring's stiffness
+		// x is the compression ratio
+		// b is the spring damping coefficient
+		// v is the velocity at the given point.
+		
+		// Calculate compression ratio
+		float compression = 1 - (hitResult.Distance / SuspensionLength); // accounts for the -x
+		float pointVelocity = Source->GetComponentVelocity().Z;
+		
+		float force = (compression * SuspensionStiffness) - (SuspensionDamping * pointVelocity);
+		FVector forceVector = GetActorUpVector() * force;
+		BoxCollision->AddForceAtLocation(forceVector, StartLocation);
+	}
+
+	//DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 1.0f, 0, 1.0f);
+}
+
+void AHoverVehiclePawn::LerpChassisToRoot(float DeltaTime)
+{
+	// Lerp to root component to make rotation smoother
+	FRotator currentRotation = Chassis->GetComponentRotation();
+	FRotator targetRotation = BoxCollision->GetComponentRotation();
+	FRotator newRotation = UKismetMathLibrary::RLerp(currentRotation, targetRotation, DeltaTime * ChassisRotationLerpSpeed, true);
+	Chassis->SetWorldRotation(newRotation);
+
+	// Lerp location as well
+	FVector currentLocation = Chassis->GetComponentLocation();
+	FVector targetLocation = BoxCollision->GetComponentLocation();
+	float newX = FMath::Lerp(currentLocation.X, targetLocation.X, DeltaTime * ChassisXYLerpSpeed);
+	float newY = FMath::Lerp(currentLocation.Y, targetLocation.Y, DeltaTime * ChassisXYLerpSpeed);
+	float newZ = FMath::Lerp(currentLocation.Z, targetLocation.Z + HoverAmount, DeltaTime * ChassisZLerpSpeed);
+
+	float xToleranceAmount = FMath::Abs(LerpChassisLocationTolerance * RootComponent->GetComponentVelocity().X);
+	float yToleranceAmount = FMath::Abs(LerpChassisLocationTolerance * RootComponent->GetComponentVelocity().Y);
+	float zToleranceAmount = FMath::Abs(LerpChassisLocationTolerance * RootComponent->GetComponentVelocity().Z);
+
+	newX = FMath::Clamp(newX, currentLocation.X - xToleranceAmount, currentLocation.X + xToleranceAmount);
+	newY = FMath::Clamp(newY, currentLocation.Y - yToleranceAmount, currentLocation.Y + yToleranceAmount);
+	newZ = FMath::Clamp(newZ, currentLocation.Z - zToleranceAmount, currentLocation.Z + zToleranceAmount);
+	
+	FVector newLocation = FVector(newX, newY, newZ);
+	Chassis->SetWorldLocation(newLocation);
 }
 
 void AHoverVehiclePawn::StopMovement()
@@ -362,11 +533,21 @@ void AHoverVehiclePawn::OnActivateBrake(const FInputActionValue& value)
 
 void AHoverVehiclePawn::OnActivateHandbrake(const FInputActionValue& value)
 {
-	OnActivateBrake(value);
+	//OnActivateBrake(value);
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Activate Handbrake."));
+	TractionStrength = 0.0f;
+	IsUsingHandbrake = true;
 }
 
 void AHoverVehiclePawn::OnActivateSteer(const FInputActionValue& value)
 {
+	// You can't change steering direction while using the handbrake.
+	if (IsUsingHandbrake)
+	{
+		return;
+	}
+	
 	//Invert the controls if affected by inverter
 	const float axisValue = IsInverted ? -value.Get<float>() : value.Get<float>();
 	Steering = SteeringMultiplier * axisValue;
@@ -444,12 +625,20 @@ void AHoverVehiclePawn::OnReleaseBrake(const FInputActionValue& value)
 	bWantsToGoForwardOrBackwards = false;
 }
 
+void AHoverVehiclePawn::OnReleaseHandbrake(const FInputActionValue& value)
+{
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Deactivate Handbrake."));
+	TractionStrength = OriginalTractionStrength;
+	IsUsingHandbrake = false;
+}
+
 void AHoverVehiclePawn::OnReleaseSteer(const FInputActionValue& value)
 {
 	MySteerDirection = ESteerDirection::STRAIGHT;
 }
 
-void AHoverVehiclePawn::RunCameraEffects()
+void AHoverVehiclePawn::RunCameraEffects(float DeltaTime)
 {
 	// TODO: Camera shake, motion blur,
 
@@ -460,7 +649,7 @@ void AHoverVehiclePawn::RunCameraEffects()
 
 	LeanCamera();
 	CameraShake();
-	ChangeCameraFOV();
+	ChangeCameraFOV(DeltaTime);
 }
 
 void AHoverVehiclePawn::LeanCamera()
@@ -506,23 +695,25 @@ void AHoverVehiclePawn::CameraShake()
 	}
 }
 
-void AHoverVehiclePawn::ChangeCameraFOV()
+void AHoverVehiclePawn::ChangeCameraFOV(float DeltaTime)
 {
-	if (GetVelocity().Length() > FastVelocityThreshold)
+	float speed = FMath::Abs(GetVelocity().Length());
+	
+	if (speed > FastVelocityThreshold)
 	{
-		float targetFOV = OriginalFOV * (1 + (SpeedFOVEffect / 1000));
-		SetFOVSettings(SpeedFOV, CameraInterpSpeed);
+		float targetFOV = OriginalFOV * (1 + (SpeedFOVEffect * speed / 100000));
+		SetFOVSettings(targetFOV, CameraInterpSpeed, DeltaTime);
 	}
 	else
 	{
-		SetFOVSettings(OriginalFOV, CameraInterpSpeed);
+		SetFOVSettings(OriginalFOV, CameraInterpSpeed, DeltaTime);
 	}
 }
 
-void AHoverVehiclePawn::SetFOVSettings(float FOV, float InterpSpeed)
+void AHoverVehiclePawn::SetFOVSettings(float FOV, float InterpSpeed, float DeltaTime)
 {
 	float currentFOV = Camera->FieldOfView;
-	float newFOV = UKismetMathLibrary::FInterpTo(currentFOV, FOV, GetWorld()->DeltaTimeSeconds, InterpSpeed);
+	float newFOV = UKismetMathLibrary::FInterpTo(currentFOV, FOV, DeltaTime, InterpSpeed);
 	Camera->SetFieldOfView(newFOV);
 }
 

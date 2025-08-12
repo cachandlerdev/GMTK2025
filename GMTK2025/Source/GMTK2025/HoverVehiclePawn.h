@@ -14,6 +14,7 @@
 #include "NiagaraComponent.h"
 #include "VehicleItems.h"
 #include "Components/SphereComponent.h"
+#include "Components/ArrowComponent.h"
 #include "HoverVehiclePawn.generated.h"
 
 class AMyGameModeBase;
@@ -49,6 +50,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Thrusters")
 	UNiagaraComponent* LeftThrusterParticleComponent;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
+	UArrowComponent* FrontRightSuspensionPoint;
+	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
+	UArrowComponent* FrontLeftSuspensionPoint;
+	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
+	UArrowComponent* BackRightSuspensionPoint;
+	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
+	UArrowComponent* BackLeftSuspensionPoint;
+
 	// Sound stuff
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
@@ -69,42 +79,83 @@ public:
 	UBoxComponent* BoxCollision;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	float MaxDistanceToFloor = 500.0f;
+	float MaxDistanceToFloor = 1000.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	float SpeedMultiplier = 2500.0;
-
+	float SpeedMultiplier = 600.0;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float MaxSpeed = 4000.0f;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	float SteeringMultiplier = 50.0;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float BoostSpeedMultiplier = 1.2f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float LongBoostUpdateTime = 0.1f;
+
+	// Steering torque
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float RotateSpeed = 50.0;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float SteeringMultiplier = 800.0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float SpeedSteeringFactor = 40000.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float MinSteerTorque = 7.5f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float MaxSteerTorque = 12.0f;
+
+	// Suspension
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
+	float CenterOfMassOffset = 100.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
+	float SuspensionLength = 50.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
+	float SuspensionStiffness = 100000.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
+	float SuspensionDamping = 100.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
+	float TractionStrength = 2.0f;
 	
 	// 1.0 lets it stop on a dime, 0 makes it never stop.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float BrakeSpeed = 0.5f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	float HoverAmount = 150.0f;
+	float HoverAmount = 20.0f;
+
+	// Lerp chassis
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleLerp")
+	float ChassisRotationLerpSpeed = 0.2f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleLerp")
+	float ChassisXYLerpSpeed = 10.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleLerp")
+	float ChassisZLerpSpeed = 10.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleLerp")
+	float LerpChassisLocationTolerance = 0.1f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	float FastVelocityThreshold = 500.0f;
+	float FastVelocityThreshold = 3000.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	float CameraLeanAmount = 5.0f;
+	float CameraLeanAmount = 8.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	float CameraInterpSpeed = 5.0f;
+	float CameraInterpSpeed = 1.5f;
 
-	// Divides this number by 500 and adds 1. e.g. "50" becomes a "1.05" FOV change
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	float SpeedFOVEffect = 50;
+	float SpeedFOVEffect = 2.85;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ghost")
 	float GhostUpdateSeconds = 0.2;
@@ -112,7 +163,7 @@ public:
 	// How often this vehicle will have force applied (in seconds).
 	// Had to switch away from tick to ensure consistent movement
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	float PhysicsUpdateTime = 0.05;
+	float PhysicsUpdateTime = 0.03333;
 
 	// The larger this value is, the less of a compensation effect we apply to account for framerate dependent physics
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
@@ -151,6 +202,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* UseItemAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* PauseAction;
 
 	void OnActivateThrottle(const FInputActionValue &value);
 	void OnActivateBrake(const FInputActionValue &value);
@@ -161,17 +215,21 @@ protected:
 	
 	void OnReleaseThrottle(const FInputActionValue &value);
 	void OnReleaseBrake(const FInputActionValue &value);
+	void OnReleaseHandbrake(const FInputActionValue &value);
 	void OnReleaseSteer(const FInputActionValue &value);
 
-	void RunCameraEffects();
+	void RunCameraEffects(float DeltaTime);
 	void LeanCamera();
 	void SetLeanSettings(float Roll, float InterpSpeed);
 	void CameraShake();
-	void ChangeCameraFOV();
-	void SetFOVSettings(float FOV, float InterpSpeed);
+	void ChangeCameraFOV(float DeltaTime);
+	void SetFOVSettings(float FOV, float InterpSpeed, float DeltaTime);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Camera")
 	void CameraShakeBP();
+	
+	UFUNCTION(BlueprintImplementableEvent, Category = "Pause")
+	void OnActivatePauseBP();
 
 private:
 	float Speed;
@@ -185,7 +243,6 @@ private:
 
 	FEnhancedInputActionValueBinding SteeringAxisBinding;
 	float OriginalFOV = 90;
-	float SpeedFOV = OriginalFOV * (1 + (SpeedFOVEffect / 1000));;
 
 	//Game instance reference
 	UMyGameInstance* GameInstance;
@@ -203,6 +260,15 @@ private:
 
 	bool IsInverted = false;
 	FTimerHandle InverterDurationHandle;
+
+	bool IsOnGround = true;
+
+	// This is the normal vector for the ground beneath the player. Used to ensure force when moving is applied
+	// parallel to the ground.
+	FVector FloorSurfaceNormal;
+
+	float OriginalTractionStrength;
+	bool IsUsingHandbrake = false;;
 	
 public:	
 	// Called every frame
@@ -255,7 +321,9 @@ public:
 private:
 	bool ShouldApplyMovement();
 
-	void ApplyPlayerMovement();
+	void ApplyMovementForce();
+	
+	void ApplyMovementRotation();
 
 	void RecordPlayerInfo();
 
@@ -266,4 +334,13 @@ private:
 	void EndEMP();
 
 	void EndInverter();
+	
+	void ApplySuspension();
+
+	// Helps the vehicle grip the road better by applying a traction/slip reduction effect
+	void ApplyTraction();
+
+	void ApplySuspensionForceOnPoint(const FVector& StartLocation, const FVector& EndLocation, UArrowComponent* Source);
+
+	void LerpChassisToRoot(float DeltaTime);
 };
