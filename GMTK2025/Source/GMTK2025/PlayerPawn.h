@@ -8,7 +8,11 @@
 #include "EnhancedInputLibrary.h"
 #include "VehicleComponent.h"
 #include "PlayerCameraComponent.h"
+#include "MyGameInstance.h"
+#include "InventoryComponent.h"
 #include "PlayerPawn.generated.h"
+
+class AMyGameModeBase;
 
 UCLASS()
 class GMTK2025_API APlayerPawn : public APawn
@@ -66,6 +70,7 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Pause")
 	void OnActivatePauseBP();
+
 #pragma endregion
 
 public:	
@@ -86,4 +91,12 @@ private:
 	UVehicleComponent* VehicleComponent;
 
 	UPlayerCameraComponent* CameraComponent;
+
+	UInventoryComponent* InventoryComponent;
+
+	UMyGameInstance* GameInstance;
+
+	AMyGameModeBase* GameMode;
+
+	void RecordPlayerInfo();
 };

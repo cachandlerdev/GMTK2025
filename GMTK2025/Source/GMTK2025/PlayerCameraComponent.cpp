@@ -2,6 +2,7 @@
 
 
 #include "PlayerCameraComponent.h"
+#include "MyEnums.h"
 
 // Sets default values for this component's properties
 UPlayerCameraComponent::UPlayerCameraComponent()
@@ -64,7 +65,7 @@ void UPlayerCameraComponent::RunCameraEffects(float DeltaTime)
 
 void UPlayerCameraComponent::LeanCamera()
 {
-	//TODO: get the velocity from the vehicle and the steer direction from the player (or maybe both from the vehicle or the player, whichever is best)
+	//TODO: get the velocity from the vehicle component and the steer direction from the movement component
 
 	if (GetVelocity().Length() > FastVelocityThreshold)
 	{
@@ -100,6 +101,8 @@ void UPlayerCameraComponent::SetLeanSettings(float Roll, float InterpSpeed)
 
 void UPlayerCameraComponent::CameraShake()
 {
+	//TODO: get the velocity from the vehicle component
+
 	if (GetVelocity().Length() > FastVelocityThreshold)
 	{
 		// Done because this is easier in blueprints
@@ -109,6 +112,8 @@ void UPlayerCameraComponent::CameraShake()
 
 void UPlayerCameraComponent::ChangeCameraFOV(float DeltaTime)
 {
+	//TODO: get the velocity from the vehicle component
+
 	float speed = FMath::Abs(GetVelocity().Length());
 
 	if (speed > FastVelocityThreshold)

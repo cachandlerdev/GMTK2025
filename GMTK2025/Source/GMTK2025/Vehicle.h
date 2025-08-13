@@ -32,13 +32,13 @@ public:
 #pragma region Suspension
 
 	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
-	UArrowComponent* FrontRightSuspensionPoint;
+	UArrowComponent* FrontRightSuspension;
 	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
-	UArrowComponent* FrontLeftSuspensionPoint;
+	UArrowComponent* FrontLeftSuspension;
 	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
-	UArrowComponent* BackRightSuspensionPoint;
+	UArrowComponent* BackRightSuspension;
 	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
-	UArrowComponent* BackLeftSuspensionPoint;
+	UArrowComponent* BackLeftSuspension;
 
 #pragma endregion
 
@@ -73,17 +73,16 @@ public:
 	//Speed
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	float MaxDistanceToFloor = 1000.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float SpeedMultiplier = 600.0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float MaxSpeed = 4000.0f;
 
+	//TODO: Ask Chris if this belongs to the boost or the vehicle
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float BoostSpeedMultiplier = 1.2f;
 
+	//TODO: Ask Chris if this belongs to the boost or the vehicle
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float LongBoostUpdateTime = 0.1f;
 
@@ -124,6 +123,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float HoverAmount = 20.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float MaxDistanceToFloor = 1000.0f;
+
 	// Brake
 	// 1.0 lets it stop on a dime, 0 makes it never stop.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
@@ -153,6 +155,60 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	const float GetSpeedMultiplier();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	const float GetMaxSpeed();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	const float GetBrakeSpeed();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	const float GetSteeringMultiplier();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	const float GetTractionStrength();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	const UStaticMeshComponent* GetChassis();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	UBoxComponent* GetCollisionBox();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	const float GetHoverAmount();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	const float GetSpeedSteeringFactor();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	const float GetMinSteerTorque();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	const float GetMaxSteerTorque();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	UArrowComponent* GetFrontRightSuspension();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	UArrowComponent* GetFrontLeftSuspension();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	UArrowComponent* GetBackRightSuspension();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	UArrowComponent* GetBackLeftSuspension();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	const float GetSuspensionLength();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	const float GetSuspensionStiffness();
+
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	const float GetSuspensionDamping();
 
 private:
 

@@ -27,7 +27,98 @@ void AVehicle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//TODO: Ask Chris why are we doing that
 	LerpChassisToRoot(DeltaTime);
+}
+
+const float AVehicle::GetSpeedMultiplier()
+{
+	return SpeedMultiplier;
+}
+
+const float AVehicle::GetMaxSpeed()
+{
+	return MaxSpeed;
+}
+
+const float AVehicle::GetBrakeSpeed()
+{
+	return BrakeSpeed;
+}
+
+const float AVehicle::GetSteeringMultiplier()
+{
+	return SteeringMultiplier;
+}
+
+const float AVehicle::GetTractionStrength()
+{
+	return TractionStrength;
+}
+
+const UStaticMeshComponent* AVehicle::GetChassis()
+{
+	return Chassis;
+}
+
+UBoxComponent* AVehicle::GetCollisionBox()
+{
+	return BoxCollision;
+}
+
+const float AVehicle::GetHoverAmount()
+{
+	return HoverAmount;
+}
+
+const float AVehicle::GetSpeedSteeringFactor()
+{
+	return SpeedSteeringFactor;
+}
+
+const float AVehicle::GetMinSteerTorque()
+{
+	return MinSteerTorque;
+}
+
+const float AVehicle::GetMaxSteerTorque()
+{
+	return MaxSteerTorque;
+}
+
+UArrowComponent* AVehicle::GetFrontRightSuspension()
+{
+	return FrontRightSuspension;
+}
+
+UArrowComponent* AVehicle::GetFrontLeftSuspension()
+{
+	return FrontLeftSuspension;
+}
+
+UArrowComponent* AVehicle::GetBackRightSuspension()
+{
+	return BackRightSuspension;
+}
+
+UArrowComponent* AVehicle::GetBackLeftSuspension()
+{
+	return BackLeftSuspension;
+}
+
+const float AVehicle::GetSuspensionLength()
+{
+	return SuspensionLength;
+}
+
+const float AVehicle::GetSuspensionStiffness()
+{
+	return SuspensionStiffness;
+}
+
+const float AVehicle::GetSuspensionDamping()
+{
+	return SuspensionDamping;
 }
 
 void AVehicle::LerpChassisToRoot(float DeltaTime)
