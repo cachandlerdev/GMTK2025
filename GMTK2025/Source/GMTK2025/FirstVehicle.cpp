@@ -68,24 +68,24 @@ AFirstVehicle::AFirstVehicle()
 	BoxCollision->SetCenterOfMass(FVector(0.0f, 0.0f, -1 * CenterOfMassOffset));
 
 	// Suspension
-	FrontRightSuspensionPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("FrontRightSuspensionPoint"));
-	FrontLeftSuspensionPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("FrontLeftSuspensionPoint"));
-	BackRightSuspensionPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("BackRightSuspensionPoint"));
-	BackLeftSuspensionPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("BackLeftSuspensionPoint"));
-	FrontRightSuspensionPoint->SetupAttachment(BoxCollision);
-	FrontLeftSuspensionPoint->SetupAttachment(BoxCollision);
-	BackRightSuspensionPoint->SetupAttachment(BoxCollision);
-	BackLeftSuspensionPoint->SetupAttachment(BoxCollision);
+	FrontRightSuspension = CreateDefaultSubobject<UArrowComponent>(TEXT("FrontRightSuspension"));
+	FrontLeftSuspension = CreateDefaultSubobject<UArrowComponent>(TEXT("FrontLeftSuspension"));
+	BackRightSuspension = CreateDefaultSubobject<UArrowComponent>(TEXT("BackRightSuspension"));
+	BackLeftSuspension = CreateDefaultSubobject<UArrowComponent>(TEXT("BackLeftSuspension"));
+	FrontRightSuspension->SetupAttachment(BoxCollision);
+	FrontLeftSuspension->SetupAttachment(BoxCollision);
+	BackRightSuspension->SetupAttachment(BoxCollision);
+	BackLeftSuspension->SetupAttachment(BoxCollision);
 
-	FrontRightSuspensionPoint->SetRelativeLocation(FVector(-185.0f, 80.0f, -50.0f));
-	FrontLeftSuspensionPoint->SetRelativeLocation(FVector(185.0f, -80.0f, -50.0f));
-	BackRightSuspensionPoint->SetRelativeLocation(FVector(185.0f, 80.0f, -50.0f));
-	BackLeftSuspensionPoint->SetRelativeLocation(FVector(-185.0f, -80.0f, -50.0f));
+	FrontRightSuspension->SetRelativeLocation(FVector(-185.0f, 80.0f, -50.0f));
+	FrontLeftSuspension->SetRelativeLocation(FVector(185.0f, -80.0f, -50.0f));
+	BackRightSuspension->SetRelativeLocation(FVector(185.0f, 80.0f, -50.0f));
+	BackLeftSuspension->SetRelativeLocation(FVector(-185.0f, -80.0f, -50.0f));
 
-	FrontRightSuspensionPoint->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
-	FrontLeftSuspensionPoint->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
-	BackRightSuspensionPoint->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
-	BackLeftSuspensionPoint->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
+	FrontRightSuspension->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
+	FrontLeftSuspension->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
+	BackRightSuspension->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
+	BackLeftSuspension->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
 
 #pragma endregion
 	

@@ -73,12 +73,48 @@ protected:
 
 #pragma endregion
 
+#pragma region Camera
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	USpringArmComponent* CameraBoom;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	UCameraComponent* Camera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float CameraLeanAmount = 8.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float CameraInterpSpeed = 1.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float SpeedFOVEffect = 2.85;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float FastVelocityThreshold = 3000.0f;
+
+	float OriginalFOV = 90;
+
+	void RunCameraEffects(float DeltaTime);
+	void LeanCamera();
+	void SetLeanSettings(float Roll, float InterpSpeed);
+	void CameraShake();
+	void ChangeCameraFOV(float DeltaTime);
+	void SetFOVSettings(float FOV, float InterpSpeed, float DeltaTime);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Camera")
+	void CameraShakeBP();
+
+#pragma endregion
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void RecordPlayerInfo();
 
 private:
 	// garbage deletion isn't an issue (I think) because we check if it's null
@@ -87,16 +123,11 @@ private:
 
 	FEnhancedInputActionValueBinding SteeringAxisBinding;
 
-	//Current Vehicle
-	UVehicleComponent* VehicleComponent;
-
-	UPlayerCameraComponent* CameraComponent;
+	UVehicleMovementComponent* MovementComponent;
 
 	UInventoryComponent* InventoryComponent;
 
 	UMyGameInstance* GameInstance;
 
 	AMyGameModeBase* GameMode;
-
-	void RecordPlayerInfo();
 };

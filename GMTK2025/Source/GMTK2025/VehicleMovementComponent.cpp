@@ -2,6 +2,7 @@
 
 
 #include "VehicleMovementComponent.h"
+#include "PlayerPawn.h"
 
 /*
 This component is responsible for handling the vehicle movement physics. It should only receive physics inputs and resolve them.
@@ -36,7 +37,7 @@ void UVehicleMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	// ...
 }
 
-void UVehicleMovementComponent::ApplyMovementForce(FVector forwardVector, UBoxComponent* forceReceiver, FVector surfaceNormal, const float speedMultiplier, const float hoverAmount)
+void UVehicleMovementComponent::ApplyMovementForce()
 {
 	//TODO: Confirm whether FloorSurfaceNormal should be in the movement component or in the vehicle component
 
@@ -44,16 +45,16 @@ void UVehicleMovementComponent::ApplyMovementForce(FVector forwardVector, UBoxCo
 	if (bWantsToGoForwardOrBackwards)
 	{
 		// Always apply the force parallel to the floor axis.
-		FVector force = FVector::VectorPlaneProject(forwardVector, surfaceNormal);
+		FVector force = FVector::VectorPlaneProject(Vehicle->GetChassis()->GetForwardVector(), FloorSurfaceNormal);
 
 		//force.X *= Speed * PhysicsUpdateTime * SpeedMultiplier;
 		//force.Y *= Speed * PhysicsUpdateTime * SpeedMultiplier;
 
 		// Thanks unreal for making physics framerate dependent
 		// TODO: find a less hacky way of doing this
-		force.X *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * speedMultiplier;
-		force.Y *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * speedMultiplier;
-		force.Z = hoverAmount;
+		force.X *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * Vehicle->GetSpeedMultiplier();
+		force.Y *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * Vehicle->GetSpeedMultiplier();
+		force.Z = Vehicle->GetHoverAmount();
 
 		// Don't let the player get stuck at 0 movement because the controls stop working.
 		if (force.X == 0 && force.Y == 0)
@@ -62,11 +63,11 @@ void UVehicleMovementComponent::ApplyMovementForce(FVector forwardVector, UBoxCo
 			force.Y = 1;
 		}
 
-		forceReceiver->AddForce(force, "", true);
+		Vehicle->GetCollisionBox()->AddForce(force, "", true);
 	}
 }
 
-void UVehicleMovementComponent::ApplyMovementRotation(double currentVelocity, UBoxComponent* torqueReceiver, const float speedSteeringFactor, const float minSteerTorque, const float maxSteerTorque)
+void UVehicleMovementComponent::ApplyMovementRotation()
 {
 	float RotationAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsRotationFramerateCompensation);
 	if (SteerDirection != ESteerDirection::STRAIGHT)
@@ -75,57 +76,56 @@ void UVehicleMovementComponent::ApplyMovementRotation(double currentVelocity, UB
 
 		// Dynamically change the torque amount based on the speed of the car.
 		// The slower the car, the stronger the torque. As it speeds up, make the torque weaker.
-		float dynamicSteeringStrength = FMath::Abs((1 / currentVelocity)) * speedSteeringFactor;
-		dynamicSteeringStrength = FMath::Clamp(dynamicSteeringStrength, minSteerTorque, maxSteerTorque);
+		float dynamicSteeringStrength = FMath::Abs((1 / Vehicle->GetVelocity().Length())) * Vehicle->GetSpeedSteeringFactor();
+		dynamicSteeringStrength = FMath::Clamp(dynamicSteeringStrength, Vehicle->GetMinSteerTorque(), Vehicle->GetMaxSteerTorque());
 		FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * RotationAccountForFramerate * dynamicSteeringStrength);
-		torqueReceiver->AddTorqueInDegrees(torque, "", true);
+		Vehicle->GetCollisionBox()->AddTorqueInDegrees(torque, "", true);
 	}
 }
 
-void UVehicleMovementComponent::ApplySuspension(UArrowComponent* frontRightSuspension, UArrowComponent* frontLeftSuspension, UArrowComponent* backRightSuspension, UArrowComponent* backLeftSuspension, 
-	const float suspensionLength, const float suspensionStiffness, const float suspensionDamping, FVector upVector, UBoxComponent* suspensionReceiver)
+void UVehicleMovementComponent::ApplySuspension()
 {
-	//TODO: get reference from the vehicle for the suspension points and up vector
+	UArrowComponent* frontRightSuspension = Vehicle->GetFrontRightSuspension();
+	UArrowComponent* frontLeftSuspension = Vehicle->GetFrontLeftSuspension();
+	UArrowComponent* backRightSuspension = Vehicle->GetBackRightSuspension();
+	UArrowComponent* backLeftSuspension = Vehicle->GetBackLeftSuspension();
 
 	FVector frontRightStartLocation = frontRightSuspension->GetComponentLocation();
 	FVector frontLeftStartLocation = frontLeftSuspension->GetComponentLocation();
 	FVector backRightStartLocation = backRightSuspension->GetComponentLocation();
 	FVector backLeftStartLocation = backLeftSuspension->GetComponentLocation();
 
-	FVector suspensionDirection = upVector * -1;
+	FVector suspensionDirection = Vehicle->GetActorUpVector() * -1;
+
+	const float suspensionLength = Vehicle->GetSuspensionLength();
 
 	FVector frontRightEndLocation = frontRightStartLocation + (suspensionDirection * suspensionLength);
 	FVector frontLeftEndLocation = frontLeftStartLocation + (suspensionDirection * suspensionLength);
 	FVector backRightEndLocation = backRightStartLocation + (suspensionDirection * suspensionLength);
 	FVector backLeftEndLocation = backLeftStartLocation + (suspensionDirection * suspensionLength);
 
-	ApplySuspensionForceOnPoint(frontRightStartLocation, frontRightEndLocation, frontRightSuspension, suspensionLength, suspensionStiffness, suspensionDamping, upVector, suspensionReceiver);
-	ApplySuspensionForceOnPoint(frontLeftStartLocation, frontLeftEndLocation, frontLeftSuspension, suspensionLength, suspensionStiffness, suspensionDamping, upVector, suspensionReceiver);
-	ApplySuspensionForceOnPoint(backRightStartLocation, backRightEndLocation, backRightSuspension, suspensionLength, suspensionStiffness, suspensionDamping, upVector, suspensionReceiver);
-	ApplySuspensionForceOnPoint(backLeftStartLocation, backLeftEndLocation, backLeftSuspension, suspensionLength, suspensionStiffness, suspensionDamping, upVector, suspensionReceiver);
+	ApplySuspensionForceOnPoint(frontRightStartLocation, frontRightEndLocation, frontRightSuspension);
+	ApplySuspensionForceOnPoint(frontLeftStartLocation, frontLeftEndLocation, frontLeftSuspension);
+	ApplySuspensionForceOnPoint(backRightStartLocation, backRightEndLocation, backRightSuspension);
+	ApplySuspensionForceOnPoint(backLeftStartLocation, backLeftEndLocation, backLeftSuspension);
 }
 
-void UVehicleMovementComponent::ApplyTraction(FVector velocityVector, FVector rightVector, UBoxComponent* tractionReceiver)
+void UVehicleMovementComponent::ApplyTraction()
 {
-	//TODO: get reference from the vehicle
-
 	// Credit to https://www.youtube.com/watch?v=LG1CtlFRmpU
 	// We find the local sideways component of the vehicle's velocity,
 	// and apply a counterforce scaled by the traction strength
-	float angle = FVector::DotProduct(velocityVector, rightVector);
-	FVector tractionVectorDirection = rightVector * angle * -1;
+	float angle = FVector::DotProduct(Vehicle->GetVelocity(), Vehicle->GetActorRightVector());
+	FVector tractionVectorDirection = Vehicle->GetActorRightVector() * angle * -1;
 	FVector tractionForce = tractionVectorDirection * CurrentTractionStrength;
-	tractionReceiver->AddForce(tractionForce, "", true);
+	Vehicle->GetCollisionBox()->AddForce(tractionForce, "", true);
 }
 
-void UVehicleMovementComponent::ApplySuspensionForceOnPoint(const FVector& StartLocation, const FVector& EndLocation, UArrowComponent* Source,
-	const float suspensionLength, const float suspensionStiffness, const float suspensionDamping, FVector upVector, UBoxComponent* suspensionReceiver)
-{
-	//TODO: get reference from the vehicle
-	
+void UVehicleMovementComponent::ApplySuspensionForceOnPoint(const FVector& StartLocation, const FVector& EndLocation, UArrowComponent* Source)
+{	
 	FHitResult hitResult;
 	FCollisionQueryParams queryParams;
-	queryParams.AddIgnoredActor(this);
+	queryParams.AddIgnoredActor(Vehicle);
 
 	bool bHit = GetWorld()->LineTraceSingleByChannel(
 		hitResult,
@@ -149,12 +149,12 @@ void UVehicleMovementComponent::ApplySuspensionForceOnPoint(const FVector& Start
 		// v is the velocity at the given point.
 
 		// Calculate compression ratio
-		float compression = 1 - (hitResult.Distance / suspensionLength); // accounts for the -x
+		float compression = 1 - (hitResult.Distance / Vehicle->GetSuspensionLength()); // accounts for the -x
 		float pointVelocity = Source->GetComponentVelocity().Z;
 
-		float force = (compression * suspensionStiffness) - (suspensionDamping * pointVelocity);
-		FVector forceVector = upVector * force;
-		suspensionReceiver->AddForceAtLocation(forceVector, StartLocation);
+		float force = (compression * Vehicle->GetSuspensionStiffness()) - (Vehicle->GetSuspensionDamping() * pointVelocity);
+		FVector forceVector = Vehicle->GetActorUpVector() * force;
+		Vehicle->GetCollisionBox()->AddForceAtLocation(forceVector, StartLocation);
 	}
 
 	//DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 1.0f, 0, 1.0f);
@@ -162,48 +162,57 @@ void UVehicleMovementComponent::ApplySuspensionForceOnPoint(const FVector& Start
 
 void UVehicleMovementComponent::StopMovement()
 {
-	//TODO: get reference from the vehicle
-
 	Speed = 0;
 	Steering = 0;
 	bWantsToGoForwardOrBackwards = false;
 	SteerDirection = ESteerDirection::STRAIGHT;
 
-	BoxCollision->SetSimulatePhysics(false);
-	BoxCollision->SetSimulatePhysics(true);
+	Vehicle->GetCollisionBox()->SetSimulatePhysics(false);
+	Vehicle->GetCollisionBox()->SetSimulatePhysics(true);
 }
 
-void UVehicleMovementComponent::Throttle(const float axisValue, const float speedMultiplier, const float maxSpeed)
+void UVehicleMovementComponent::Throttle(const float axisValue)
 {
 	bWantsToGoForwardOrBackwards = true;
-	Speed = FMath::Clamp(axisValue * speedMultiplier, 1.0f, maxSpeed);
+	Speed = FMath::Clamp(axisValue * Vehicle->GetSpeedMultiplier(), 1.0f, Vehicle->GetMaxSpeed());
 }
 
-void UVehicleMovementComponent::Brake(const float brakeSpeed, const float maxSpeed)
+void UVehicleMovementComponent::Brake()
 {
 	bWantsToGoForwardOrBackwards = true;
-	Speed *= FMath::Clamp(-1 * brakeSpeed, -1.0f, -1 * maxSpeed);
+	Speed *= FMath::Clamp(-1 * Vehicle->GetBrakeSpeed(), -1.0f, -1 * Vehicle->GetMaxSpeed());
 }
 
 void UVehicleMovementComponent::Handbrake()
 {
+	IsUsingHandbrake = true;
+
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Activate Handbrake."));
 	CurrentTractionStrength = 0.0f;
 }
 
-void UVehicleMovementComponent::Steer(const float axisValue, const float steeringMultiplier, const bool shouldInvert)
+void UVehicleMovementComponent::Steer(const float axisValue)
 {
-	Steering = steeringMultiplier * axisValue;
+	// You can't change steering direction while using the handbrake.
+	if (IsUsingHandbrake)
+	{
+		return;
+	}
+
+	//Invert the controls if affected by inverter
+	const float finalAxisValue = IsInverted ? -axisValue : axisValue;
+
+	Steering = Vehicle->GetSteeringMultiplier() * finalAxisValue;
 
 	// Not very clean but if it works
-	if (Speed >= 0 && !shouldInvert)
+	if (Speed >= 0 && !IsInverted)
 	{
-		if (axisValue > 0)
+		if (finalAxisValue > 0)
 		{
 			SteerDirection = ESteerDirection::RIGHT;
 		}
-		else if (axisValue < 0)
+		else if (finalAxisValue < 0)
 		{
 			SteerDirection = ESteerDirection::LEFT;
 		}
@@ -215,11 +224,11 @@ void UVehicleMovementComponent::Steer(const float axisValue, const float steerin
 	else
 	{
 		// Reverse if going backwards
-		if (axisValue > 0)
+		if (finalAxisValue > 0)
 		{
 			SteerDirection = ESteerDirection::LEFT;
 		}
-		else if (axisValue < 0)
+		else if (finalAxisValue < 0)
 		{
 			SteerDirection = ESteerDirection::RIGHT;
 		}
@@ -240,11 +249,13 @@ void UVehicleMovementComponent::ReleaseBrake()
 	bWantsToGoForwardOrBackwards = false;
 }
 
-void UVehicleMovementComponent::ReleaseHandbrake(const float defaultTractionStrength)
+void UVehicleMovementComponent::ReleaseHandbrake()
 {
+	IsUsingHandbrake = false;
+
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Deactivate Handbrake."));
-	CurrentTractionStrength = defaultTractionStrength;
+	CurrentTractionStrength = Vehicle->GetTractionStrength();
 }
 
 void UVehicleMovementComponent::ReleaseSteer()
@@ -262,7 +273,76 @@ float UVehicleMovementComponent::GetCurrentSteering()
 	return Steering;
 }
 
+double UVehicleMovementComponent::GetCurrentVelocity()
+{
+	return Vehicle->GetVelocity().Length();
+}
+
 ESteerDirection UVehicleMovementComponent::GetCurrentSteerDirection()
 {
 	return SteerDirection;
+}
+
+AActor* UVehicleMovementComponent::GetVehicle()
+{
+	return Vehicle;
+}
+
+bool UVehicleMovementComponent::ShouldApplyMovement()
+{
+	//Check if the vehicle is EMP'd
+	if (IsEMPd)
+	{
+		return false;
+	}
+
+	FHitResult HitResult;
+	FVector TraceStart = Vehicle->GetActorLocation();
+	FVector TraceEnd = TraceStart;
+	TraceEnd.Z -= Vehicle->MaxDistanceToFloor;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(Vehicle);
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		TraceStart,
+		TraceEnd,
+		ECC_Visibility,
+		QueryParams
+	);
+
+	if (bHit)
+	{
+		FloorSurfaceNormal = HitResult.ImpactNormal;
+	}
+
+	IsOnGround = bHit;
+
+	return bHit;
+}
+
+void UVehicleMovementComponent::UpdateMovementPhysics()
+{
+	if (ShouldApplyMovement())
+	{
+		ApplyMovementForce();
+		ApplyMovementRotation();
+		ApplySuspension();
+		ApplyTraction();
+	}
+
+	//Store player info to game instance for the ghost
+	//Broadcast physics changed
+	OnPhysicsUpdated.Broadcast();
+}
+
+float UVehicleMovementComponent::GetCurrentVelocityInKMPerHour()
+{
+	FVector VelocityVector = Vehicle->GetVelocity();
+
+	double VelocityInCmPerSecond = VelocityVector.Length();
+
+	double VelocityInKMPerHour = VelocityInCmPerSecond * 0.036;
+
+	return VelocityInKMPerHour;
 }

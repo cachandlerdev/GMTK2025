@@ -44,8 +44,6 @@ TArray<int> UInventoryComponent::GetItems()
 
 void UInventoryComponent::AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemClass)
 {
-	//TODO: get reference to the vehicle to get the location
-
 	if (VehicleItem != nullptr)
 	{
 		VehicleItem->RemoveItem();
@@ -56,10 +54,10 @@ void UInventoryComponent::AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemC
 	{
 		NewVehicleItem->RegisterComponent();
 		VehicleItem = NewVehicleItem;
+		
 
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), GetCollectableSound, GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), GetCollectableSound, GetOwner()->GetActorLocation());
 	}
-
 }
 
 UVehicleItems* UInventoryComponent::GetVehicleItems()
@@ -81,14 +79,14 @@ void UInventoryComponent::UseItem(const float axisValue)
 
 void UInventoryComponent::AddCoins()
 {
-	//TODO: get reference to the vehicle to get the location
 	//TODO: refactor boosting with coins logic
 
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), GetCollectableSound, GetActorLocation());
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), GetCollectableSound, GetOwner()->GetActorLocation());
 	Coins++;
 	if (Coins == 10)
 	{
-		Boost(3);
+		//Disabled boost until the boosting refactor is done
+		//Boost(3);
 		Coins = 0;
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Boosted!"));
 	}
