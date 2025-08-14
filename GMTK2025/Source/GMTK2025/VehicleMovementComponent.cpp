@@ -273,6 +273,11 @@ float UVehicleMovementComponent::GetCurrentSteering()
 	return Steering;
 }
 
+bool UVehicleMovementComponent::GetCurrentWantsToGoForwardOrBackwards()
+{
+	return bWantsToGoForwardOrBackwards;
+}
+
 double UVehicleMovementComponent::GetCurrentVelocity()
 {
 	return Vehicle->GetVelocity().Length();
@@ -346,3 +351,4 @@ float UVehicleMovementComponent::GetCurrentVelocityInKMPerHour()
 
 	return VelocityInKMPerHour;
 }
+

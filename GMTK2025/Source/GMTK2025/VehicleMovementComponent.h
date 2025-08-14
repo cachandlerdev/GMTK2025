@@ -36,7 +36,7 @@ public:
 	// Had to switch away from tick to ensure consistent movement
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float PhysicsUpdateTime = 0.03333;
-
+	/*
 	void Throttle(const float axisValue);
 
 	void Brake();
@@ -52,7 +52,7 @@ public:
 	void ReleaseHandbrake();
 
 	void ReleaseSteer();
-
+	*/
 	void ApplyMovementForce();
 
 	void ApplyMovementRotation();
@@ -110,7 +110,7 @@ public:
 	float GetCurrentSteering();
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
-	float GetCurrentWantsToGoForwardOrBackwards();
+	bool GetCurrentWantsToGoForwardOrBackwards();
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	double GetCurrentVelocity();

@@ -6,10 +6,11 @@
 #include "GameFramework/Pawn.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputLibrary.h"
-#include "VehicleComponent.h"
-#include "PlayerCameraComponent.h"
 #include "MyGameInstance.h"
 #include "InventoryComponent.h"
+#include "VehicleMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 #include "PlayerPawn.generated.h"
 
 class AMyGameModeBase;
