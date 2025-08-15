@@ -8,7 +8,7 @@
 #include "InventoryComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable )
 class GMTK2025_API UInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -50,6 +50,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Items")
 	int32 Coins = 0;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Items")
-	void OnUseItemBP(UVehicleItems* Item);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Items")
+	void OnUseItemBP(UVehicleItems* Item); 
 };

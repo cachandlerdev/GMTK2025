@@ -24,6 +24,15 @@ public:
 	// Sets default values for this pawn's properties
 	APlayerPawn();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UVehicleMovementComponent* MovementComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UInventoryComponent* InventoryComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UChildActorComponent* VehicleBlueprintComponent;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -104,7 +113,7 @@ protected:
 	void SetFOVSettings(float FOV, float InterpSpeed, float DeltaTime);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Camera")
-	void CameraShakeBP();
+	void PlayerCameraShakeBP();
 
 #pragma endregion
 
@@ -123,10 +132,6 @@ private:
 	UEnhancedInputComponent* EnhancedInputComponent;
 
 	FEnhancedInputActionValueBinding SteeringAxisBinding;
-
-	UVehicleMovementComponent* MovementComponent;
-
-	UInventoryComponent* InventoryComponent;
 
 	UMyGameInstance* GameInstance;
 

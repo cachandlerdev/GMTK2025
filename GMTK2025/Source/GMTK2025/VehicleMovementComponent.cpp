@@ -24,6 +24,10 @@ void UVehicleMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//Start the physics update timer
+	GetOwner()->GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &UVehicleMovementComponent::UpdateMovementPhysics,
+		PhysicsUpdateTime, true);
+
 	// ...
 	
 }

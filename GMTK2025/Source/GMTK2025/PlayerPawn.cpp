@@ -15,8 +15,14 @@ APlayerPawn::APlayerPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	MovementComponent = CreateDefaultSubobject<UVehicleMovementComponent>(TEXT("MovementComponent"));
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
+
+	VehicleBlueprintComponent = CreateDefaultSubobject<UChildActorComponent>(TEXT("VehicleBlueprintComponent"));
+	VehicleBlueprintComponent->SetupAttachment(RootComponent);
+
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
+	CameraBoom->SetupAttachment(VehicleBlueprintComponent);
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
 
@@ -107,7 +113,7 @@ void APlayerPawn::CameraShake()
 	if (MovementComponent->GetCurrentVelocity() > FastVelocityThreshold)
 	{
 		// Done because this is easier in blueprints
-		CameraShakeBP();
+		PlayerCameraShakeBP();
 	}
 }
 
