@@ -31,7 +31,7 @@ public:
 	void CountUpTimer()
 	{
 		TimerCount++;
-		if (TimerCount >= effectDuration) // Reset after Specified Duration
+		if (TimerCount >= effectDuration) // Call to remove item if the effect duration is reached
 		{
 			TimerCount = 0;
 			GetWorld()->GetTimerManager().ClearTimer(MyTimerHandle);

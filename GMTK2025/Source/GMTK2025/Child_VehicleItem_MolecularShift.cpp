@@ -8,10 +8,11 @@
 void UChild_VehicleItem_MolecularShift::UseItem()
 {
 	Super::UseItem();
-	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerGhostActor::StaticClass(), FoundActors);
+	TArray<AActor*> FoundActors;// Array to hold found actors
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerGhostActor::StaticClass(), FoundActors);// Fills found actors
+	//with all the AI ghost cars
 
-	for (AActor* Actor : FoundActors)
+	for (AActor* Actor : FoundActors)//sets ai ghost cars to ignore collision with the player
 	{
 		APlayerGhostActor* GhostActor = Cast<APlayerGhostActor>(Actor);
 		if (GhostActor)
@@ -19,7 +20,7 @@ void UChild_VehicleItem_MolecularShift::UseItem()
 			GhostActor->BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
 		}
 	}
-	FTimerHandle TimerHandle;
+	FTimerHandle TimerHandle;// timer to manage length of the effect
 	GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, this, &UChild_VehicleItem_MolecularShift::CountUpTimer, 1.0f, true);
 	
 }
@@ -32,7 +33,7 @@ void UChild_VehicleItem_MolecularShift::RemoveItem()
 		APlayerGhostActor* GhostActor = Cast<APlayerGhostActor>(Actor);
 		if (GhostActor)
 		{
-			GhostActor->BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
+			GhostActor->BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);// sets all ghosts to collidable
 		}
 	}
 	GetWorld()->GetTimerManager().ClearTimer(MyTimerHandle);
