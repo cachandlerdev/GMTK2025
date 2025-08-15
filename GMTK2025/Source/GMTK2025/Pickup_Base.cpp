@@ -3,6 +3,8 @@
 
 #include "Pickup_Base.h"
 #include "NiagaraComponent.h"
+#include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 APickup_Base::APickup_Base()
@@ -33,6 +35,7 @@ void APickup_Base::HandlePickup(AActor* PickupInstigator)
 	// Logic for handling the pickup
 	// This could include adding to inventory, updating score, etc.
 	UE_LOG(LogTemp, Warning, TEXT("Pickup handled!"));
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickupSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation());
 
 	// Optionally destroy the pickup actor after handling
 	Destroy();

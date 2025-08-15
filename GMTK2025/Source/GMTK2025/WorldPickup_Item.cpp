@@ -6,18 +6,17 @@
 #include "HoverVehiclePawn.h"
 #include "VehicleItems.h"
 #include "Kismet/GameplayStatics.h"
-
-void AWorldPickup_Item::HandlePickup(AActor* PickupInstigator)
+//****This class handles granting player items when they begin overlapping in the world. Its a subclass of Pickup_Base****
+void AWorldPickup_Item::HandlePickup(AActor* PickupInstigator)//Handle pickup item adds item to players inventory then
+// calls parents function
 {
 	AHoverVehiclePawn* player = Cast<AHoverVehiclePawn>(PickupInstigator);
 	
 
-	if (player && player->IsPlayerControlled())
+	if (player && player->IsPlayerControlled())// make sure the player is the instigating actor before running function
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickupSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation());
-
 		player->AddVehicleItem(VehicleItemClass);	
-		Destroy();
+		Super::HandlePickup(PickupInstigator);
 	}
 
 	// Replaced for performance reasons (even if it sacrifices portability somewhat)
