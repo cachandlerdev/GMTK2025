@@ -721,14 +721,9 @@ void AHoverVehiclePawn::AddCoins()
 {
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), GetCollectableSound, GetActorLocation());
 	Coins++;
-	if (Coins == 10)
+	if (Coins < 10)
 	{
-		Boost(3);
-		Coins = 0;
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Boosted!"));
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Coins: %d"), Coins));
+		SpeedMultiplier += 10.0f;
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("+Speed"));
 	}
 }
