@@ -19,10 +19,15 @@ APlayerPawn::APlayerPawn()
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 
 	VehicleBlueprintComponent = CreateDefaultSubobject<UChildActorComponent>(TEXT("VehicleBlueprintComponent"));
-	VehicleBlueprintComponent->SetupAttachment(RootComponent);
+
+	//TODO: move the vehicle construction to here a make the box collider the root of the blueprint
+
+#pragma region Camera
+
+	//TODO: Attach this to the vehicle Root
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(VehicleBlueprintComponent);
+	CameraBoom->SetupAttachment(RootComponent);
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
 
@@ -38,6 +43,8 @@ APlayerPawn::APlayerPawn()
 	CameraBoom->SocketOffset.Z = 140.0f;
 
 	OriginalFOV = Camera->FieldOfView;
+
+#pragma endregion
 }
 
 // Called when the game starts or when spawned
@@ -50,6 +57,9 @@ void APlayerPawn::BeginPlay()
 
 	//Subscribe to OnPhysicsUpdated in the Movement Component
 	MovementComponent->OnPhysicsUpdated.AddDynamic(this, &APlayerPawn::RecordPlayerInfo);
+
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Subscribed to movement updates."));
 }
 
 // Called every frame
@@ -180,6 +190,12 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void APlayerPawn::RecordPlayerInfo()
 {
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Physics Updated From Pawn."));
+	
+	//Update current transform
+	this->SetActorTransform(MovementComponent->GetVehicle()->GetCollisionBox()->GetComponentTransform());
+
 	int32 loopNum = GameMode->GetCurrentLoopNumber();
 	
 	if (loopNum > -1)

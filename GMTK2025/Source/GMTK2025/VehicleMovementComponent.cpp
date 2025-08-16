@@ -43,8 +43,6 @@ void UVehicleMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 
 void UVehicleMovementComponent::ApplyMovementForce()
 {
-	//TODO: Confirm whether FloorSurfaceNormal should be in the movement component or in the vehicle component
-
 	float MovementAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * PhysicsMovementFramerateCompensation);
 	if (bWantsToGoForwardOrBackwards)
 	{
@@ -292,7 +290,7 @@ ESteerDirection UVehicleMovementComponent::GetCurrentSteerDirection()
 	return SteerDirection;
 }
 
-AActor* UVehicleMovementComponent::GetVehicle()
+AVehicle* UVehicleMovementComponent::GetVehicle()
 {
 	return Vehicle;
 }
@@ -339,6 +337,9 @@ void UVehicleMovementComponent::UpdateMovementPhysics()
 		ApplySuspension();
 		ApplyTraction();
 	}
+
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Physics Updated From Movement Component."));
 
 	//Store player info to game instance for the ghost
 	//Broadcast physics changed

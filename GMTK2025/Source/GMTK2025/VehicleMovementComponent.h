@@ -61,7 +61,7 @@ public:
 	float GetCurrentVelocityInKMPerHour();
 
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
-	AActor* GetVehicle();
+	AVehicle* GetVehicle();
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void Throttle(float axisValue);
