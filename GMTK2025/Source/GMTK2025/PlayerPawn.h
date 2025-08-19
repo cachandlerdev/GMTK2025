@@ -11,27 +11,19 @@
 #include "VehicleMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "VehiclePawn.h"
 #include "PlayerPawn.generated.h"
 
 class AMyGameModeBase;
 
 UCLASS()
-class GMTK2025_API APlayerPawn : public APawn
+class GMTK2025_API APlayerPawn : public AVehiclePawn
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
 	APlayerPawn();
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UVehicleMovementComponent* MovementComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UInventoryComponent* InventoryComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UChildActorComponent* VehicleBlueprintComponent;
 
 protected:
 	// Called when the game starts or when spawned
@@ -133,7 +125,4 @@ private:
 
 	FEnhancedInputActionValueBinding SteeringAxisBinding;
 
-	UMyGameInstance* GameInstance;
-
-	AMyGameModeBase* GameMode;
 };

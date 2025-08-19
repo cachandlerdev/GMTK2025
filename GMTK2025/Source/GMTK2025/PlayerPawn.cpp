@@ -15,11 +15,6 @@ APlayerPawn::APlayerPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	MovementComponent = CreateDefaultSubobject<UVehicleMovementComponent>(TEXT("MovementComponent"));
-	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
-
-	VehicleBlueprintComponent = CreateDefaultSubobject<UChildActorComponent>(TEXT("VehicleBlueprintComponent"));
-
 	//TODO: move the vehicle construction to here a make the box collider the root of the blueprint
 
 #pragma region Camera
@@ -51,9 +46,6 @@ APlayerPawn::APlayerPawn()
 void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	GameInstance = Cast<UMyGameInstance>(GetGameInstance());
-	GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 
 	//Subscribe to OnPhysicsUpdated in the Movement Component
 	MovementComponent->OnPhysicsUpdated.AddDynamic(this, &APlayerPawn::RecordPlayerInfo);
@@ -192,9 +184,6 @@ void APlayerPawn::RecordPlayerInfo()
 {
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Physics Updated From Pawn."));
-	
-	//Update current transform
-	this->SetActorTransform(MovementComponent->GetVehicle()->GetCollisionBox()->GetComponentTransform());
 
 	int32 loopNum = GameMode->GetCurrentLoopNumber();
 	
@@ -205,7 +194,7 @@ void APlayerPawn::RecordPlayerInfo()
 		GameInstance->PlayerWantsToGoForwardOrBackwards[loopNum].ArrayOfBools.Emplace(MovementComponent->GetCurrentWantsToGoForwardOrBackwards());
 		GameInstance->PlayerSteerDirections[loopNum].ArrayOfDirections.Emplace(MovementComponent->GetCurrentSteerDirection());
 
-		GameInstance->PlayerTransforms[loopNum].ArrayOfTransforms.Emplace(MovementComponent->GetVehicle()->GetActorTransform());
+		GameInstance->PlayerTransforms[loopNum].ArrayOfTransforms.Emplace(GetActorTransform());
 	}
 }
 
