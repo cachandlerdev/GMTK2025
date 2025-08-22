@@ -15,7 +15,7 @@ Game created for the GMTK Game Jam 2025 in 96 hours.
 
 - **Brandon**: Sound Design
 - **Chance**: Programming & Voice Acting
-- **Christopher**: Programming & UI
+- **Christopher**: Programming, Art, & UI
 - **Lucas**: Programming & Level Design
 - **Mazzledazz**: Art
 - **Melonenstrauch**: Music
