@@ -2,6 +2,7 @@
 
 
 #include "VehiclePawn.h"
+#include "Components/ArrowComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -27,7 +28,7 @@ AVehiclePawn::AVehiclePawn()
 #pragma endregion
 
 #pragma region Suspension
-
+	
 	// Suspension
 	FrontRightSuspension = CreateDefaultSubobject<UArrowComponent>(TEXT("FrontRightSuspension"));
 	FrontLeftSuspension = CreateDefaultSubobject<UArrowComponent>(TEXT("FrontLeftSuspension"));
@@ -38,6 +39,9 @@ AVehiclePawn::AVehiclePawn()
 	BackRightSuspension->SetupAttachment(Chassis);
 	BackLeftSuspension->SetupAttachment(Chassis);
 
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "Vehicle Pawn Constructor: " + FrontRightSuspension->GetName());
+
 	FrontRightSuspension->SetRelativeLocation(FVector(-185.0f, 80.0f, -50.0f));
 	FrontLeftSuspension->SetRelativeLocation(FVector(185.0f, -80.0f, -50.0f));
 	BackRightSuspension->SetRelativeLocation(FVector(185.0f, 80.0f, -50.0f));
@@ -47,7 +51,7 @@ AVehiclePawn::AVehiclePawn()
 	FrontLeftSuspension->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
 	BackRightSuspension->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
 	BackLeftSuspension->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
-
+	
 #pragma endregion
 
 #pragma region Sound
@@ -62,11 +66,11 @@ AVehiclePawn::AVehiclePawn()
 
 	MovementComponent = CreateDefaultSubobject<UVehicleMovementComponent>(TEXT("MovementComponent"));
 	MovementComponent->RegisterComponent();
-	MovementComponent->FrontRightSuspension = FrontRightSuspension;
-	MovementComponent->FrontLeftSuspension = FrontLeftSuspension;
-	MovementComponent->BackRightSuspension = BackRightSuspension;
-	MovementComponent->BackLeftSuspension = BackLeftSuspension;
-	MovementComponent->Chassis = Chassis;
+	//MovementComponent->FrontRightSuspension = FrontRightSuspension;
+	//MovementComponent->FrontLeftSuspension = FrontLeftSuspension;
+	//MovementComponent->BackRightSuspension = BackRightSuspension;
+	//MovementComponent->BackLeftSuspension = BackLeftSuspension;
+	//MovementComponent->Chassis = Chassis;
 
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 	InventoryComponent->RegisterComponent();
@@ -103,6 +107,9 @@ UStaticMeshComponent* AVehiclePawn::GetChassis_Implementation()
 
 UArrowComponent* AVehiclePawn::GetFrontRightSuspension_Implementation()
 {
+	if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FrontRightSuspension->GetName());
+
 	return FrontRightSuspension;
 }
 

@@ -26,34 +26,42 @@ void UVehicleMovementComponent::BeginPlay()
 
 	AActor* owner = GetOwner();
 
-		//Start the physics update timer
-		owner->GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &UVehicleMovementComponent::UpdateMovementPhysics,
-			PhysicsUpdateTime, true);
+	Owner = Cast<AVehiclePawn>(owner);
 
-		Owner = Cast<AVehiclePawn>(owner);
-
-		// Offset center of mass to keep the vehicle upright
-		Chassis->SetCenterOfMass(FVector(0.0f, 0.0f, -1 * CenterOfMassOffset));
-		/*
-
-	if (owner->GetClass()->ImplementsInterface(UVehicleInterface::StaticClass()))
-	{
-		Chassis = IVehicleInterface::Execute_GetChassis(owner);
-
-		FrontRightSuspension = IVehicleInterface::Execute_GetFrontRightSuspension(owner);
-
-		FrontLeftSuspension = IVehicleInterface::Execute_GetFrontLeftSuspension(owner);
-
-		BackRightSuspension = IVehicleInterface::Execute_GetBackRightSuspension(owner);
-
-		BackLeftSuspension = IVehicleInterface::Execute_GetBackLeftSuspension(owner);
-
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, Owner->StaticClass()->GetName());
 		
 
+	if (Owner->GetClass()->ImplementsInterface(UVehicleInterface::StaticClass()))
+	{
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, "Implements Interface.");
+		
+		Chassis = IVehicleInterface::Execute_GetChassis(Owner);
+		
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, Chassis->GetName());
 
+		FrontRightSuspension = IVehicleInterface::Execute_GetFrontRightSuspension(Owner);
+		
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FrontRightSuspension->GetName());
+
+		FrontLeftSuspension = IVehicleInterface::Execute_GetFrontLeftSuspension(Owner);
+
+		BackRightSuspension = IVehicleInterface::Execute_GetBackRightSuspension(Owner);
+
+		BackLeftSuspension = IVehicleInterface::Execute_GetBackLeftSuspension(Owner);
+		
+		
 	}
-	*/
 
+	// Offset center of mass to keep the vehicle upright
+	Chassis->SetCenterOfMass(FVector(0.0f, 0.0f, -1 * CenterOfMassOffset));
+	
+	//Start the physics update timer
+	owner->GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &UVehicleMovementComponent::UpdateMovementPhysics,
+		PhysicsUpdateTime, true);
 	// ...
 	
 }

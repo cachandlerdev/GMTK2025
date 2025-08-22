@@ -37,16 +37,16 @@ public:
 
 	//Suspension
 #pragma region Suspension
-
-	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
 	UArrowComponent* FrontRightSuspension;
-	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
 	UArrowComponent* FrontLeftSuspension;
-	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
 	UArrowComponent* BackRightSuspension;
-	UPROPERTY(BlueprintReadOnly, Category = "Suspension")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspension")
 	UArrowComponent* BackLeftSuspension;
-
+	
 #pragma endregion
 
 	// Sound
@@ -94,7 +94,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UStaticMeshComponent* GetChassis_Implementation() override;
-
+	
 	UArrowComponent* GetFrontRightSuspension_Implementation() override;
 
 	UArrowComponent* GetFrontLeftSuspension_Implementation() override;
@@ -102,7 +102,7 @@ public:
 	UArrowComponent* GetBackRightSuspension_Implementation() override;
 
 	UArrowComponent* GetBackLeftSuspension_Implementation() override;
-
+	
 private:
 
 	void LerpChassisToRoot(float DeltaTime);
