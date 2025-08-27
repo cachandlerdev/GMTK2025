@@ -32,8 +32,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
 	void AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemClass);
 
-	UFUNCTION(BlueprintCallable, Category = "Vehicle")
-	UVehicleItems* GetVehicleItems();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Vehicle")
+	UVehicleItems* GetVehicleItem();
 
 	UFUNCTION(BlueprintCallable, Category = "Item")
 	void UseItem(const float axisValue);

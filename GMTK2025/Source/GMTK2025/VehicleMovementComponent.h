@@ -117,6 +117,42 @@ public:
 
 #pragma endregion
 
+#pragma region GroundModifiers
+	
+	FTimerHandle LongBoostDurationHandle;
+	float RemainingLongBoostTime = 0.0f;
+	float LongBoostStrengthMultiplier = 1.0f;
+	
+	bool IsEMPd = false;
+	FTimerHandle EMPDurationHandle;
+
+	bool IsInverted = false;
+	FTimerHandle InverterDurationHandle;
+	
+	// Boost the vehicle forward.
+	UFUNCTION(BlueprintCallable, Category="Vehicle")
+	void Boost(float BoostStrength);
+	
+	// Boost the vehicle for a certain duration.
+	UFUNCTION(BlueprintCallable, Category="Vehicle")
+	void LongBoost(float BoostStrength, float Duration);
+	
+	// Disable the vehicle for a certain duration.
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void EMP(float Duration);
+
+	// Invert the steering axis of the vehicle for a certain duration.
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void Inverter(float Duration);
+
+	void ApplyLongBoost();
+
+	void EndEMP();
+
+	void EndInverter();
+	
+#pragma endregion
+
 
 	void ApplyMovementForce();
 
@@ -236,10 +272,6 @@ private:
 	// This is the normal vector for the ground beneath the player. Used to ensure force when moving is applied
 	// parallel to the ground.
 	FVector FloorSurfaceNormal;
-
-	bool IsEMPd = false;
-
-	bool IsInverted = false;
 
 	bool IsUsingHandbrake = false;
 

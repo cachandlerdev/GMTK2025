@@ -3,6 +3,7 @@
 
 #include "VehicleMovementComponent.h"
 #include "VehiclePawn.h"
+#include "Kismet/GameplayStatics.h"
 
 /*
 This component is responsible for handling the vehicle movement physics. It should only receive physics inputs and resolve them.
@@ -316,7 +317,11 @@ bool UVehicleMovementComponent::GetCurrentWantsToGoForwardOrBackwards()
 
 double UVehicleMovementComponent::GetCurrentVelocity()
 {
-	return Owner->GetVelocity().Length();
+	if (Owner)
+	{
+		return Owner->GetVelocity().Length();
+	}
+	return 0.0f;
 }
 
 ESteerDirection UVehicleMovementComponent::GetCurrentSteerDirection()
@@ -366,10 +371,6 @@ void UVehicleMovementComponent::UpdateMovementPhysics()
 		ApplySuspension();
 		ApplyTraction();
 	}
-
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Physics Updated From Movement Component."));
-
 	//Store player info to game instance for the ghost
 	//Broadcast physics changed
 	OnPhysicsUpdated.Broadcast();
@@ -386,6 +387,74 @@ float UVehicleMovementComponent::GetCurrentVelocityInKMPerHour()
 	return VelocityInKMPerHour;
 }
 
+void UVehicleMovementComponent::ApplyLongBoost()
+{
+	if (RemainingLongBoostTime <= 0)
+	{
+		Owner->GetWorldTimerManager().ClearTimer(LongBoostDurationHandle);
+	}
+	else
+	{
+		const float baseBoostMultiplier = 100000.0f;
+		FVector direction = Owner->GetRootComponent()->GetForwardVector();
+		Chassis->AddForce(direction * LongBoostStrengthMultiplier * baseBoostMultiplier, "", true);
+		
+		RemainingLongBoostTime = RemainingLongBoostTime - LongBoostUpdateTime;
+	}
+}
+
+void UVehicleMovementComponent::Boost(float BoostStrength)
+{
+	const float baseBoostMultiplier = 100000.0f;
+	FVector direction = Chassis->GetForwardVector();
+	Chassis->AddForce(direction * BoostStrength * baseBoostMultiplier, "", true);
+}
+
+void UVehicleMovementComponent::LongBoost(float BoostStrength, float Duration)
+{
+	if (RemainingLongBoostTime <= 0)
+	{
+		RemainingLongBoostTime = Duration;
+		LongBoostStrengthMultiplier = BoostStrength;
+		Owner->GetWorldTimerManager().SetTimer(LongBoostDurationHandle, this, &UVehicleMovementComponent::ApplyLongBoost,
+			LongBoostUpdateTime, true);	
+	}
+}
+
+void UVehicleMovementComponent::EMP(float Duration)
+{
+	if(!IsEMPd) 
+	{
+		IsEMPd = true;
+		Owner->GetWorldTimerManager().SetTimer(EMPDurationHandle, this, &UVehicleMovementComponent::EndEMP,
+			Duration, false);
+	}	
+}
+
+void UVehicleMovementComponent::EndEMP()
+{
+	IsEMPd = false;
+
+	Owner->GetWorldTimerManager().ClearTimer(EMPDurationHandle);
+}
+
+void UVehicleMovementComponent::Inverter(float Duration)
+{
+	if (!IsInverted)
+	{
+		IsInverted = true;
+
+		Owner->GetWorldTimerManager().SetTimer(InverterDurationHandle, this, &UVehicleMovementComponent::EndInverter,
+			Duration, false);
+	}
+}
+
+void UVehicleMovementComponent::EndInverter()
+{
+	IsInverted = false;
+
+	Owner->GetWorldTimerManager().ClearTimer(InverterDurationHandle);
+}
 
 const float UVehicleMovementComponent::GetSpeedMultiplier()
 {

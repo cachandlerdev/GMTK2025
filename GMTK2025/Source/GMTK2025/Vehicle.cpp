@@ -28,7 +28,7 @@ void AVehicle::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	//TODO: Ask Chris why are we doing that
-	LerpChassisToRoot(DeltaTime);
+	//LerpChassisToRoot(DeltaTime);
 }
 
 const float AVehicle::GetSpeedMultiplier()

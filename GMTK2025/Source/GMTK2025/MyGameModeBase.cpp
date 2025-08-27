@@ -4,6 +4,7 @@
 #include "MyGameModeBase.h"
 
 #include "PlayerGhostActor.h"
+#include "VehiclePawn.h"
 #include "Kismet/GameplayStatics.h"
 
 void AMyGameModeBase::InitRaceLogic()
@@ -235,10 +236,11 @@ bool AMyGameModeBase::CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActo
 
 void AMyGameModeBase::SetupPlayerForLoop()
 {
-	AHoverVehiclePawn* player = Cast<AHoverVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	//AHoverVehiclePawn* player = Cast<AHoverVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	AVehiclePawn* player = Cast<AVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (player)
 	{
-		player->StopMovement();
+		//player->StopMovement();
 		if (StartLocation)
 		{
 			FVector newLocation = StartLocation->GetActorLocation();

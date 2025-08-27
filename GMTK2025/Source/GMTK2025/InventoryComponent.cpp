@@ -60,7 +60,7 @@ void UInventoryComponent::AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemC
 	}
 }
 
-UVehicleItems* UInventoryComponent::GetVehicleItems()
+UVehicleItems* UInventoryComponent::GetVehicleItem()
 {
 	return VehicleItem;
 }
