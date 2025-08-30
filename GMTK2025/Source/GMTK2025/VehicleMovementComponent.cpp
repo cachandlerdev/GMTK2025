@@ -30,23 +30,17 @@ void UVehicleMovementComponent::BeginPlay()
 	Owner = Cast<AVehiclePawn>(owner);
 
 	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, Owner->StaticClass()->GetName());
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "Movement component owner: " + Owner->StaticClass()->GetName());
 		
 
 	if (Owner->GetClass()->ImplementsInterface(UVehicleInterface::StaticClass()))
 	{
 		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, "Implements Interface.");
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, "Movement component owner implements vehicle interface.");
 		
 		Chassis = IVehicleInterface::Execute_GetChassis(Owner);
-		
-		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, Chassis->GetName());
 
 		FrontRightSuspension = IVehicleInterface::Execute_GetFrontRightSuspension(Owner);
-		
-		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FrontRightSuspension->GetName());
 
 		FrontLeftSuspension = IVehicleInterface::Execute_GetFrontLeftSuspension(Owner);
 
@@ -54,17 +48,14 @@ void UVehicleMovementComponent::BeginPlay()
 
 		BackLeftSuspension = IVehicleInterface::Execute_GetBackLeftSuspension(Owner);
 		
+		// Offset center of mass to keep the vehicle upright
+		Chassis->SetCenterOfMass(FVector(0.0f, 0.0f, -1 * CenterOfMassOffset));
+	
+		//Start the physics update timer
+		Owner->GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &UVehicleMovementComponent::UpdateMovementPhysics,
+			PhysicsUpdateTime, true);
 		
 	}
-
-	// Offset center of mass to keep the vehicle upright
-	Chassis->SetCenterOfMass(FVector(0.0f, 0.0f, -1 * CenterOfMassOffset));
-	
-	//Start the physics update timer
-	owner->GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &UVehicleMovementComponent::UpdateMovementPhysics,
-		PhysicsUpdateTime, true);
-	// ...
-	
 }
 
 
@@ -374,17 +365,31 @@ void UVehicleMovementComponent::UpdateMovementPhysics()
 	//Store player info to game instance for the ghost
 	//Broadcast physics changed
 	OnPhysicsUpdated.Broadcast();
+	/*
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Broadcasting physics updated event."));
+	*/
 }
 
 float UVehicleMovementComponent::GetCurrentVelocityInKMPerHour()
 {
-	FVector VelocityVector = Owner->GetVelocity();
+	if (Owner)
+	{
+		FVector VelocityVector = Owner->GetVelocity();
 
-	double VelocityInCmPerSecond = VelocityVector.Length();
+		double VelocityInCmPerSecond = VelocityVector.Length();
 
-	double VelocityInKMPerHour = VelocityInCmPerSecond * 0.036;
+		double VelocityInKMPerHour = VelocityInCmPerSecond * 0.036;
 
-	return VelocityInKMPerHour;
+		return VelocityInKMPerHour;
+	}
+	else
+	{
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Movement component failed to find the owner while trying to get the current velocity."));
+
+		return 0.0f;
+	}
 }
 
 void UVehicleMovementComponent::ApplyLongBoost()

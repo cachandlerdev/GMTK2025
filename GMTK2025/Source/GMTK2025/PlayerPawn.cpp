@@ -15,11 +15,7 @@ APlayerPawn::APlayerPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//TODO: move the vehicle construction to here a make the box collider the root of the blueprint
-
 #pragma region Camera
-
-	//TODO: Attach this to the vehicle Root
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -47,11 +43,22 @@ void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//Subscribe to OnPhysicsUpdated in the Movement Component
-	MovementComponent->OnPhysicsUpdated.AddDynamic(this, &APlayerPawn::RecordPlayerInfo);
+	//Get reference to the game mode
+	GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Subscribed to movement updates."));
+	if (MovementComponent)
+	{
+		//Subscribe to OnPhysicsUpdated in the Movement Component
+		MovementComponent->OnPhysicsUpdated.AddDynamic(this, &APlayerPawn::RecordPlayerInfo);
+
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Player Pawn Subscribed to movement updates."));
+	}
+	else
+	{
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Failed to subscribe to movement updates: Movement Component invalid!"));
+	}
 }
 
 // Called every frame
@@ -182,9 +189,10 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void APlayerPawn::RecordPlayerInfo()
 {
+	/*
 	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Physics Updated From Pawn."));
-
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Recording player info."));
+	*/
 	int32 loopNum = GameMode->GetCurrentLoopNumber();
 	
 	if (loopNum > -1)

@@ -6,7 +6,6 @@
 #include "GameFramework/Pawn.h"
 #include "InventoryComponent.h"
 #include "MyGameInstance.h"
-#include "MyGameModeBase.h"
 #include "VehicleInterface.h"
 #include "VehicleMovementComponent.h"
 #include "Components/AudioComponent.h"
@@ -83,8 +82,6 @@ protected:
 	virtual void BeginPlay() override;
 
 	UMyGameInstance* GameInstance;
-
-	AMyGameModeBase* GameMode;
 
 public:	
 	// Called every frame

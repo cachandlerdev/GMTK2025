@@ -29,6 +29,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	//Game mode reference
+	AMyGameModeBase* GameMode;
+
 #pragma region Inputs
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
@@ -116,6 +119,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION()
 	void RecordPlayerInfo();
 
 private:

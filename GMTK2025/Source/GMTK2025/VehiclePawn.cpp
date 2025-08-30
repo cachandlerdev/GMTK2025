@@ -39,9 +39,6 @@ AVehiclePawn::AVehiclePawn()
 	BackRightSuspension->SetupAttachment(Chassis);
 	BackLeftSuspension->SetupAttachment(Chassis);
 
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "Vehicle Pawn Constructor: " + FrontRightSuspension->GetName());
-
 	FrontRightSuspension->SetRelativeLocation(FVector(-185.0f, 80.0f, -50.0f));
 	FrontLeftSuspension->SetRelativeLocation(FVector(185.0f, -80.0f, -50.0f));
 	BackRightSuspension->SetRelativeLocation(FVector(185.0f, 80.0f, -50.0f));
@@ -82,8 +79,14 @@ void AVehiclePawn::BeginPlay()
 	Super::BeginPlay();
 	
 	GameInstance = Cast<UMyGameInstance>(GetGameInstance());
-	GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 
+	if (GameInstance)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Game Instance set from Vehicle Pawn."));
+		}
+	}
 }
 
 // Called every frame

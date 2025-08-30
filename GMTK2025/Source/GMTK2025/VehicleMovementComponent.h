@@ -10,16 +10,18 @@
 
 class AVehiclePawn;
 
+//Event called when physics change
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPhysicsUpdatedEvent);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GMTK2025_API UVehicleMovementComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
-	//Event called when physics change
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPhysicsUpdated);
+	
 	UPROPERTY(BlueprintAssignable, Category = "Movement")
-	FOnPhysicsUpdated OnPhysicsUpdated;
+	FPhysicsUpdatedEvent OnPhysicsUpdated;
 
 	// Sets default values for this component's properties
 	UVehicleMovementComponent();
