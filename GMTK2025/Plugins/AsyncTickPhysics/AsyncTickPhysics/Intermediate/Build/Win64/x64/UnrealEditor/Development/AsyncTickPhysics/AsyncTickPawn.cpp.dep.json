@@ -1,0 +1,17 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\gmtk2025\\gmtk2025\\gmtk2025\\plugins\\asynctickphysics\\asynctickphysics\\source\\asynctickphysics\\private\\asynctickpawn.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\gmtk2025\\gmtk2025\\gmtk2025\\intermediate\\build\\win64\\x64\\gmtk2025editor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\gmtk2025\\gmtk2025\\gmtk2025\\plugins\\asynctickphysics\\asynctickphysics\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\asynctickphysics\\definitions.asynctickphysics.h",
+            "d:\\gmtk2025\\gmtk2025\\gmtk2025\\plugins\\asynctickphysics\\asynctickphysics\\source\\asynctickphysics\\public\\asynctickpawn.h",
+            "d:\\gmtk2025\\gmtk2025\\gmtk2025\\plugins\\asynctickphysics\\asynctickphysics\\intermediate\\build\\win64\\unrealeditor\\inc\\asynctickphysics\\uht\\asynctickpawn.generated.h",
+            "d:\\gmtk2025\\gmtk2025\\gmtk2025\\plugins\\asynctickphysics\\asynctickphysics\\source\\asynctickphysics\\public\\asynctickmanager.h",
+            "d:\\gmtk2025\\gmtk2025\\gmtk2025\\plugins\\asynctickphysics\\asynctickphysics\\source\\asynctickphysics\\public\\asynctickcallback.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
