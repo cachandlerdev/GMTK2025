@@ -3,6 +3,7 @@
 
 #include "GhostPawn.h"
 #include "Kismet/GameplayStatics.h"
+#include "PlayerPawn.h"
 
 
 // Sets default values
@@ -19,6 +20,42 @@ void AGhostPawn::BeginPlay()
 
 	//Initiate timer
 	CurrentFollowIndex = 0;
+
+	APlayerPawn* PlayerPawn = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+
+	if (PlayerPawn)
+	{
+		//Copy values from the player to the ghost
+
+		UVehicleMovementComponent* PlayerMovementComponent = PlayerPawn->MovementComponent;
+
+		MovementComponent->SpeedMultiplier = PlayerMovementComponent->GetSpeedMultiplier();
+		MovementComponent->MaxSpeed = PlayerMovementComponent->GetMaxSpeed();
+		MovementComponent->BoostSpeedMultiplier = PlayerMovementComponent->BoostSpeedMultiplier;
+		MovementComponent->LongBoostUpdateTime = PlayerMovementComponent->LongBoostUpdateTime;
+		MovementComponent->RotateSpeed = PlayerMovementComponent->RotateSpeed;
+		MovementComponent->SteeringMultiplier = PlayerMovementComponent->GetSteeringMultiplier();
+		MovementComponent->SpeedSteeringFactor = PlayerMovementComponent->GetSpeedSteeringFactor();
+		MovementComponent->MinSteerTorque = PlayerMovementComponent->GetMinSteerTorque();
+		MovementComponent->MaxSteerTorque = PlayerMovementComponent->GetMaxSteerTorque();
+		MovementComponent->CenterOfMassOffset = PlayerMovementComponent->CenterOfMassOffset;
+		MovementComponent->SuspensionLength = PlayerMovementComponent->GetSuspensionLength();
+		MovementComponent->SuspensionStiffness = PlayerMovementComponent->GetSuspensionStiffness();
+		MovementComponent->SuspensionDamping = PlayerMovementComponent->GetSuspensionDamping();
+		MovementComponent->TractionStrength = PlayerMovementComponent->GetTractionStrength();
+		MovementComponent->HoverAmount = PlayerMovementComponent->GetHoverAmount();
+		MovementComponent->MaxDistanceToFloor = PlayerMovementComponent->MaxDistanceToFloor;
+		MovementComponent->BrakeSpeed = PlayerMovementComponent->GetBrakeSpeed();
+
+		Chassis->SetRelativeScale3D(PlayerPawn->Chassis->GetRelativeScale3D());
+	}
+	else
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("[Ghost] Couldn't find player pawn."));
+		}
+	}
 
 	GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &AGhostPawn::UpdateMovementPhysics,
 		MovementComponent->PhysicsUpdateTime, true);
@@ -52,7 +89,7 @@ void AGhostPawn::StartNextLoop(FVector StartLocation, FRotator StartRotation)
 
 void AGhostPawn::RestartThisLoop(FVector StartLocation, FRotator StartRotation)
 {
-	Chassis->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
+	Chassis->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 
 	GetWorldTimerManager().SetTimer(CollisionHandle, this, &AGhostPawn::ReenableCollision,
 		CollisionOffAfterRestartDuration, false);
@@ -186,7 +223,7 @@ void AGhostPawn::ReenableCollision()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Reenable collision"));
 	}
-	Chassis->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
+	Chassis->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
 	OnReenableCollisionBP();
 }
 

@@ -52,22 +52,17 @@ AVehiclePawn::AVehiclePawn()
 #pragma endregion
 
 #pragma region Sound
-
+	
 	// Audio
 	CarWindComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("CarWindComponent"));
 	CarWindComponent->SetupAttachment(RootComponent);
 	CarEngineLoopComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("CarEngineLoopComponent"));
 	CarEngineLoopComponent->SetupAttachment(RootComponent);
-
+	
 #pragma endregion
 
 	MovementComponent = CreateDefaultSubobject<UVehicleMovementComponent>(TEXT("MovementComponent"));
 	MovementComponent->RegisterComponent();
-	//MovementComponent->FrontRightSuspension = FrontRightSuspension;
-	//MovementComponent->FrontLeftSuspension = FrontLeftSuspension;
-	//MovementComponent->BackRightSuspension = BackRightSuspension;
-	//MovementComponent->BackLeftSuspension = BackLeftSuspension;
-	//MovementComponent->Chassis = Chassis;
 
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 	InventoryComponent->RegisterComponent();

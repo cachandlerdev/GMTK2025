@@ -50,11 +50,12 @@ public:
 
 	// Sound
 #pragma region Sound
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 	UAudioComponent* CarWindComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 	UAudioComponent* CarEngineLoopComponent;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 	USoundBase* EngineShortBoostSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
