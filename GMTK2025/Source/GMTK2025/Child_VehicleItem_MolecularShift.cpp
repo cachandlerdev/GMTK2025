@@ -2,21 +2,22 @@
 
 
 #include "Child_VehicleItem_MolecularShift.h"
+
+#include "GhostPawn.h"
 #include "Kismet/GameplayStatics.h"
-#include "PlayerGhostActor.h"
 
 void UChild_VehicleItem_MolecularShift::UseItem()
 {
 	Super::UseItem();
 	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerGhostActor::StaticClass(), FoundActors);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGhostPawn::StaticClass(), FoundActors);
 
 	for (AActor* Actor : FoundActors)
 	{
-		APlayerGhostActor* GhostActor = Cast<APlayerGhostActor>(Actor);
-		if (GhostActor)
+		AGhostPawn* GhostPawn = Cast<AGhostPawn>(Actor);
+		if (GhostPawn)
 		{
-			GhostActor->BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
+			GhostPawn->Chassis->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 		}
 	}
 	FTimerHandle TimerHandle;
@@ -26,13 +27,13 @@ void UChild_VehicleItem_MolecularShift::UseItem()
 void UChild_VehicleItem_MolecularShift::RemoveItem()
 {
 	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerGhostActor::StaticClass(), FoundActors);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGhostPawn::StaticClass(), FoundActors);
 	for (AActor* Actor : FoundActors)
 	{
-		APlayerGhostActor* GhostActor = Cast<APlayerGhostActor>(Actor);
-		if (GhostActor)
+		AGhostPawn* GhostPawn = Cast<AGhostPawn>(Actor);
+		if (GhostPawn)
 		{
-			GhostActor->BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
+			GhostPawn->Chassis->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
 		}
 	}
 	GetWorld()->GetTimerManager().ClearTimer(MyTimerHandle);

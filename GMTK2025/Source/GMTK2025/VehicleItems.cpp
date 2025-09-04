@@ -3,6 +3,7 @@
 
 #include "VehicleItems.h"
 #include "HoverVehiclePawn.h"
+#include "PlayerPawn.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
@@ -35,14 +36,13 @@ void UVehicleItems::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 void UVehicleItems::UseItem()
 {
 	// Implement item usage logic here
-	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, TEXT("Vehicle Items Tick: "));
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), UseSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation());
 	AActor* Player = GetOwner();
 
-	AHoverVehiclePawn* VehiclePawn = Cast<AHoverVehiclePawn>(Player);
-	if (VehiclePawn)
+	APlayerPawn* PlayerPawn = Cast<APlayerPawn>(Player);
+	if (PlayerPawn)
 	{
-		VehiclePawn->VehicleItem = nullptr; // Clear the vehicle item reference
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), UseSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation());
+		PlayerPawn->InventoryComponent->VehicleItem = nullptr; // Clear the vehicle item reference
 	}
 }
 
@@ -50,10 +50,10 @@ void UVehicleItems::RemoveItem()
 {
 	AActor* Player = GetOwner();
 
-	AHoverVehiclePawn* VehiclePawn = Cast<AHoverVehiclePawn>(Player);
-	if (VehiclePawn)
+	APlayerPawn* PlayerPawn = Cast<APlayerPawn>(Player);
+	if (PlayerPawn)
 	{
-		VehiclePawn->VehicleItem = nullptr; // Clear the vehicle item reference
+		PlayerPawn->InventoryComponent->VehicleItem = nullptr; // Clear the vehicle item reference
 	}
 
 	DestroyComponent();
