@@ -46,8 +46,6 @@ void AGhostPawn::BeginPlay()
 		MovementComponent->HoverAmount = PlayerMovementComponent->GetHoverAmount();
 		MovementComponent->MaxDistanceToFloor = PlayerMovementComponent->MaxDistanceToFloor;
 		MovementComponent->BrakeSpeed = PlayerMovementComponent->GetBrakeSpeed();
-
-		Chassis->SetRelativeScale3D(PlayerPawn->Chassis->GetRelativeScale3D());
 	}
 	else
 	{
