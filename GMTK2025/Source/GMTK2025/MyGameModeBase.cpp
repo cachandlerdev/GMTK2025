@@ -4,6 +4,7 @@
 #include "MyGameModeBase.h"
 
 #include "PlayerGhostActor.h"
+#include "VehiclePawn.h"
 #include "Kismet/GameplayStatics.h"
 
 void AMyGameModeBase::InitRaceLogic()
@@ -235,10 +236,11 @@ bool AMyGameModeBase::CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActo
 
 void AMyGameModeBase::SetupPlayerForLoop()
 {
-	AHoverVehiclePawn* player = Cast<AHoverVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	//AHoverVehiclePawn* player = Cast<AHoverVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	AVehiclePawn* player = Cast<AVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (player)
 	{
-		player->StopMovement();
+		//player->StopMovement();
 		if (StartLocation)
 		{
 			FVector newLocation = StartLocation->GetActorLocation();
@@ -272,9 +274,19 @@ void AMyGameModeBase::AddNewGhost()
 {
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	APlayerGhostActor* newGhost =
-		GetWorld()->SpawnActor<APlayerGhostActor>(GhostBPClass, FVector(0, 0, 0),
-			FRotator(0, 0, 0), SpawnParams);
+	AGhostPawn* newGhost =
+		GetWorld()->SpawnActor<AGhostPawn>(GhostBPClass, StartLocation->GetActorLocation(),
+			StartLocation->GetActorRotation(), SpawnParams);
+
+	if (!newGhost)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Ghost Invalid.")
+			);
+		}
+	}
+
 	newGhost->SetFollowLoopNumber(CurrentLoopNumber - 1);
 	newGhost->RestartThisLoop(StartLocation->GetActorLocation(), StartLocation->GetActorRotation());
 	
