@@ -3,7 +3,7 @@
 
 
 #include "Child_VehicleItem_Booster.h"
-#include "HoverVehiclePawn.h"
+#include "PlayerPawn.h"
 
 
 void UChild_VehicleItem_Booster::UseItem()
@@ -11,8 +11,11 @@ void UChild_VehicleItem_Booster::UseItem()
 	Super::UseItem();
 	AActor* Player = GetOwner();
 
-	AHoverVehiclePawn* VehiclePawn = Cast<AHoverVehiclePawn>(Player);
-	VehiclePawn->Boost(4); //to tweak boost multiplier just change the value in the function here
+	APlayerPawn* VehiclePawn = Cast<APlayerPawn>(Player);
+	if (VehiclePawn)
+	{
+		VehiclePawn->MovementComponent->Boost(4); //to tweak boost multiplier just change the value in the function here
+	}
 
 	RemoveItem();
 }
