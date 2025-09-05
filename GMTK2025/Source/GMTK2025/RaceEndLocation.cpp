@@ -44,17 +44,7 @@ void ARaceEndLocation::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 		
 		if (player && GameMode)
 		{
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red, player->GetActorNameOrLabel());
-			}
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("The loop should finish")
-				);
-			}
-
-			// Trying to solve a bug where the player collides twice somehow
+			// This solves a bug where the player collides twice somehow
 			if (CanCollide)
 			{
 				CanCollide = false;
