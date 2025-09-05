@@ -5,7 +5,42 @@
 
 #include "PlayerGhostActor.h"
 #include "VehiclePawn.h"
+#include "Blueprint/UserWidget.h"
+#include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
+
+void AMyGameModeBase::SpawnPlayerVehicle(TSubclassOf<APlayerPawn> PlayerClass, bool StartImmediately)
+{
+	// Spawn vehicle
+	TArray<AActor*> startActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), startActors);
+	if (startActors.Num() < 1)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Error: No player spawn location set."));
+		}
+		return;
+	}
+	FVector spawnLocation = startActors[0]->GetActorLocation();
+	FRotator spawnRotation = startActors[0]->GetActorRotation();
+	FActorSpawnParameters spawnParams;
+	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	APlayerPawn* newPlayerPawn = GetWorld()->SpawnActor<APlayerPawn>(PlayerClass, spawnLocation, spawnRotation, spawnParams);
+
+	// Possess vehicle
+	APlayerController* playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (newPlayerPawn && playerController)
+	{
+		playerController->Possess(newPlayerPawn);
+	}
+
+	if (StartImmediately)
+	{
+		InitRaceLogic();
+		StartNextLoop();
+	}
+}
 
 void AMyGameModeBase::InitRaceLogic()
 {

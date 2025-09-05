@@ -8,6 +8,7 @@
 #include "RaceStartLocation.h"
 #include "GameFramework/GameModeBase.h"
 #include "GhostPawn.h"
+#include "PlayerPawn.h"
 #include "MyGameModeBase.generated.h"
 
 // To avoid a circular dependency
@@ -42,6 +43,11 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category="Loop")
 	float InitialCountdownDuration = 2.22f;
+
+	// UI
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<UUserWidget> VehicleSelectionWidgetClass;
 
 	// Sound
 	
@@ -117,6 +123,12 @@ private:
 	// Used to play the lose sound effect.
 	FTimerHandle GameLoseSoundDelayHandle;
 public:
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="Loop")
+	void InitVehicleSelection();
+
+	UFUNCTION(BlueprintCallable, Category="Init")
+	void SpawnPlayerVehicle(TSubclassOf<APlayerPawn> PlayerClass, bool StartImmediately);
 	
 	UFUNCTION(BlueprintCallable, Category="Loop")
 	void InitRaceLogic();
