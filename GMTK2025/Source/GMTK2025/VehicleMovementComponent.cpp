@@ -15,8 +15,6 @@ UVehicleMovementComponent::UVehicleMovementComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 
@@ -63,8 +61,6 @@ void UVehicleMovementComponent::BeginPlay()
 void UVehicleMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 void UVehicleMovementComponent::ApplyMovementForce()
@@ -80,8 +76,8 @@ void UVehicleMovementComponent::ApplyMovementForce()
 
 		// Thanks unreal for making physics framerate dependent
 		// TODO: find a less hacky way of doing this
-		force.X *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * SpeedMultiplier;
-		force.Y *= Speed * PhysicsUpdateTime * MovementAccountForFramerate * SpeedMultiplier;
+		force.X *= Speed * MovementAccountForFramerate * SpeedMultiplier;
+		force.Y *= Speed * MovementAccountForFramerate * SpeedMultiplier;
 		force.Z = HoverAmount;
 
 		// Don't let the player get stuck at 0 movement because the controls stop working.
@@ -91,7 +87,7 @@ void UVehicleMovementComponent::ApplyMovementForce()
 			force.Y = 1;
 		}
 
-		Chassis->AddForce(force, "", true);
+		Chassis->AddForce(force, "", false);
 	}
 }
 
@@ -106,8 +102,8 @@ void UVehicleMovementComponent::ApplyMovementRotation()
 		// The slower the car, the stronger the torque. As it speeds up, make the torque weaker.
 		float dynamicSteeringStrength = FMath::Abs((1 / Owner->GetVelocity().Length())) * SpeedSteeringFactor;
 		dynamicSteeringStrength = FMath::Clamp(dynamicSteeringStrength, MinSteerTorque, MaxSteerTorque);
-		FVector torque = FVector(0, 0, Steering * PhysicsUpdateTime * RotationAccountForFramerate * dynamicSteeringStrength);
-		Chassis->AddTorqueInDegrees(torque, "", true);
+		FVector torque = FVector(0, 0, Steering * RotationAccountForFramerate * dynamicSteeringStrength);
+		Chassis->AddTorqueInDegrees(torque, "", false);
 	}
 }
 
@@ -146,7 +142,7 @@ void UVehicleMovementComponent::ApplyTraction()
 	float angle = FVector::DotProduct(Owner->GetVelocity(), Owner->GetActorRightVector());
 	FVector tractionVectorDirection = Owner->GetActorRightVector() * angle * -1;
 	FVector tractionForce = tractionVectorDirection * CurrentTractionStrength;
-	Chassis->AddForce(tractionForce, "", true);
+	Chassis->AddForce(tractionForce, "", false);
 }
 
 void UVehicleMovementComponent::ApplySuspensionForceOnPoint(const FVector& StartLocation, const FVector& EndLocation, UArrowComponent* Source)
@@ -182,6 +178,7 @@ void UVehicleMovementComponent::ApplySuspensionForceOnPoint(const FVector& Start
 
 		float force = (compression * SuspensionStiffness) - (SuspensionDamping * pointVelocity);
 		FVector forceVector = Owner->GetActorUpVector() * force;
+		
 		Chassis->AddForceAtLocation(forceVector, StartLocation);
 	}
 
@@ -322,6 +319,10 @@ ESteerDirection UVehicleMovementComponent::GetCurrentSteerDirection()
 
 bool UVehicleMovementComponent::ShouldApplyMovement()
 {
+	if (!Chassis->IsSimulatingPhysics())
+	{
+		return false;
+	}
 	//Check if the vehicle is EMP'd
 	if (IsEMPd)
 	{
@@ -402,7 +403,7 @@ void UVehicleMovementComponent::ApplyLongBoost()
 	{
 		const float baseBoostMultiplier = 100000.0f;
 		FVector direction = Owner->GetRootComponent()->GetForwardVector();
-		Chassis->AddForce(direction * LongBoostStrengthMultiplier * baseBoostMultiplier, "", true);
+		Chassis->AddForce(direction * LongBoostStrengthMultiplier * baseBoostMultiplier, "", false);
 		
 		RemainingLongBoostTime = RemainingLongBoostTime - LongBoostUpdateTime;
 	}
@@ -412,7 +413,7 @@ void UVehicleMovementComponent::Boost(float BoostStrength)
 {
 	const float baseBoostMultiplier = 100000.0f;
 	FVector direction = Chassis->GetForwardVector();
-	Chassis->AddForce(direction * BoostStrength * baseBoostMultiplier, "", true);
+	Chassis->AddForce(direction * BoostStrength * baseBoostMultiplier, "", false);
 }
 
 void UVehicleMovementComponent::LongBoost(float BoostStrength, float Duration)

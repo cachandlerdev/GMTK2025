@@ -32,9 +32,7 @@ void ARaceEndLocation::BeginPlay()
 		BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &ARaceEndLocation::OnOverlapBegin);
 	}
 	
-	//AMyGameModeBase* gamemode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 	GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
-	
 }
 
 void ARaceEndLocation::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -42,22 +40,26 @@ void ARaceEndLocation::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 {
 	if (OtherActor && OtherActor != this)
 	{
-		APawn* OverlappingPawn = Cast<APawn>(OtherActor);
-
-		if (OverlappingPawn && OverlappingPawn->IsPlayerControlled())
+		APlayerPawn* player = Cast<APlayerPawn>(OtherActor);
+		
+		if (player && GameMode)
 		{
-			// The player has reached the end location.
-			if (GameMode)
+			// This solves a bug where the player collides twice somehow
+			if (CanCollide)
 			{
-				if (GEngine)
-				{
-					GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("The loop should finish")
-					);
-				}
+				CanCollide = false;
+				GetWorldTimerManager().SetTimer(OverlapTimer, this, &ARaceEndLocation::Reenablecollision,
+					2.0f, true);	
 				GameMode->FinishThisLoop();
 			}
+			
 		}
 	}
+}
+
+void ARaceEndLocation::Reenablecollision()
+{
+	CanCollide = true;
 }
 
 // Called every frame

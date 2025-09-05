@@ -29,9 +29,16 @@ protected:
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	UFUNCTION()
+	void Reenablecollision();
+
 private:
 
 	AMyGameModeBase* GameMode;
+	
+	FTimerHandle OverlapTimer;
+
+	bool CanCollide = true;
 
 public:	
 	// Called every frame
