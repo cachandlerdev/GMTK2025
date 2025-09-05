@@ -179,13 +179,10 @@ void UVehicleMovementComponent::ApplySuspensionForceOnPoint(const FVector& Start
 		float force = (compression * SuspensionStiffness) - (SuspensionDamping * pointVelocity);
 		FVector forceVector = Owner->GetActorUpVector() * force;
 		
-		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, forceVector.ToString());
-		
 		Chassis->AddForceAtLocation(forceVector, StartLocation);
 	}
 
-	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 1.0f, 0, 1.0f);
+	//DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 1.0f, 0, 1.0f);
 }
 
 void UVehicleMovementComponent::StopMovement()
