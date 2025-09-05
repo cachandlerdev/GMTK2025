@@ -322,6 +322,10 @@ ESteerDirection UVehicleMovementComponent::GetCurrentSteerDirection()
 
 bool UVehicleMovementComponent::ShouldApplyMovement()
 {
+	if (!Chassis->IsSimulatingPhysics())
+	{
+		return false;
+	}
 	//Check if the vehicle is EMP'd
 	if (IsEMPd)
 	{

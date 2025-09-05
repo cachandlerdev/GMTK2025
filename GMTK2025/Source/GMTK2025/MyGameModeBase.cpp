@@ -22,6 +22,7 @@ void AMyGameModeBase::SpawnPlayerVehicle(TSubclassOf<APlayerPawn> PlayerClass, b
 		}
 		return;
 	}
+	
 	FVector spawnLocation = startActors[0]->GetActorLocation();
 	FRotator spawnRotation = startActors[0]->GetActorRotation();
 	FActorSpawnParameters spawnParams;
@@ -98,10 +99,11 @@ void AMyGameModeBase::StartFirstLoopWithCountdown()
 	PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (PlayerController)
 	{
-		PlayerPawn = PlayerController->GetPawn();
+		PlayerPawn = Cast<APlayerPawn>(PlayerController->GetPawn());
 		if (PlayerPawn)
 		{
 			PlayerPawn->DisableInput(PlayerController);
+			PlayerPawn->StartCountdownBP();
 		}
 	}
 
@@ -115,6 +117,7 @@ void AMyGameModeBase::StartFirstLoopWithCountdown()
 		return;
 	}
 	
+	CurrentLoopStartTime = GetWorld()->TimeSeconds;
 	SetupPlayerForLoop();
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), FirstLoopSound, PlayerPawn->GetActorLocation(), PlayerPawn->GetActorRotation());
 	
@@ -132,6 +135,10 @@ void AMyGameModeBase::SetLevelBaselineTime(int32 Seconds)
 
 void AMyGameModeBase::StartNextLoop()
 {
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Start next loop."));
+	}
 	if (PlayerController && PlayerPawn)
 	{
 		if (!PlayerPawn->InputEnabled())
@@ -220,7 +227,7 @@ void AMyGameModeBase::FinishThisLoop()
 				OnResetCurrentNumOfFailuresBP();
 			}
 			CurrentNumberOfPlayerFailures = 0; // We count consecutive failures
-			BestLoopTimeInSeconds = playerTime;
+			SetLevelBaselineTime(playerTime);
 		}
 		
 		OnFinishThisLoopBP();

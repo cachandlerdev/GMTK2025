@@ -122,6 +122,9 @@ public:
 	UFUNCTION()
 	void RecordPlayerInfo();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartCountdownBP();
+
 private:
 	// garbage deletion isn't an issue (I think) because we check if it's null
 	// todo: double check this if it's a problem

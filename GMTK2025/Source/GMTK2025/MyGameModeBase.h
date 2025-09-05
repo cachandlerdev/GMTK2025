@@ -118,7 +118,7 @@ private:
 	// Used for the initial countdown
 	FTimerHandle FirstLoopCountdownHandle;
 	APlayerController* PlayerController;
-	APawn* PlayerPawn;
+	APlayerPawn* PlayerPawn;
 
 	// Used to play the lose sound effect.
 	FTimerHandle GameLoseSoundDelayHandle;
