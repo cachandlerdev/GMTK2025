@@ -125,10 +125,10 @@ private:
 public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="Loop")
-	void InitVehicleSelection();
+	void InitVehicleSelection(bool StartImmediately, int BaselineTime);
 
 	UFUNCTION(BlueprintCallable, Category="Init")
-	void SpawnPlayerVehicle(TSubclassOf<APlayerPawn> PlayerClass, bool StartImmediately);
+	void SpawnPlayerVehicle(TSubclassOf<APlayerPawn> PlayerClass, bool StartImmediately, int BaselineTime);
 	
 	UFUNCTION(BlueprintCallable, Category="Loop")
 	void InitRaceLogic();

@@ -9,7 +9,7 @@
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 
-void AMyGameModeBase::SpawnPlayerVehicle(TSubclassOf<APlayerPawn> PlayerClass, bool StartImmediately)
+void AMyGameModeBase::SpawnPlayerVehicle(TSubclassOf<APlayerPawn> PlayerClass, bool StartImmediately, int BaselineTime)
 {
 	// Spawn vehicle
 	TArray<AActor*> startActors;
@@ -35,10 +35,12 @@ void AMyGameModeBase::SpawnPlayerVehicle(TSubclassOf<APlayerPawn> PlayerClass, b
 		playerController->Possess(newPlayerPawn);
 	}
 
+	SetLevelBaselineTime(BaselineTime);
+
 	if (StartImmediately)
 	{
 		InitRaceLogic();
-		StartNextLoop();
+		StartFirstLoopWithCountdown();
 	}
 }
 
@@ -101,6 +103,16 @@ void AMyGameModeBase::StartFirstLoopWithCountdown()
 		{
 			PlayerPawn->DisableInput(PlayerController);
 		}
+	}
+
+	if (!PlayerPawn)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Error: Couldn't get a reference to the player pawn.")
+			);
+		}
+		return;
 	}
 	
 	SetupPlayerForLoop();
@@ -271,19 +283,17 @@ bool AMyGameModeBase::CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActo
 
 void AMyGameModeBase::SetupPlayerForLoop()
 {
-	//AHoverVehiclePawn* player = Cast<AHoverVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	AVehiclePawn* player = Cast<AVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (player)
 	{
-		//player->StopMovement();
 		if (StartLocation)
 		{
 			FVector newLocation = StartLocation->GetActorLocation();
-			newLocation.Z += player->GetDefaultHalfHeight();
+			float playerZOffset = player->GetComponentsBoundingBox(false, false).GetExtent().Z;
+			newLocation.Z += playerZOffset;
 			player->SetActorLocation(newLocation);
 			player->SetActorRotation(StartLocation->GetActorRotation());
-			player->Chassis->SetWorldLocation(newLocation);
-			player->Chassis->SetWorldRotation(StartLocation->GetActorRotation());
+			player->Chassis->SetAllPhysicsLinearVelocity(FVector(0), false);
 		}
 	}
 }
