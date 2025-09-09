@@ -1,16 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Child_PickupType_Coin.h"
-#include "HoverVehiclePawn.h"
+#include "PlayerPawn.h"
 
-//is child class of Base Pickup. This class is used to handle coin pickups for the game
-void AChild_PickupType_Coin::HandlePickup(AActor* PickupInstigator)//override of base class function
+
+void AChild_PickupType_Coin::HandlePickup(AActor* PickupInstigator)
 {
-	AHoverVehiclePawn* player = Cast<AHoverVehiclePawn>(PickupInstigator);
+	APlayerPawn* player = Cast<APlayerPawn>(PickupInstigator);
 
-	if (player)// adds coin to player if the instigating actor is the player, then calls parent function
+	if (player)
 	{
-		player->AddCoins();
-		Super::HandlePickup(PickupInstigator); Super::HandlePickup(PickupInstigator);
+		player->InventoryComponent->AddCoins();
 	}
+	Super::HandlePickup(PickupInstigator);
 }

@@ -4,7 +4,46 @@
 #include "MyGameModeBase.h"
 
 #include "PlayerGhostActor.h"
+#include "VehiclePawn.h"
+#include "Blueprint/UserWidget.h"
+#include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
+
+void AMyGameModeBase::SpawnPlayerVehicle(TSubclassOf<APlayerPawn> PlayerClass, bool StartImmediately, int BaselineTime)
+{
+	// Spawn vehicle
+	TArray<AActor*> startActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), startActors);
+	if (startActors.Num() < 1)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Error: No player spawn location set."));
+		}
+		return;
+	}
+	
+	FVector spawnLocation = startActors[0]->GetActorLocation();
+	FRotator spawnRotation = startActors[0]->GetActorRotation();
+	FActorSpawnParameters spawnParams;
+	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	APlayerPawn* newPlayerPawn = GetWorld()->SpawnActor<APlayerPawn>(PlayerClass, spawnLocation, spawnRotation, spawnParams);
+
+	// Possess vehicle
+	APlayerController* playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (newPlayerPawn && playerController)
+	{
+		playerController->Possess(newPlayerPawn);
+	}
+
+	SetLevelBaselineTime(BaselineTime);
+
+	if (StartImmediately)
+	{
+		InitRaceLogic();
+		StartFirstLoopWithCountdown();
+	}
+}
 
 void AMyGameModeBase::InitRaceLogic()
 {
@@ -60,13 +99,25 @@ void AMyGameModeBase::StartFirstLoopWithCountdown()
 	PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (PlayerController)
 	{
-		PlayerPawn = PlayerController->GetPawn();
+		PlayerPawn = Cast<APlayerPawn>(PlayerController->GetPawn());
 		if (PlayerPawn)
 		{
 			PlayerPawn->DisableInput(PlayerController);
+			PlayerPawn->StartCountdownBP();
 		}
 	}
+
+	if (!PlayerPawn)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Error: Couldn't get a reference to the player pawn.")
+			);
+		}
+		return;
+	}
 	
+	CurrentLoopStartTime = GetWorld()->TimeSeconds;
 	SetupPlayerForLoop();
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), FirstLoopSound, PlayerPawn->GetActorLocation(), PlayerPawn->GetActorRotation());
 	
@@ -84,6 +135,10 @@ void AMyGameModeBase::SetLevelBaselineTime(int32 Seconds)
 
 void AMyGameModeBase::StartNextLoop()
 {
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Start next loop."));
+	}
 	if (PlayerController && PlayerPawn)
 	{
 		if (!PlayerPawn->InputEnabled())
@@ -172,7 +227,7 @@ void AMyGameModeBase::FinishThisLoop()
 				OnResetCurrentNumOfFailuresBP();
 			}
 			CurrentNumberOfPlayerFailures = 0; // We count consecutive failures
-			BestLoopTimeInSeconds = playerTime;
+			SetLevelBaselineTime(playerTime);
 		}
 		
 		OnFinishThisLoopBP();
@@ -235,18 +290,17 @@ bool AMyGameModeBase::CanInitRaceLogic(TArray<AActor*> startActors, TArray<AActo
 
 void AMyGameModeBase::SetupPlayerForLoop()
 {
-	AHoverVehiclePawn* player = Cast<AHoverVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	AVehiclePawn* player = Cast<AVehiclePawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (player)
 	{
-		player->StopMovement();
 		if (StartLocation)
 		{
 			FVector newLocation = StartLocation->GetActorLocation();
-			newLocation.Z += player->GetDefaultHalfHeight();
+			float playerZOffset = player->GetComponentsBoundingBox(false, false).GetExtent().Z;
+			newLocation.Z += playerZOffset;
 			player->SetActorLocation(newLocation);
 			player->SetActorRotation(StartLocation->GetActorRotation());
-			player->Chassis->SetWorldLocation(newLocation);
-			player->Chassis->SetWorldRotation(StartLocation->GetActorRotation());
+			player->Chassis->SetAllPhysicsLinearVelocity(FVector(0), false);
 		}
 	}
 }
@@ -272,9 +326,19 @@ void AMyGameModeBase::AddNewGhost()
 {
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	APlayerGhostActor* newGhost =
-		GetWorld()->SpawnActor<APlayerGhostActor>(GhostBPClass, FVector(0, 0, 0),
-			FRotator(0, 0, 0), SpawnParams);
+	AGhostPawn* newGhost =
+		GetWorld()->SpawnActor<AGhostPawn>(GhostBPClass, StartLocation->GetActorLocation(),
+			StartLocation->GetActorRotation(), SpawnParams);
+
+	if (!newGhost)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Ghost Invalid.")
+			);
+		}
+	}
+
 	newGhost->SetFollowLoopNumber(CurrentLoopNumber - 1);
 	newGhost->RestartThisLoop(StartLocation->GetActorLocation(), StartLocation->GetActorRotation());
 	

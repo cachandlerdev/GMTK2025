@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "MyGameInstance.h"
-#include "PlayerGhostActor.h"
 #include "RaceEndLocation.h"
 #include "RaceStartLocation.h"
 #include "GameFramework/GameModeBase.h"
+#include "GhostPawn.h"
+#include "PlayerPawn.h"
 #include "MyGameModeBase.generated.h"
 
 // To avoid a circular dependency
@@ -26,7 +27,7 @@ public:
 	int32 NumOfLoops = 5;
 	
 	UPROPERTY(EditAnywhere, Category="Loop")
-	TSubclassOf<APlayerGhostActor> GhostBPClass;
+	TSubclassOf<AGhostPawn> GhostBPClass;
 
 	UPROPERTY(EditAnywhere, Category="Loop")
 	float DelayTimePerLoopForPlayer = 0.2f;
@@ -42,6 +43,11 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category="Loop")
 	float InitialCountdownDuration = 2.22f;
+
+	// UI
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<UUserWidget> VehicleSelectionWidgetClass;
 
 	// Sound
 	
@@ -93,7 +99,7 @@ private:
 	// The first "active recording" loop number is 0
 	int32 CurrentLoopNumber = -1;
 	
-	TArray<APlayerGhostActor*> Ghosts;
+	TArray<AGhostPawn*> Ghosts;
 
 	UMyGameInstance* GameInstance;
 	
@@ -112,11 +118,17 @@ private:
 	// Used for the initial countdown
 	FTimerHandle FirstLoopCountdownHandle;
 	APlayerController* PlayerController;
-	APawn* PlayerPawn;
+	APlayerPawn* PlayerPawn;
 
 	// Used to play the lose sound effect.
 	FTimerHandle GameLoseSoundDelayHandle;
 public:
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="Loop")
+	void InitVehicleSelection(bool StartImmediately, int BaselineTime);
+
+	UFUNCTION(BlueprintCallable, Category="Init")
+	void SpawnPlayerVehicle(TSubclassOf<APlayerPawn> PlayerClass, bool StartImmediately, int BaselineTime);
 	
 	UFUNCTION(BlueprintCallable, Category="Loop")
 	void InitRaceLogic();

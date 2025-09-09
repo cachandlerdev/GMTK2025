@@ -2,38 +2,38 @@
 
 
 #include "Child_VehicleItem_MolecularShift.h"
+
+#include "GhostPawn.h"
 #include "Kismet/GameplayStatics.h"
-#include "PlayerGhostActor.h"
 
 void UChild_VehicleItem_MolecularShift::UseItem()
 {
 	Super::UseItem();
-	TArray<AActor*> FoundActors;// Array to hold found actors
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerGhostActor::StaticClass(), FoundActors);// Fills found actors
-	//with all the AI ghost cars
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGhostPawn::StaticClass(), FoundActors);
 
-	for (AActor* Actor : FoundActors)//sets ai ghost cars to ignore collision with the player
+	for (AActor* Actor : FoundActors)
 	{
-		APlayerGhostActor* GhostActor = Cast<APlayerGhostActor>(Actor);
-		if (GhostActor)
+		AGhostPawn* GhostPawn = Cast<AGhostPawn>(Actor);
+		if (GhostPawn)
 		{
-			GhostActor->BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
+			GhostPawn->Chassis->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 		}
 	}
-	FTimerHandle TimerHandle;// timer to manage length of the effect
+	FTimerHandle TimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, this, &UChild_VehicleItem_MolecularShift::CountUpTimer, 1.0f, true);
 	
 }
 void UChild_VehicleItem_MolecularShift::RemoveItem()
 {
 	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerGhostActor::StaticClass(), FoundActors);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGhostPawn::StaticClass(), FoundActors);
 	for (AActor* Actor : FoundActors)
 	{
-		APlayerGhostActor* GhostActor = Cast<APlayerGhostActor>(Actor);
-		if (GhostActor)
+		AGhostPawn* GhostPawn = Cast<AGhostPawn>(Actor);
+		if (GhostPawn)
 		{
-			GhostActor->BoxCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);// sets all ghosts to collidable
+			GhostPawn->Chassis->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
 		}
 	}
 	GetWorld()->GetTimerManager().ClearTimer(MyTimerHandle);
