@@ -19,7 +19,6 @@ AVehiclePawn::AVehiclePawn()
 	Chassis->SetCollisionProfileName(TEXT("Vehicle"));
 	Chassis->SetCollisionObjectType(ECC_GameTraceChannel1);
 	Chassis->BodyInstance.bOverrideMass = true;
-	Chassis->GetBodyInstance()->SetMassOverride(50000.0, true);
 	Chassis->SetLinearDamping(1.0);
 	Chassis->SetAngularDamping(1.0);
 	Chassis->SetUsingAbsoluteRotation(true);
@@ -105,9 +104,6 @@ UStaticMeshComponent* AVehiclePawn::GetChassis_Implementation()
 
 UArrowComponent* AVehiclePawn::GetFrontRightSuspension_Implementation()
 {
-	if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FrontRightSuspension->GetName());
-
 	return FrontRightSuspension;
 }
 

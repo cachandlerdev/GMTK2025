@@ -50,9 +50,6 @@ void APlayerPawn::BeginPlay()
 	{
 		//Subscribe to OnPhysicsUpdated in the Movement Component
 		MovementComponent->OnPhysicsUpdated.AddDynamic(this, &APlayerPawn::RecordPlayerInfo);
-
-		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Player Pawn Subscribed to movement updates."));
 	}
 	else
 	{
