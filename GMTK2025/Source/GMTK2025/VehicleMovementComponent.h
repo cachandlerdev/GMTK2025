@@ -75,9 +75,6 @@ public:
 	// Steering
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-	float RotateSpeed = 50.0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float SteeringMultiplier = 800.0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
@@ -254,19 +251,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	ESteerDirection GetCurrentSteerDirection();
 
+public:
+
+	float Speed;
+	float Steering;
+	bool bWantsToGoForwardOrBackwards = false;
+	ESteerDirection SteerDirection = ESteerDirection::STRAIGHT;
+	
 private:
 
 	AVehiclePawn* Owner;
 
 	FTimerHandle PhysicsUpdateHandle;
-
-	//TODO: Ask Chris what is this for
-	bool bWantsToGoForwardOrBackwards = false;
-
-	float Speed;
-	float Steering;
-	ESteerDirection SteerDirection = ESteerDirection::STRAIGHT;
-
+	
 	float CurrentTractionStrength;
 
 	bool IsOnGround = true;

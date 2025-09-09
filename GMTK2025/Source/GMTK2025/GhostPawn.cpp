@@ -27,25 +27,39 @@ void AGhostPawn::BeginPlay()
 	{
 		//Copy values from the player to the ghost
 
+		UStaticMesh* chassisMesh = PlayerPawn->Chassis->GetStaticMesh();
+
+		if (chassisMesh)
+		{
+			Chassis->SetStaticMesh(chassisMesh);
+			Chassis->SetRelativeScale3D(PlayerPawn->Chassis->GetRelativeScale3D());
+		}
+
+		BackLeftSuspension->SetRelativeLocation(PlayerPawn->BackLeftSuspension->GetRelativeLocation());
+		BackRightSuspension->SetRelativeLocation(PlayerPawn->BackRightSuspension->GetRelativeLocation());
+		FrontLeftSuspension->SetRelativeLocation(PlayerPawn->FrontLeftSuspension->GetRelativeLocation());
+		FrontRightSuspension->SetRelativeLocation(PlayerPawn->FrontRightSuspension->GetRelativeLocation());
+
+		Chassis->SetMassOverrideInKg(NAME_None, PlayerPawn->Chassis->GetMass(), true);
+
 		UVehicleMovementComponent* PlayerMovementComponent = PlayerPawn->MovementComponent;
 
 		MovementComponent->SpeedMultiplier = PlayerMovementComponent->GetSpeedMultiplier();
 		MovementComponent->MaxSpeed = PlayerMovementComponent->GetMaxSpeed();
 		MovementComponent->BoostSpeedMultiplier = PlayerMovementComponent->BoostSpeedMultiplier;
 		MovementComponent->LongBoostUpdateTime = PlayerMovementComponent->LongBoostUpdateTime;
-		MovementComponent->RotateSpeed = PlayerMovementComponent->RotateSpeed;
 		MovementComponent->SteeringMultiplier = PlayerMovementComponent->GetSteeringMultiplier();
 		MovementComponent->SpeedSteeringFactor = PlayerMovementComponent->GetSpeedSteeringFactor();
 		MovementComponent->MinSteerTorque = PlayerMovementComponent->GetMinSteerTorque();
 		MovementComponent->MaxSteerTorque = PlayerMovementComponent->GetMaxSteerTorque();
+		MovementComponent->HoverAmount = PlayerMovementComponent->GetHoverAmount();
+		MovementComponent->MaxDistanceToFloor = PlayerMovementComponent->MaxDistanceToFloor;
+		MovementComponent->BrakeSpeed = PlayerMovementComponent->GetBrakeSpeed();
 		MovementComponent->CenterOfMassOffset = PlayerMovementComponent->CenterOfMassOffset;
 		MovementComponent->SuspensionLength = PlayerMovementComponent->GetSuspensionLength();
 		MovementComponent->SuspensionStiffness = PlayerMovementComponent->GetSuspensionStiffness();
 		MovementComponent->SuspensionDamping = PlayerMovementComponent->GetSuspensionDamping();
 		MovementComponent->TractionStrength = PlayerMovementComponent->GetTractionStrength();
-		MovementComponent->HoverAmount = PlayerMovementComponent->GetHoverAmount();
-		MovementComponent->MaxDistanceToFloor = PlayerMovementComponent->MaxDistanceToFloor;
-		MovementComponent->BrakeSpeed = PlayerMovementComponent->GetBrakeSpeed();
 	}
 	else
 	{
@@ -69,10 +83,6 @@ void AGhostPawn::Tick(float DeltaTime)
 		// Correct for movement changes
 		ApplyCorrectionFactor(DeltaTime);
 	}
-
-	FRotator newRotation = Chassis->GetRelativeRotation();
-	newRotation.Roll += DeltaTime * MovementComponent->RotateSpeed;
-	Chassis->SetRelativeRotation(newRotation);
 }
 
 void AGhostPawn::SetFollowLoopNumber(int32 LoopNumber)
@@ -113,30 +123,10 @@ void AGhostPawn::ApplyGhostPhysicsMovement(int32 FollowIndex)
 	float currentWantsForwardOrBackwards = GameInstance->PlayerWantsToGoForwardOrBackwards[FollowLoopNumber].ArrayOfBools[FollowIndex];
 	ESteerDirection currentSteerDirection = GameInstance->PlayerSteerDirections[FollowLoopNumber].ArrayOfDirections[FollowIndex];
 
-	float MovementAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * MovementComponent->PhysicsMovementFramerateCompensation);
-	float RotationAccountForFramerate = 1 / (GetWorld()->GetDeltaSeconds() * MovementComponent->PhysicsRotationFramerateCompensation);
-
-	if (currentWantsForwardOrBackwards)
-	{
-		FVector force = Chassis->GetForwardVector();
-		force.X *= currentSpeed * MovementComponent->SpeedMultiplier * MovementComponent->PhysicsUpdateTime * MovementAccountForFramerate;
-		force.Y *= currentSpeed * MovementComponent->SpeedMultiplier * MovementComponent->PhysicsUpdateTime * MovementAccountForFramerate;
-		force.Z = MovementComponent->HoverAmount;
-
-		Chassis->AddForce(force, "", true);
-	}
-
-	if (currentSteerDirection != ESteerDirection::STRAIGHT)
-	{
-		FVector torque = FVector(0, 0, currentSteering * MovementComponent->SteeringMultiplier * MovementComponent->PhysicsUpdateTime * RotationAccountForFramerate);
-		Chassis->AddTorqueInDegrees(torque, "", true);
-	}
-	/*
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Applied physics movement."));
-	}
-	*/
+	MovementComponent->Steering = GameInstance->PlayerSteering[FollowLoopNumber].ArrayOfFloats[FollowIndex];
+	MovementComponent->Speed = GameInstance->PlayerSpeed[FollowLoopNumber].ArrayOfFloats[FollowIndex];
+	MovementComponent->bWantsToGoForwardOrBackwards = GameInstance->PlayerWantsToGoForwardOrBackwards[FollowLoopNumber].ArrayOfBools[FollowIndex];
+	MovementComponent->SteerDirection = GameInstance->PlayerSteerDirections[FollowLoopNumber].ArrayOfDirections[FollowIndex];
 }
 
 void AGhostPawn::ApplyCorrectionFactor(float DeltaTime)
@@ -149,11 +139,8 @@ void AGhostPawn::ApplyCorrectionFactor(float DeltaTime)
 		targetTransform.GetLocation(), DeltaTime,
 		GhostPositionInterpolationSpeed);
 
-	// Interpolate scale
-	FVector NewScale = FMath::VInterpTo(currentTransform.GetScale3D(), TargetTransform.GetScale3D(),
-		DeltaTime, GhostPositionInterpolationSpeed);
+	FTransform NewTransform(targetTransform.GetRotation(), NewLocation, GetActorScale3D());
 
-	FTransform NewTransform(targetTransform.GetRotation(), NewLocation, NewScale);
 	SetActorTransform(NewTransform);
 }
 
@@ -205,12 +192,6 @@ void AGhostPawn::UpdateGhostLocation(int32 FollowIndex)
 
 	if (ShouldUpdateGhostLocation())
 	{
-		/*
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Should Update Ghost Location."));
-		}
-		*/
 		ApplyGhostPhysicsMovement(FollowIndex);
 	}
 }
@@ -243,26 +224,11 @@ void AGhostPawn::UpdateMovementPhysics()
 		{
 			if (bUsePlayerPhysicsForMovement)
 			{
-				/*
-				if (GEngine)
-				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Should update Ghost location."));
-				}
-				*/
 				UpdateGhostLocation(CurrentFollowIndex);
 			}
 
 			//update current transform index
 			CurrentFollowIndex++;
-		}
-		else
-		{
-			/*
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Array of player positions is missing the required position."));
-			}
-			*/
 		}
 	}
 	else

@@ -27,15 +27,8 @@ void UVehicleMovementComponent::BeginPlay()
 
 	Owner = Cast<AVehiclePawn>(owner);
 
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "Movement component owner: " + Owner->StaticClass()->GetName());
-		
-
 	if (Owner->GetClass()->ImplementsInterface(UVehicleInterface::StaticClass()))
 	{
-		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, "Movement component owner implements vehicle interface.");
-		
 		Chassis = IVehicleInterface::Execute_GetChassis(Owner);
 
 		FrontRightSuspension = IVehicleInterface::Execute_GetFrontRightSuspension(Owner);
