@@ -69,8 +69,16 @@ void UVehicleMovementComponent::ApplyMovementForce()
 
 		// Thanks unreal for making physics framerate dependent
 		// TODO: find a less hacky way of doing this
-		force.X *= Speed * MovementAccountForFramerate * SpeedMultiplier;
-		force.Y *= Speed * MovementAccountForFramerate * SpeedMultiplier;
+		if (Speed >= 0)
+		{
+			force.X *= Speed * MovementAccountForFramerate * SpeedMultiplier;
+			force.Y *= Speed * MovementAccountForFramerate * SpeedMultiplier;
+		}
+		else
+		{
+			force.X *= Speed * MovementAccountForFramerate * BrakeSpeed;
+			force.Y *= Speed * MovementAccountForFramerate * BrakeSpeed;
+		}
 		force.Z = HoverAmount;
 
 		// Don't let the player get stuck at 0 movement because the controls stop working.
@@ -192,7 +200,14 @@ void UVehicleMovementComponent::StopMovement()
 void UVehicleMovementComponent::Throttle(const float axisValue)
 {
 	bWantsToGoForwardOrBackwards = true;
-	Speed = FMath::Clamp(axisValue * SpeedMultiplier, 1.0f, MaxSpeed);
+	if (axisValue > 0)
+	{
+		Speed = FMath::Clamp(axisValue * SpeedMultiplier, 1.0f, MaxSpeed);
+	}
+	else if (axisValue < 0)
+	{
+		Speed = FMath::Clamp(axisValue * BrakeSpeed, -1.0f * MaxSpeed, -1.0f);
+	}
 }
 
 void UVehicleMovementComponent::Brake()
