@@ -2,6 +2,8 @@
 
 
 #include "InventoryComponent.h"
+
+#include "VehiclePawn.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
@@ -86,7 +88,10 @@ void UInventoryComponent::AddCoins()
 	if (Coins == 10)
 	{
 		//Disabled boost until the boosting refactor is done
-		//Boost(3);
+		
+		AVehiclePawn* Owner = Cast<AVehiclePawn>(GetOwner());
+
+		Owner->MovementComponent->Boost(CoinBoostStrength);
 		Coins = 0;
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Boosted!"));
 	}
