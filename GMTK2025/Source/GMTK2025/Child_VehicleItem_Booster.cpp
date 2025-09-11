@@ -4,7 +4,6 @@
 
 #include "Child_VehicleItem_Booster.h"
 #include "PlayerPawn.h"
-#include "Kismet/GameplayStatics.h"
 
 
 void UChild_VehicleItem_Booster::UseItem()
@@ -15,8 +14,7 @@ void UChild_VehicleItem_Booster::UseItem()
 	APlayerPawn* VehiclePawn = Cast<APlayerPawn>(Player);
 	if (VehiclePawn)
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), BoostSound, VehiclePawn->GetActorLocation());
-		VehiclePawn->MovementComponent->Boost(BoostStrength);
+		VehiclePawn->MovementComponent->Boost(4); //to tweak boost multiplier just change the value in the function here
 	}
 
 	RemoveItem();

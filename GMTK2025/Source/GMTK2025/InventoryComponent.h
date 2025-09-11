@@ -51,8 +51,5 @@ public:
 	int32 Coins = 0;
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Items")
-	void OnUseItemBP(UVehicleItems* Item);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Items")
-	float CoinBoostStrength = 300.0f;
+	void OnUseItemBP(UVehicleItems* Item); 
 };
