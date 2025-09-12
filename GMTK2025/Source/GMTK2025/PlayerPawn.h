@@ -78,6 +78,16 @@ protected:
 
 #pragma endregion
 
+#pragma region Sound
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* ActivateHandbrakeSound;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* ReleaseHandbrakeSound;
+	
+#pragma endregion
+
 #pragma region Camera
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
