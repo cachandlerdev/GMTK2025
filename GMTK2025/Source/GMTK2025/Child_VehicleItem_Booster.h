@@ -17,5 +17,12 @@ class GMTK2025_API UChild_VehicleItem_Booster : public UVehicleItems
 	virtual void UseItem() override;
 
 	virtual void RemoveItem() override;
+
+public:
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float BoostStrength = 400.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* BoostSound;
 };
