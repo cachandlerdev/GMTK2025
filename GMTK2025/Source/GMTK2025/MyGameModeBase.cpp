@@ -86,7 +86,7 @@ void AMyGameModeBase::InitRaceLogic()
 
 void AMyGameModeBase::PlayTutorialLines()
 {
-	UGameplayStatics::PlaySound2D(GetWorld(), TutorialVoiceLines);
+	//UGameplayStatics::PlaySound2D(GetWorld(), TutorialVoiceLines);
 }
 
 void AMyGameModeBase::StartFirstLoopWithCountdown()
@@ -195,6 +195,31 @@ void AMyGameModeBase::RestartThisLoop()
 		UGameplayStatics::PlaySound2D(GetWorld(), RestartLoopSound);
 		LoopFinishedDelegateCalls();
 		OnRestartThisLoopBP();
+	}
+	else
+	{
+		// Reset at player start
+		TArray<AActor*> playerStarts;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), playerStarts);
+		if (playerStarts.Num() < 1)
+		{
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1,5.0f, FColor::Red,TEXT("Error: Couldn't find player start.")
+				);
+			}
+		}
+		else
+		{
+			UGameplayStatics::PlaySound2D(GetWorld(), RestartLoopSound);
+			FVector location = playerStarts[0]->GetActorLocation();
+			FRotator rotation = playerStarts[0]->GetActorRotation();
+			APawn* player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+			if (player)
+			{
+				player->SetActorLocationAndRotation(location, rotation, false, nullptr, ETeleportType::ResetPhysics);
+			}
+		}
 	}
 }
 
