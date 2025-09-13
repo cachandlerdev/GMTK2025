@@ -29,6 +29,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Items")
 	TArray<int> GetItems();
 
+	UPROPERTY(BlueprintReadOnly, Category="Item")
+	UVehicleItems* VehicleItem;
+
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
 	void AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemClass);
 
@@ -37,9 +40,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Item")
 	void UseItem(const float axisValue);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	UVehicleItems* VehicleItem;
 
 	UFUNCTION(BlueprintCallable, Category = "Coins")
 	void AddCoins();

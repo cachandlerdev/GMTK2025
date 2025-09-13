@@ -3,8 +3,6 @@
 
 #include "WorldPickup_Item.h"
 
-#include "HoverVehiclePawn.h"
-#include "VehicleItems.h"
 #include "VehiclePawn.h"
 #include "Kismet/GameplayStatics.h"
 

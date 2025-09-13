@@ -54,9 +54,8 @@ void UInventoryComponent::AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemC
 	UVehicleItems* NewVehicleItem = NewObject<UVehicleItems>(this, VehicleItemClass);
 	if (NewVehicleItem)
 	{
-		NewVehicleItem->RegisterComponent();
+		//NewVehicleItem->RegisterComponent();
 		VehicleItem = NewVehicleItem;
-		
 
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), GetCollectableSound, GetOwner()->GetActorLocation());
 	}

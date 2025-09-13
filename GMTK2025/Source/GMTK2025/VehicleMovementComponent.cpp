@@ -435,8 +435,12 @@ void UVehicleMovementComponent::LongBoost(float BoostStrength, float Duration)
 	{
 		RemainingLongBoostTime = Duration;
 		LongBoostStrengthMultiplier = BoostStrength;
-		Owner->GetWorldTimerManager().SetTimer(LongBoostDurationHandle, this, &UVehicleMovementComponent::ApplyLongBoost,
-			LongBoostUpdateTime, true);	
+		AActor* owner = GetOwner();
+		if (owner)
+		{
+			owner->GetWorldTimerManager().SetTimer(LongBoostDurationHandle, this, &UVehicleMovementComponent::ApplyLongBoost,
+				LongBoostUpdateTime, true);	
+		}
 	}
 }
 
@@ -445,8 +449,12 @@ void UVehicleMovementComponent::EMP(float Duration)
 	if(!IsEMPd) 
 	{
 		IsEMPd = true;
-		Owner->GetWorldTimerManager().SetTimer(EMPDurationHandle, this, &UVehicleMovementComponent::EndEMP,
-			Duration, false);
+		AActor* owner = GetOwner();
+		if (owner)
+		{
+			owner->GetWorldTimerManager().SetTimer(EMPDurationHandle, this, &UVehicleMovementComponent::EndEMP,
+				Duration, false);
+		}
 	}	
 }
 
@@ -463,8 +471,12 @@ void UVehicleMovementComponent::Inverter(float Duration)
 	{
 		IsInverted = true;
 
-		Owner->GetWorldTimerManager().SetTimer(InverterDurationHandle, this, &UVehicleMovementComponent::EndInverter,
+		AActor* owner = GetOwner();
+		if (owner)
+		{
+			owner->GetWorldTimerManager().SetTimer(InverterDurationHandle, this, &UVehicleMovementComponent::EndInverter,
 			Duration, false);
+		}
 	}
 }
 
@@ -472,7 +484,11 @@ void UVehicleMovementComponent::EndInverter()
 {
 	IsInverted = false;
 
-	Owner->GetWorldTimerManager().ClearTimer(InverterDurationHandle);
+	AActor* owner = GetOwner();
+	if (owner)
+	{
+		owner->GetWorldTimerManager().ClearTimer(InverterDurationHandle);
+	}
 }
 
 const float UVehicleMovementComponent::GetSpeedMultiplier()
