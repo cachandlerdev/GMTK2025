@@ -55,4 +55,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Items")
 	float CoinBoostStrength = 300.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* BoostSound;
 };
