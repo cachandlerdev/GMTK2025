@@ -56,6 +56,12 @@ public:
 
 #pragma region Stats
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	bool UseSuspension = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float EnableSuspensionVelocity = 500.0f;
+
 	//Speed
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
@@ -120,6 +126,8 @@ public:
 	
 	FTimerHandle LongBoostDurationHandle;
 	float RemainingLongBoostTime = 0.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	float LongBoostStrengthMultiplier = 1.0f;
 	
 	bool IsEMPd = false;
@@ -260,6 +268,7 @@ public:
 	
 private:
 
+	UPROPERTY()
 	AVehiclePawn* Owner;
 
 	FTimerHandle PhysicsUpdateHandle;

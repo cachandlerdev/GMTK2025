@@ -190,16 +190,19 @@ void APlayerPawn::RecordPlayerInfo()
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Recording player info."));
 	*/
-	int32 loopNum = GameMode->GetCurrentLoopNumber();
-	
-	if (loopNum > -1)
+	if (GameMode)
 	{
-		GameInstance->PlayerSpeed[loopNum].ArrayOfFloats.Emplace(MovementComponent->GetCurrentSpeed());
-		GameInstance->PlayerSteering[loopNum].ArrayOfFloats.Emplace(MovementComponent->GetCurrentSteering());
-		GameInstance->PlayerWantsToGoForwardOrBackwards[loopNum].ArrayOfBools.Emplace(MovementComponent->GetCurrentWantsToGoForwardOrBackwards());
-		GameInstance->PlayerSteerDirections[loopNum].ArrayOfDirections.Emplace(MovementComponent->GetCurrentSteerDirection());
+		int32 loopNum = GameMode->GetCurrentLoopNumber();
+	
+		if (loopNum > -1)
+		{
+			GameInstance->PlayerSpeed[loopNum].ArrayOfFloats.Emplace(MovementComponent->GetCurrentSpeed());
+			GameInstance->PlayerSteering[loopNum].ArrayOfFloats.Emplace(MovementComponent->GetCurrentSteering());
+			GameInstance->PlayerWantsToGoForwardOrBackwards[loopNum].ArrayOfBools.Emplace(MovementComponent->GetCurrentWantsToGoForwardOrBackwards());
+			GameInstance->PlayerSteerDirections[loopNum].ArrayOfDirections.Emplace(MovementComponent->GetCurrentSteerDirection());
 
-		GameInstance->PlayerTransforms[loopNum].ArrayOfTransforms.Emplace(GetActorTransform());
+			GameInstance->PlayerTransforms[loopNum].ArrayOfTransforms.Emplace(GetActorTransform());
+		}
 	}
 }
 
@@ -218,6 +221,7 @@ void APlayerPawn::OnActivateReset(const FInputActionValue& value)
 
 void APlayerPawn::OnActivateUseItem(const FInputActionValue& value)
 {
+	OnUseItemBP();
 	InventoryComponent->UseItem(value.Get<float>());
 }
 
