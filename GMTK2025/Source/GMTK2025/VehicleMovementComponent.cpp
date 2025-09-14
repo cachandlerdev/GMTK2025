@@ -426,9 +426,12 @@ void UVehicleMovementComponent::ApplyLongBoost()
 
 void UVehicleMovementComponent::Boost(float BoostStrength)
 {
-	const float baseBoostMultiplier = 100000.0f;
-	FVector direction = Chassis->GetForwardVector();
-	Chassis->AddForce(direction * BoostStrength * baseBoostMultiplier, "", !UseSuspension);
+	if (Chassis)
+	{
+		const float baseBoostMultiplier = 100000.0f;
+		FVector direction = Chassis->GetForwardVector();
+		Chassis->AddForce(direction * BoostStrength * baseBoostMultiplier, "", !UseSuspension);
+	}
 }
 
 void UVehicleMovementComponent::LongBoost(float BoostStrength, float Duration)

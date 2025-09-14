@@ -109,10 +109,10 @@ private:
 	// This is the minimum threshold we use when comparing the impact normal with the actor's forward vector.
 	// 0.707 allows for the impact angle to differ from the "direction the vehicle is going" by 45 degrees, 0.866 is a
 	// 30 degree tolerance, etc.
-	float NotSidewaysCollisionThreshold = 0.15;
+	float NotSidewaysCollisionThreshold = 0.25;
 	// This is the minimum speed the vehicle should be going when it crashes for us to play a
 	// collision SFX.
-	float MinSpeedForSoundCollision = 1000.0f;
+	float MinSpeedForSoundCollision = 1500.0f;
 
 	// Used to play a sound effect when the vehicle collides with a wall.
 	UFUNCTION()
