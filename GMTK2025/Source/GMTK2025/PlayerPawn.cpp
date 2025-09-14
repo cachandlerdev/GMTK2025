@@ -221,6 +221,7 @@ void APlayerPawn::OnActivateReset(const FInputActionValue& value)
 
 void APlayerPawn::OnActivateUseItem(const FInputActionValue& value)
 {
+	OnUseItemBP();
 	InventoryComponent->UseItem(value.Get<float>());
 }
 
