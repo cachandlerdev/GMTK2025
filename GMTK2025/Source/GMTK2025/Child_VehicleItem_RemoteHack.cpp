@@ -33,9 +33,5 @@ void UChild_VehicleItem_RemoteHack::UseItem()
 
 void UChild_VehicleItem_RemoteHack::RemoveItem()
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Remote Hack item removed."));
-	}
 	Super::RemoveItem();
 }

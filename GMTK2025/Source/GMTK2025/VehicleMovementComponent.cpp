@@ -27,8 +27,10 @@ void UVehicleMovementComponent::BeginPlay()
 
 	Owner = Cast<AVehiclePawn>(owner);
 
-	if (Owner->GetClass()->ImplementsInterface(UVehicleInterface::StaticClass()))
+	if (Owner && Owner->GetClass()->ImplementsInterface(UVehicleInterface::StaticClass()))
 	{
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Got owner"));
 		Chassis = IVehicleInterface::Execute_GetChassis(Owner);
 
 		FrontRightSuspension = IVehicleInterface::Execute_GetFrontRightSuspension(Owner);
@@ -44,8 +46,7 @@ void UVehicleMovementComponent::BeginPlay()
 	
 		//Start the physics update timer
 		Owner->GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &UVehicleMovementComponent::UpdateMovementPhysics,
-			PhysicsUpdateTime, true);
-		
+			PhysicsUpdateTime, true);	
 	}
 }
 
@@ -88,7 +89,7 @@ void UVehicleMovementComponent::ApplyMovementForce()
 			force.Y = 1;
 		}
 
-		Chassis->AddForce(force, "", false);
+		Chassis->AddForce(force, "", !UseSuspension);
 	}
 }
 
@@ -104,7 +105,7 @@ void UVehicleMovementComponent::ApplyMovementRotation()
 		float dynamicSteeringStrength = FMath::Abs((1 / Owner->GetVelocity().Length())) * SpeedSteeringFactor;
 		dynamicSteeringStrength = FMath::Clamp(dynamicSteeringStrength, MinSteerTorque, MaxSteerTorque);
 		FVector torque = FVector(0, 0, Steering * RotationAccountForFramerate * dynamicSteeringStrength);
-		Chassis->AddTorqueInDegrees(torque, "", false);
+		Chassis->AddTorqueInDegrees(torque, "", !UseSuspension);
 	}
 }
 
@@ -143,7 +144,7 @@ void UVehicleMovementComponent::ApplyTraction()
 	float angle = FVector::DotProduct(Owner->GetVelocity(), Owner->GetActorRightVector());
 	FVector tractionVectorDirection = Owner->GetActorRightVector() * angle * -1;
 	FVector tractionForce = tractionVectorDirection * CurrentTractionStrength;
-	Chassis->AddForce(tractionForce, "", false);
+	Chassis->AddForce(tractionForce, "", !UseSuspension);
 }
 
 void UVehicleMovementComponent::ApplySuspensionForceOnPoint(const FVector& StartLocation, const FVector& EndLocation, UArrowComponent* Source)
@@ -368,8 +369,14 @@ void UVehicleMovementComponent::UpdateMovementPhysics()
 	{
 		ApplyMovementForce();
 		ApplyMovementRotation();
-		ApplySuspension();
-		ApplyTraction();
+		if (UseSuspension)
+		{
+			if (abs(Owner->GetVelocity().Length()) > EnableSuspensionVelocity)
+			{
+				ApplySuspension();
+				ApplyTraction();
+			}
+		}
 	}
 	//Store player info to game instance for the ghost
 	//Broadcast physics changed
@@ -411,7 +418,7 @@ void UVehicleMovementComponent::ApplyLongBoost()
 	{
 		const float baseBoostMultiplier = 100000.0f;
 		FVector direction = Owner->GetRootComponent()->GetForwardVector();
-		Chassis->AddForce(direction * LongBoostStrengthMultiplier * baseBoostMultiplier, "", false);
+		Chassis->AddForce(direction * LongBoostStrengthMultiplier * baseBoostMultiplier, "", !UseSuspension);
 		
 		RemainingLongBoostTime = RemainingLongBoostTime - LongBoostUpdateTime;
 	}
@@ -419,9 +426,12 @@ void UVehicleMovementComponent::ApplyLongBoost()
 
 void UVehicleMovementComponent::Boost(float BoostStrength)
 {
-	const float baseBoostMultiplier = 100000.0f;
-	FVector direction = Chassis->GetForwardVector();
-	Chassis->AddForce(direction * BoostStrength * baseBoostMultiplier, "", false);
+	if (Chassis)
+	{
+		const float baseBoostMultiplier = 100000.0f;
+		FVector direction = Chassis->GetForwardVector();
+		Chassis->AddForce(direction * BoostStrength * baseBoostMultiplier, "", !UseSuspension);
+	}
 }
 
 void UVehicleMovementComponent::LongBoost(float BoostStrength, float Duration)
@@ -430,8 +440,12 @@ void UVehicleMovementComponent::LongBoost(float BoostStrength, float Duration)
 	{
 		RemainingLongBoostTime = Duration;
 		LongBoostStrengthMultiplier = BoostStrength;
-		Owner->GetWorldTimerManager().SetTimer(LongBoostDurationHandle, this, &UVehicleMovementComponent::ApplyLongBoost,
-			LongBoostUpdateTime, true);	
+		AActor* owner = GetOwner();
+		if (owner)
+		{
+			owner->GetWorldTimerManager().SetTimer(LongBoostDurationHandle, this, &UVehicleMovementComponent::ApplyLongBoost,
+				LongBoostUpdateTime, true);	
+		}
 	}
 }
 
@@ -440,8 +454,12 @@ void UVehicleMovementComponent::EMP(float Duration)
 	if(!IsEMPd) 
 	{
 		IsEMPd = true;
-		Owner->GetWorldTimerManager().SetTimer(EMPDurationHandle, this, &UVehicleMovementComponent::EndEMP,
-			Duration, false);
+		AActor* owner = GetOwner();
+		if (owner)
+		{
+			owner->GetWorldTimerManager().SetTimer(EMPDurationHandle, this, &UVehicleMovementComponent::EndEMP,
+				Duration, false);
+		}
 	}	
 }
 
@@ -458,8 +476,12 @@ void UVehicleMovementComponent::Inverter(float Duration)
 	{
 		IsInverted = true;
 
-		Owner->GetWorldTimerManager().SetTimer(InverterDurationHandle, this, &UVehicleMovementComponent::EndInverter,
+		AActor* owner = GetOwner();
+		if (owner)
+		{
+			owner->GetWorldTimerManager().SetTimer(InverterDurationHandle, this, &UVehicleMovementComponent::EndInverter,
 			Duration, false);
+		}
 	}
 }
 
@@ -467,7 +489,11 @@ void UVehicleMovementComponent::EndInverter()
 {
 	IsInverted = false;
 
-	Owner->GetWorldTimerManager().ClearTimer(InverterDurationHandle);
+	AActor* owner = GetOwner();
+	if (owner)
+	{
+		owner->GetWorldTimerManager().ClearTimer(InverterDurationHandle);
+	}
 }
 
 const float UVehicleMovementComponent::GetSpeedMultiplier()

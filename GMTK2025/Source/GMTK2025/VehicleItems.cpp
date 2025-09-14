@@ -55,7 +55,6 @@ void UVehicleItems::RemoveItem()
 	{
 		PlayerPawn->InventoryComponent->VehicleItem = nullptr; // Clear the vehicle item reference
 	}
-
-	DestroyComponent();
+	//DestroyComponent();
 }
 

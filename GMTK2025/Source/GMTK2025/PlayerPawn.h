@@ -30,6 +30,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	//Game mode reference
+	UPROPERTY()
 	AMyGameModeBase* GameMode;
 
 #pragma region Inputs
@@ -138,6 +139,7 @@ public:
 private:
 	// garbage deletion isn't an issue (I think) because we check if it's null
 	// todo: double check this if it's a problem
+	UPROPERTY()
 	UEnhancedInputComponent* EnhancedInputComponent;
 
 	FEnhancedInputActionValueBinding SteeringAxisBinding;
