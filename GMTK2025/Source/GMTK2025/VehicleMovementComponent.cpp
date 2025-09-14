@@ -46,8 +46,7 @@ void UVehicleMovementComponent::BeginPlay()
 	
 		//Start the physics update timer
 		Owner->GetWorldTimerManager().SetTimer(PhysicsUpdateHandle, this, &UVehicleMovementComponent::UpdateMovementPhysics,
-			PhysicsUpdateTime, true);
-		
+			PhysicsUpdateTime, true);	
 	}
 }
 
@@ -185,7 +184,7 @@ void UVehicleMovementComponent::ApplySuspensionForceOnPoint(const FVector& Start
 		Chassis->AddForceAtLocation(forceVector, StartLocation);
 	}
 
-	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 1.0f, 0, 1.0f);
+	//DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 1.0f, 0, 1.0f);
 }
 
 void UVehicleMovementComponent::StopMovement()
