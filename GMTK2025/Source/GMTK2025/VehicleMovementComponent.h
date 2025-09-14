@@ -59,6 +59,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 	bool UseSuspension = true;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	float EnableSuspensionVelocity = 500.0f;
+
 	//Speed
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")

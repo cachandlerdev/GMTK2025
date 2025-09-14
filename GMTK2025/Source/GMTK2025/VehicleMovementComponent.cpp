@@ -185,7 +185,7 @@ void UVehicleMovementComponent::ApplySuspensionForceOnPoint(const FVector& Start
 		Chassis->AddForceAtLocation(forceVector, StartLocation);
 	}
 
-	//DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 1.0f, 0, 1.0f);
+	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 1.0f, 0, 1.0f);
 }
 
 void UVehicleMovementComponent::StopMovement()
@@ -372,8 +372,11 @@ void UVehicleMovementComponent::UpdateMovementPhysics()
 		ApplyMovementRotation();
 		if (UseSuspension)
 		{
-			ApplySuspension();
-			ApplyTraction();
+			if (abs(Owner->GetVelocity().Length()) > EnableSuspensionVelocity)
+			{
+				ApplySuspension();
+				ApplyTraction();
+			}
 		}
 	}
 	//Store player info to game instance for the ghost
