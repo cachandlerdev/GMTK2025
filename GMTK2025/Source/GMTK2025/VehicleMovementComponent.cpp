@@ -371,10 +371,13 @@ void UVehicleMovementComponent::UpdateMovementPhysics()
 		ApplyMovementRotation();
 		if (UseSuspension)
 		{
-			if (abs(Owner->GetVelocity().Length()) > EnableSuspensionVelocity)
+			if (IsValid(Owner))
 			{
-				ApplySuspension();
-				ApplyTraction();
+				if (abs(Owner->GetVelocity().Length()) > EnableSuspensionVelocity)
+				{
+					ApplySuspension();
+					ApplyTraction();
+				}
 			}
 		}
 	}
@@ -389,7 +392,7 @@ void UVehicleMovementComponent::UpdateMovementPhysics()
 
 float UVehicleMovementComponent::GetCurrentVelocityInKMPerHour()
 {
-	if (Owner)
+	if (IsValid(Owner))
 	{
 		FVector VelocityVector = Owner->GetVelocity();
 
@@ -412,21 +415,30 @@ void UVehicleMovementComponent::ApplyLongBoost()
 {
 	if (RemainingLongBoostTime <= 0)
 	{
-		Owner->GetWorldTimerManager().ClearTimer(LongBoostDurationHandle);
+		if (IsValid(Owner))
+		{
+			Owner->GetWorldTimerManager().ClearTimer(LongBoostDurationHandle);
+		}
 	}
 	else
 	{
 		const float baseBoostMultiplier = 100000.0f;
-		FVector direction = Owner->GetRootComponent()->GetForwardVector();
-		Chassis->AddForce(direction * LongBoostStrengthMultiplier * baseBoostMultiplier, "", !UseSuspension);
+		if (IsValid(Owner))
+		{
+			FVector direction = Owner->GetRootComponent()->GetForwardVector();
+			if (IsValid(Chassis))
+			{
+				Chassis->AddForce(direction * LongBoostStrengthMultiplier * baseBoostMultiplier, "", !UseSuspension);
+			}
 		
-		RemainingLongBoostTime = RemainingLongBoostTime - LongBoostUpdateTime;
+			RemainingLongBoostTime = RemainingLongBoostTime - LongBoostUpdateTime;
+		}
 	}
 }
 
 void UVehicleMovementComponent::Boost(float BoostStrength)
 {
-	if (Chassis)
+	if (IsValid(Chassis))
 	{
 		const float baseBoostMultiplier = 100000.0f;
 		FVector direction = Chassis->GetForwardVector();
@@ -440,10 +452,9 @@ void UVehicleMovementComponent::LongBoost(float BoostStrength, float Duration)
 	{
 		RemainingLongBoostTime = Duration;
 		LongBoostStrengthMultiplier = BoostStrength;
-		AActor* owner = GetOwner();
-		if (owner)
+		if (IsValid(Owner))
 		{
-			owner->GetWorldTimerManager().SetTimer(LongBoostDurationHandle, this, &UVehicleMovementComponent::ApplyLongBoost,
+			Owner->GetWorldTimerManager().SetTimer(LongBoostDurationHandle, this, &UVehicleMovementComponent::ApplyLongBoost,
 				LongBoostUpdateTime, true);	
 		}
 	}
@@ -454,10 +465,9 @@ void UVehicleMovementComponent::EMP(float Duration)
 	if(!IsEMPd) 
 	{
 		IsEMPd = true;
-		AActor* owner = GetOwner();
-		if (owner)
+		if (IsValid(Owner))
 		{
-			owner->GetWorldTimerManager().SetTimer(EMPDurationHandle, this, &UVehicleMovementComponent::EndEMP,
+			Owner->GetWorldTimerManager().SetTimer(EMPDurationHandle, this, &UVehicleMovementComponent::EndEMP,
 				Duration, false);
 		}
 	}	
@@ -467,7 +477,10 @@ void UVehicleMovementComponent::EndEMP()
 {
 	IsEMPd = false;
 
-	Owner->GetWorldTimerManager().ClearTimer(EMPDurationHandle);
+	if (IsValid(Owner))
+	{
+		Owner->GetWorldTimerManager().ClearTimer(EMPDurationHandle);
+	}
 }
 
 void UVehicleMovementComponent::Inverter(float Duration)
@@ -476,10 +489,9 @@ void UVehicleMovementComponent::Inverter(float Duration)
 	{
 		IsInverted = true;
 
-		AActor* owner = GetOwner();
-		if (owner)
+		if (IsValid(Owner))
 		{
-			owner->GetWorldTimerManager().SetTimer(InverterDurationHandle, this, &UVehicleMovementComponent::EndInverter,
+			Owner->GetWorldTimerManager().SetTimer(InverterDurationHandle, this, &UVehicleMovementComponent::EndInverter,
 			Duration, false);
 		}
 	}
@@ -489,10 +501,9 @@ void UVehicleMovementComponent::EndInverter()
 {
 	IsInverted = false;
 
-	AActor* owner = GetOwner();
-	if (owner)
+	if (IsValid(Owner))
 	{
-		owner->GetWorldTimerManager().ClearTimer(InverterDurationHandle);
+		Owner->GetWorldTimerManager().ClearTimer(InverterDurationHandle);
 	}
 }
 
