@@ -233,6 +233,7 @@ void APlayerPawn::OnActivateBrake(const FInputActionValue& value)
 
 void APlayerPawn::OnActivateHandbrake(const FInputActionValue& value)
 {
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), ActivateHandbrakeSound, GetActorLocation(), GetActorRotation());
 	MovementComponent->Handbrake();
 }
 
@@ -253,6 +254,7 @@ void APlayerPawn::OnReleaseBrake(const FInputActionValue& value)
 
 void APlayerPawn::OnReleaseHandbrake(const FInputActionValue& value)
 {
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReleaseHandbrakeSound, GetActorLocation(), GetActorRotation());
 	MovementComponent->ReleaseHandbrake();
 }
 
