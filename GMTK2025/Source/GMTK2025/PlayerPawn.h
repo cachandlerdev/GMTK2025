@@ -136,6 +136,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartCountdownBP();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnUseItemBP();
+
 private:
 	// garbage deletion isn't an issue (I think) because we check if it's null
 	// todo: double check this if it's a problem
