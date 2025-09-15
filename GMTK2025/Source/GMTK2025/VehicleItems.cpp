@@ -2,7 +2,6 @@
 
 
 #include "VehicleItems.h"
-#include "HoverVehiclePawn.h"
 #include "PlayerPawn.h"
 #include "Kismet/GameplayStatics.h"
 

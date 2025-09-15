@@ -62,10 +62,8 @@ AVehiclePawn::AVehiclePawn()
 #pragma endregion
 
 	MovementComponent = CreateDefaultSubobject<UVehicleMovementComponent>(TEXT("MovementComponent"));
-	//MovementComponent->RegisterComponent();
 
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
-	//InventoryComponent->RegisterComponent();
 }
 
 // Called when the game starts or when spawned

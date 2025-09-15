@@ -41,8 +41,8 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Loop")
 	int32 CurrentNumberOfPlayerFailures = 0;
 
-	UPROPERTY(BlueprintReadOnly, Category="Loop")
-	float InitialCountdownDuration = 2.22f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Loop")
+	float InitialCountdownDuration = 2.0f;
 
 	// UI
 

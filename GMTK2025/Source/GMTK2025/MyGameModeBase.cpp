@@ -3,7 +3,6 @@
 
 #include "MyGameModeBase.h"
 
-#include "PlayerGhostActor.h"
 #include "VehiclePawn.h"
 #include "Blueprint/UserWidget.h"
 #include "GameFramework/PlayerStart.h"
