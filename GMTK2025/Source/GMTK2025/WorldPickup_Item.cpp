@@ -9,7 +9,6 @@
 void AWorldPickup_Item::HandlePickup(AActor* PickupInstigator)
 {
 	AVehiclePawn* player = Cast<AVehiclePawn>(PickupInstigator);
-	
 
 	if (player && player->IsPlayerControlled())
 	{
@@ -18,23 +17,4 @@ void AWorldPickup_Item::HandlePickup(AActor* PickupInstigator)
 		player->InventoryComponent->AddVehicleItem(VehicleItemClass);
 		Destroy();
 	}
-
-	// Replaced for performance reasons (even if it sacrifices portability somewhat)
-	
-	//UVehicleItems* ExistingVehicleItems = PickupInstigator->FindComponentByClass<UVehicleItems>();
-	//
-	//if (ExistingVehicleItems)
-	//{
-	//	// Add the item to the vehicle's inventory
-	//	ExistingVehicleItems->RemoveItem();
-	//}
-
-	//UVehicleItems* NewVehicleItem = NewObject<UVehicleItems>(PickupInstigator, VehicleItemClass);
-
-	//if (NewVehicleItem)
-	//{
-	//	NewVehicleItem->RegisterComponent();
-	//	NewVehicleItem->UseItem();
-	//}
-	//Destroy();
 }

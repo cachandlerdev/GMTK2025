@@ -15,7 +15,15 @@ void UChild_VehicleItem_Booster::UseItem()
 	APlayerPawn* VehiclePawn = Cast<APlayerPawn>(Player);
 	if (VehiclePawn)
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), BoostSound, VehiclePawn->GetActorLocation());
+		UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		if (instance)
+		{
+			float volume = instance->MusicVolume;
+			if (BoostSound)
+			{
+				UGameplayStatics::PlaySoundAtLocation(GetWorld(), BoostSound, VehiclePawn->GetActorLocation(), BoostSound->GetVolumeMultiplier() * volume);
+			}
+		}
 		VehiclePawn->MovementComponent->Boost(BoostStrength);
 	}
 

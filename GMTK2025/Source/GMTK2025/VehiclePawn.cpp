@@ -102,7 +102,15 @@ void AVehiclePawn::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 		if (!bHasCollidedRecently)
 		{
 			bHasCollidedRecently = true;
-			UGameplayStatics::PlaySoundAtLocation(GetWorld(), CollisionSound, Hit.Location, GetActorRotation());
+			UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+			if (instance)
+			{
+				float volume = instance->MusicVolume;
+				if (CollisionSound)
+				{
+					UGameplayStatics::PlaySoundAtLocation(GetWorld(), CollisionSound, Hit.Location, GetActorRotation(), CollisionSound->GetVolumeMultiplier() * volume);
+				}
+			}
 			GetWorld()->GetTimerManager().SetTimer(HasCollidedRecentlyHandle, this,
 				&AVehiclePawn::ResetHasCollidedRecently, HasCollidedRecentlyCooldown, false);
 		}
