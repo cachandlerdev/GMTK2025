@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\plugins\\asyncloac1ceae7b44acv11\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\asyncloadingscreen\\permoduleinline.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\intermediate\\build\\win64\\x64\\gmtk2025editor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\plugins\\asyncloac1ceae7b44acv11\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\asyncloadingscreen\\definitions.asyncloadingscreen.h",
+            "c:\\program files\\epic games\\ue_5.5\\engine\\source\\runtime\\core\\public\\hal\\permoduleinline.inl"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
