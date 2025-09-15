@@ -428,7 +428,7 @@ void UVehicleMovementComponent::ApplyLongBoost()
 			FVector direction = Owner->GetRootComponent()->GetForwardVector();
 			if (IsValid(Chassis))
 			{
-				Chassis->AddForce(direction * LongBoostStrengthMultiplier * baseBoostMultiplier, "", !UseSuspension);
+				Chassis->AddImpulse(direction * LongBoostStrengthMultiplier * baseBoostMultiplier * GetWorld()->GetDeltaSeconds(), "", !UseSuspension);
 			}
 		
 			RemainingLongBoostTime = RemainingLongBoostTime - LongBoostUpdateTime;
