@@ -2,7 +2,6 @@
 
 
 #include "VehicleItems.h"
-#include "HoverVehiclePawn.h"
 #include "PlayerPawn.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -41,7 +40,16 @@ void UVehicleItems::UseItem()
 	APlayerPawn* PlayerPawn = Cast<APlayerPawn>(Player);
 	if (PlayerPawn)
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), UseSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation());
+		
+		UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		if (instance)
+		{
+			float volume = instance->MusicVolume;
+			if (UseSound)
+			{
+				UGameplayStatics::PlaySoundAtLocation(GetWorld(), UseSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation(), UseSound->GetVolumeMultiplier() * volume);
+			}
+		}
 		PlayerPawn->InventoryComponent->VehicleItem = nullptr; // Clear the vehicle item reference
 	}
 }
