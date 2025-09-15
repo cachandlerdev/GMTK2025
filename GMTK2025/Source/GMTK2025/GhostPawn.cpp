@@ -26,7 +26,7 @@ void AGhostPawn::BeginPlay()
 	if (PlayerPawn)
 	{
 		//Copy values from the player to the ghost
-
+		
 		UStaticMesh* chassisMesh = PlayerPawn->Chassis->GetStaticMesh();
 
 		if (chassisMesh)
@@ -40,11 +40,17 @@ void AGhostPawn::BeginPlay()
 		FrontLeftSuspension->SetRelativeLocation(PlayerPawn->FrontLeftSuspension->GetRelativeLocation());
 		FrontRightSuspension->SetRelativeLocation(PlayerPawn->FrontRightSuspension->GetRelativeLocation());
 
-		Chassis->SetMassOverrideInKg(NAME_None, PlayerPawn->Chassis->GetMass(), true);
+		//Chassis->SetMassOverrideInKg(NAME_None, PlayerPawn->Chassis->GetMass(), true);
+		Chassis->GetBodyInstance()->bOverrideMass = true;
+		Chassis->GetBodyInstance()->SetMassOverride(PlayerPawn->Chassis->GetMass());	
 
 		UVehicleMovementComponent* PlayerMovementComponent = PlayerPawn->MovementComponent;
 
 		MovementComponent->SpeedMultiplier = PlayerMovementComponent->GetSpeedMultiplier();
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Speed multiplier %f"), MovementComponent->SpeedMultiplier));
+		}
 		MovementComponent->MaxSpeed = PlayerMovementComponent->GetMaxSpeed();
 		MovementComponent->BoostSpeedMultiplier = PlayerMovementComponent->BoostSpeedMultiplier;
 		MovementComponent->LongBoostUpdateTime = PlayerMovementComponent->LongBoostUpdateTime;
@@ -127,6 +133,13 @@ void AGhostPawn::ApplyGhostPhysicsMovement(int32 FollowIndex)
 	MovementComponent->Speed = GameInstance->PlayerSpeed[FollowLoopNumber].ArrayOfFloats[FollowIndex];
 	MovementComponent->bWantsToGoForwardOrBackwards = GameInstance->PlayerWantsToGoForwardOrBackwards[FollowLoopNumber].ArrayOfBools[FollowIndex];
 	MovementComponent->SteerDirection = GameInstance->PlayerSteerDirections[FollowLoopNumber].ArrayOfDirections[FollowIndex];
+	
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Steering: %f"), MovementComponent->Steering));
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Speed: %f"), MovementComponent->Speed));
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Wants FW/Back: %d"), MovementComponent->GetCurrentWantsToGoForwardOrBackwards()));
+	//}
 }
 
 void AGhostPawn::ApplyCorrectionFactor(float DeltaTime)

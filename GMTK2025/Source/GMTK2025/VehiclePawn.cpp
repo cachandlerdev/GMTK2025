@@ -17,15 +17,13 @@ AVehiclePawn::AVehiclePawn()
 	SetRootComponent(Chassis);
 	Chassis->SetSimulatePhysics(true);
 	Chassis->SetCollisionProfileName(TEXT("Vehicle"));
-	Chassis->SetCollisionObjectType(ECC_GameTraceChannel1);
-	Chassis->BodyInstance.bOverrideMass = true;
+	Chassis->SetCollisionObjectType(ECC_Pawn);
+	Chassis->GetBodyInstance()->bOverrideMass = true;
 	Chassis->SetLinearDamping(1.0);
-	Chassis->SetAngularDamping(1.0);
+	Chassis->SetAngularDamping(10.0);
 	Chassis->SetUsingAbsoluteRotation(true);
 	Chassis->SetUsingAbsoluteLocation(true);
 	Chassis->SetNotifyRigidBodyCollision(true);
-
-	Chassis->OnComponentHit.AddDynamic(this, &AVehiclePawn::OnComponentHit);	
 
 #pragma endregion
 
@@ -64,10 +62,10 @@ AVehiclePawn::AVehiclePawn()
 #pragma endregion
 
 	MovementComponent = CreateDefaultSubobject<UVehicleMovementComponent>(TEXT("MovementComponent"));
-	MovementComponent->RegisterComponent();
+	//MovementComponent->RegisterComponent();
 
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
-	InventoryComponent->RegisterComponent();
+	//InventoryComponent->RegisterComponent();
 }
 
 // Called when the game starts or when spawned
@@ -83,6 +81,11 @@ void AVehiclePawn::BeginPlay()
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Game Instance set from Vehicle Pawn."));
 		}
+	}
+
+	if (Chassis)
+	{
+		Chassis->OnComponentHit.AddDynamic(this, &AVehiclePawn::OnComponentHit);	
 	}
 }
 

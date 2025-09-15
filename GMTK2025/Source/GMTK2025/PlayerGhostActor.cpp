@@ -41,7 +41,7 @@ APlayerGhostActor::APlayerGhostActor()
 	Chassis->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	Chassis->SetupAttachment(BoxCollision);
 
-	Chassis->BodyInstance.bOverrideMass = true;
+	Chassis->GetBodyInstance()->bOverrideMass = true;
 	//Chassis->SetMassOverrideInKg("", 50000.0);
 	Chassis->GetBodyInstance()->SetMassOverride(50000.0, true);
 	Chassis->SetLinearDamping(1.0);

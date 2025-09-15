@@ -37,8 +37,9 @@ AHoverVehiclePawn::AHoverVehiclePawn()
 	Chassis = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Chassis"));
 	Chassis->SetupAttachment(BoxCollision);
 	Chassis->SetSimulatePhysics(true);
-	Chassis->BodyInstance.bOverrideMass = true;
-	Chassis->GetBodyInstance()->SetMassOverride(50000.0, true);
+	
+	Chassis->GetBodyInstance()->bOverrideMass = true;
+	//Chassis->GetBodyInstance()->SetMassOverride(50000.0, true);
 	Chassis->SetLinearDamping(1.0);
 	Chassis->SetAngularDamping(1.0);
 	Chassis->SetUsingAbsoluteRotation(true);
