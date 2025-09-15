@@ -179,6 +179,7 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 		EnhancedInputComponent->BindAction(ResetAction, ETriggerEvent::Triggered, this, &APlayerPawn::OnActivateReset);
 		EnhancedInputComponent->BindAction(UseItemAction, ETriggerEvent::Triggered, this, &APlayerPawn::OnActivateUseItem);
+		EnhancedInputComponent->BindAction(ToggleHudAction, ETriggerEvent::Started, this, &APlayerPawn::OnActivateToggleHud);
 
 		SteeringAxisBinding = EnhancedInputComponent->BindActionValue(SteeringAction);
 	}
@@ -206,6 +207,11 @@ void APlayerPawn::RecordPlayerInfo()
 	}
 }
 
+bool APlayerPawn::GetShouldDisplayHud()
+{
+	return bShouldDisplayHud;
+}
+
 void APlayerPawn::OnActivateReset(const FInputActionValue& value)
 {
 	const float axisValue = value.Get<float>();
@@ -223,6 +229,30 @@ void APlayerPawn::OnActivateUseItem(const FInputActionValue& value)
 {
 	OnUseItemBP();
 	InventoryComponent->UseItem(value.Get<float>());
+}
+
+void APlayerPawn::OnActivateToggleHud(const FInputActionValue& value)
+{
+	bShouldDisplayHud = !bShouldDisplayHud;
+	USoundBase* sound;
+	if (bShouldDisplayHud)
+	{
+		sound = EnableHUDSound;
+	}
+	else
+	{
+		sound = DisableHUDSound;
+	}
+	if (sound)
+	{
+		UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		if (instance)
+		{
+			float volume = instance->MusicVolume;
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), sound, GetActorLocation(), sound->GetVolumeMultiplier() * volume);
+		}
+	}
+	OnToggleHudBP();
 }
 
 void APlayerPawn::OnActivateThrottle(const FInputActionValue& value)

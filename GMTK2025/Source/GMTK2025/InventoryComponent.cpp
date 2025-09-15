@@ -106,7 +106,14 @@ void UInventoryComponent::AddCoins()
 		
 		AVehiclePawn* Owner = Cast<AVehiclePawn>(GetOwner());
 
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), BoostSound, Owner->GetActorLocation(), Owner->GetActorRotation());
+		if (instance)
+		{
+			float volume = instance->MusicVolume;
+			if (BoostSound)
+			{
+				UGameplayStatics::PlaySoundAtLocation(GetWorld(), BoostSound, Owner->GetActorLocation(), Owner->GetActorRotation(), BoostSound->GetVolumeMultiplier() * volume);
+			}
+		}
 		Owner->MovementComponent->Boost(CoinBoostStrength);
 		Coins = 0;
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Boosted!"));
