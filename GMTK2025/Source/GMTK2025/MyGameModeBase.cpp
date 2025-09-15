@@ -213,6 +213,7 @@ void AMyGameModeBase::RestartThisLoop()
 		GameInstance->PlayerSteering[CurrentLoopNumber].ArrayOfFloats.Reset();
 		GameInstance->PlayerWantsToGoForwardOrBackwards[CurrentLoopNumber].ArrayOfBools.Reset();
 		GameInstance->PlayerSteerDirections[CurrentLoopNumber].ArrayOfDirections.Reset();
+		GameInstance->PlayerTransforms[CurrentLoopNumber].ArrayOfTransforms.Reset();	
 		
 		CurrentLoopStartTime = GetWorld()->TimeSeconds;
 		
