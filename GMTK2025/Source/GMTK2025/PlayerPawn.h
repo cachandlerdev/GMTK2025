@@ -61,6 +61,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* PauseAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* ToggleHudAction;
 
 	void OnActivateThrottle(const FInputActionValue& value);
 	void OnActivateBrake(const FInputActionValue& value);
@@ -68,6 +71,8 @@ protected:
 	void OnActivateSteer(const FInputActionValue& value);
 	void OnActivateReset(const FInputActionValue& value);
 	void OnActivateUseItem(const FInputActionValue& value);
+	
+	void OnActivateToggleHud(const FInputActionValue& value);
 
 	void OnReleaseThrottle(const FInputActionValue& value);
 	void OnReleaseBrake(const FInputActionValue& value);
@@ -76,6 +81,9 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Pause")
 	void OnActivatePauseBP();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "UI")
+	void OnToggleHudBP();
 
 #pragma endregion
 
@@ -86,6 +94,12 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 	USoundBase* ReleaseHandbrakeSound;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* EnableHUDSound;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* DisableHUDSound;
 	
 #pragma endregion
 
@@ -136,12 +150,17 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartCountdownBP();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnUseItemBP();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "UI")
+	bool GetShouldDisplayHud();
+
 private:
-	// garbage deletion isn't an issue (I think) because we check if it's null
-	// todo: double check this if it's a problem
 	UPROPERTY()
 	UEnhancedInputComponent* EnhancedInputComponent;
 
 	FEnhancedInputActionValueBinding SteeringAxisBinding;
 
+	bool bShouldDisplayHud = true;
 };

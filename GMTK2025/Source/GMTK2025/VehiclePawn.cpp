@@ -23,6 +23,9 @@ AVehiclePawn::AVehiclePawn()
 	Chassis->SetAngularDamping(1.0);
 	Chassis->SetUsingAbsoluteRotation(true);
 	Chassis->SetUsingAbsoluteLocation(true);
+	Chassis->SetNotifyRigidBodyCollision(true);
+
+	Chassis->OnComponentHit.AddDynamic(this, &AVehiclePawn::OnComponentHit);	
 
 #pragma endregion
 
@@ -81,6 +84,42 @@ void AVehiclePawn::BeginPlay()
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Game Instance set from Vehicle Pawn."));
 		}
 	}
+}
+
+void AVehiclePawn::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	FVector NormalImpulse, const FHitResult& Hit)
+{
+	FVector impactNormal = Hit.ImpactNormal;
+	FVector upDirection = FVector(0, 0, 1.0f);
+	FVector forwardDirection = GetActorForwardVector();
+
+	bool bIsNotFloor = abs(FVector::DotProduct(impactNormal, upDirection)) < NotFloorCollisionThreshold;
+	bool bVehicleMovementIsNotParallelToWall = abs(FVector::DotProduct(impactNormal, forwardDirection)) > NotSidewaysCollisionThreshold;
+	bool bWasGoingFastEnough = abs(GetVelocity().Length()) >= MinSpeedForSoundCollision;
+	
+	if (bIsNotFloor && bVehicleMovementIsNotParallelToWall && bWasGoingFastEnough)
+	{
+		if (!bHasCollidedRecently)
+		{
+			bHasCollidedRecently = true;
+			UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+			if (instance)
+			{
+				float volume = instance->MusicVolume;
+				if (CollisionSound)
+				{
+					UGameplayStatics::PlaySoundAtLocation(GetWorld(), CollisionSound, Hit.Location, GetActorRotation(), CollisionSound->GetVolumeMultiplier() * volume);
+				}
+			}
+			GetWorld()->GetTimerManager().SetTimer(HasCollidedRecentlyHandle, this,
+				&AVehiclePawn::ResetHasCollidedRecently, HasCollidedRecentlyCooldown, false);
+		}
+	}
+}
+
+void AVehiclePawn::ResetHasCollidedRecently()
+{
+	bHasCollidedRecently = false;
 }
 
 // Called every frame

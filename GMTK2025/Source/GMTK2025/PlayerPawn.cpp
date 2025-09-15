@@ -179,6 +179,7 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 		EnhancedInputComponent->BindAction(ResetAction, ETriggerEvent::Triggered, this, &APlayerPawn::OnActivateReset);
 		EnhancedInputComponent->BindAction(UseItemAction, ETriggerEvent::Triggered, this, &APlayerPawn::OnActivateUseItem);
+		EnhancedInputComponent->BindAction(ToggleHudAction, ETriggerEvent::Started, this, &APlayerPawn::OnActivateToggleHud);
 
 		SteeringAxisBinding = EnhancedInputComponent->BindActionValue(SteeringAction);
 	}
@@ -190,17 +191,25 @@ void APlayerPawn::RecordPlayerInfo()
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Recording player info."));
 	*/
-	int32 loopNum = GameMode->GetCurrentLoopNumber();
-	
-	if (loopNum > -1)
+	if (GameMode)
 	{
-		GameInstance->PlayerSpeed[loopNum].ArrayOfFloats.Emplace(MovementComponent->GetCurrentSpeed());
-		GameInstance->PlayerSteering[loopNum].ArrayOfFloats.Emplace(MovementComponent->GetCurrentSteering());
-		GameInstance->PlayerWantsToGoForwardOrBackwards[loopNum].ArrayOfBools.Emplace(MovementComponent->GetCurrentWantsToGoForwardOrBackwards());
-		GameInstance->PlayerSteerDirections[loopNum].ArrayOfDirections.Emplace(MovementComponent->GetCurrentSteerDirection());
+		int32 loopNum = GameMode->GetCurrentLoopNumber();
+	
+		if (loopNum > -1)
+		{
+			GameInstance->PlayerSpeed[loopNum].ArrayOfFloats.Emplace(MovementComponent->GetCurrentSpeed());
+			GameInstance->PlayerSteering[loopNum].ArrayOfFloats.Emplace(MovementComponent->GetCurrentSteering());
+			GameInstance->PlayerWantsToGoForwardOrBackwards[loopNum].ArrayOfBools.Emplace(MovementComponent->GetCurrentWantsToGoForwardOrBackwards());
+			GameInstance->PlayerSteerDirections[loopNum].ArrayOfDirections.Emplace(MovementComponent->GetCurrentSteerDirection());
 
-		GameInstance->PlayerTransforms[loopNum].ArrayOfTransforms.Emplace(GetActorTransform());
+			GameInstance->PlayerTransforms[loopNum].ArrayOfTransforms.Emplace(GetActorTransform());
+		}
 	}
+}
+
+bool APlayerPawn::GetShouldDisplayHud()
+{
+	return bShouldDisplayHud;
 }
 
 void APlayerPawn::OnActivateReset(const FInputActionValue& value)
@@ -218,7 +227,32 @@ void APlayerPawn::OnActivateReset(const FInputActionValue& value)
 
 void APlayerPawn::OnActivateUseItem(const FInputActionValue& value)
 {
+	OnUseItemBP();
 	InventoryComponent->UseItem(value.Get<float>());
+}
+
+void APlayerPawn::OnActivateToggleHud(const FInputActionValue& value)
+{
+	bShouldDisplayHud = !bShouldDisplayHud;
+	USoundBase* sound;
+	if (bShouldDisplayHud)
+	{
+		sound = EnableHUDSound;
+	}
+	else
+	{
+		sound = DisableHUDSound;
+	}
+	if (sound)
+	{
+		UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		if (instance)
+		{
+			float volume = instance->MusicVolume;
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), sound, GetActorLocation(), sound->GetVolumeMultiplier() * volume);
+		}
+	}
+	OnToggleHudBP();
 }
 
 void APlayerPawn::OnActivateThrottle(const FInputActionValue& value)
@@ -233,7 +267,15 @@ void APlayerPawn::OnActivateBrake(const FInputActionValue& value)
 
 void APlayerPawn::OnActivateHandbrake(const FInputActionValue& value)
 {
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), ActivateHandbrakeSound, GetActorLocation(), GetActorRotation());
+	UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (instance)
+	{
+		float volume = instance->MusicVolume;
+		if (ActivateHandbrakeSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), ActivateHandbrakeSound, GetActorLocation(), GetActorRotation(), ActivateHandbrakeSound->GetVolumeMultiplier() * volume);
+		}
+	}
 	MovementComponent->Handbrake();
 }
 
@@ -254,7 +296,15 @@ void APlayerPawn::OnReleaseBrake(const FInputActionValue& value)
 
 void APlayerPawn::OnReleaseHandbrake(const FInputActionValue& value)
 {
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReleaseHandbrakeSound, GetActorLocation(), GetActorRotation());
+	UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (instance)
+	{
+		float volume = instance->MusicVolume;
+		if (ReleaseHandbrakeSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReleaseHandbrakeSound, GetActorLocation(), GetActorRotation(), ReleaseHandbrakeSound->GetVolumeMultiplier() * volume);
+		}
+	}
 	MovementComponent->ReleaseHandbrake();
 }
 
