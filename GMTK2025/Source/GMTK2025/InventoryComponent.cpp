@@ -57,7 +57,15 @@ void UInventoryComponent::AddVehicleItem(TSubclassOf<UVehicleItems> VehicleItemC
 		//NewVehicleItem->RegisterComponent();
 		VehicleItem = NewVehicleItem;
 
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), GetCollectableSound, GetOwner()->GetActorLocation());
+		UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		if (instance)
+		{
+			float volume = instance->MusicVolume;
+			if (GetCollectableSound)
+			{
+				UGameplayStatics::PlaySoundAtLocation(GetWorld(), GetCollectableSound, GetOwner()->GetActorLocation(), GetCollectableSound->GetVolumeMultiplier() * volume);
+			}
+		}
 	}
 }
 
@@ -82,7 +90,15 @@ void UInventoryComponent::AddCoins()
 {
 	//TODO: refactor boosting with coins logic
 
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), GetCollectableSound, GetOwner()->GetActorLocation());
+	UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (instance)
+	{
+		float volume = instance->MusicVolume;
+		if (GetCollectableSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), GetCollectableSound, GetOwner()->GetActorLocation(), GetCollectableSound->GetVolumeMultiplier() * volume);
+		}
+	}
 	Coins++;
 	if (Coins == 10)
 	{

@@ -237,7 +237,15 @@ void APlayerPawn::OnActivateBrake(const FInputActionValue& value)
 
 void APlayerPawn::OnActivateHandbrake(const FInputActionValue& value)
 {
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), ActivateHandbrakeSound, GetActorLocation(), GetActorRotation());
+	UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (instance)
+	{
+		float volume = instance->MusicVolume;
+		if (ActivateHandbrakeSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), ActivateHandbrakeSound, GetActorLocation(), GetActorRotation(), ActivateHandbrakeSound->GetVolumeMultiplier() * volume);
+		}
+	}
 	MovementComponent->Handbrake();
 }
 
@@ -258,7 +266,15 @@ void APlayerPawn::OnReleaseBrake(const FInputActionValue& value)
 
 void APlayerPawn::OnReleaseHandbrake(const FInputActionValue& value)
 {
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReleaseHandbrakeSound, GetActorLocation(), GetActorRotation());
+	UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (instance)
+	{
+		float volume = instance->MusicVolume;
+		if (ReleaseHandbrakeSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReleaseHandbrakeSound, GetActorLocation(), GetActorRotation(), ReleaseHandbrakeSound->GetVolumeMultiplier() * volume);
+		}
+	}
 	MovementComponent->ReleaseHandbrake();
 }
 
