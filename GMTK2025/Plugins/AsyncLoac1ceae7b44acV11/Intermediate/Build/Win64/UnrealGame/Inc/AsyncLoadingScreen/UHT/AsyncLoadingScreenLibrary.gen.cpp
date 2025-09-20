@@ -26,9 +26,13 @@ struct Z_Construct_UFunction_UAsyncLoadingScreenLibrary_GetIsEnableLoadingScreen
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "Async Loading Screen" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Get enable/disable the loading screen for next levels\n\x09 *\n\x09 **/" },
+#endif
 		{ "ModuleRelativePath", "Public/AsyncLoadingScreenLibrary.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Get enable/disable the loading screen for next levels" },
+#endif
 	};
 #endif // WITH_METADATA
 	static void NewProp_ReturnValue_SetBit(void* Obj);
@@ -71,9 +75,13 @@ struct Z_Construct_UFunction_UAsyncLoadingScreenLibrary_PreloadBackgroundImages_
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "Async Loading Screen" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Load all background images into memory\n\x09 * \n\x09 * Only use this function when: \n\x09 * \"bPreloadBackgroundImages\" option is checked, \n\x09 * and you called \"RemovePreloadedBackgroundImages\" before.\n\x09 * \n\x09 * You don't need to use this if you never call\n\x09 * \"RemovePreloadedBackgroundImages\" function,\n\x09 * since the background images are still in the memory\n\x09 * \n\x09 * Note: Call this function before calling \"OpenLevel\" node.\n\x09 * \n\x09 **/" },
+#endif
 		{ "ModuleRelativePath", "Public/AsyncLoadingScreenLibrary.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Load all background images into memory\n\nOnly use this function when:\n\"bPreloadBackgroundImages\" option is checked,\nand you called \"RemovePreloadedBackgroundImages\" before.\n\nYou don't need to use this if you never call\n\"RemovePreloadedBackgroundImages\" function,\nsince the background images are still in the memory\n\nNote: Call this function before calling \"OpenLevel\" node." },
+#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FFunctionParams FuncParams;
@@ -103,9 +111,13 @@ struct Z_Construct_UFunction_UAsyncLoadingScreenLibrary_RemovePreloadedBackgroun
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "Async Loading Screen" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Remove all preloaded background images\n\x09 * \n\x09 * Only need to use this function when \n\x09 * \"bPreloadBackgroundImages\" is checked.\n\x09 * \n\x09 * You need to call \"PreloadBackgroundImages\" \n\x09 * to manually load all background images again.\n\x09 * \n\x09 **/" },
+#endif
 		{ "ModuleRelativePath", "Public/AsyncLoadingScreenLibrary.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Remove all preloaded background images\n\nOnly need to use this function when\n\"bPreloadBackgroundImages\" is checked.\n\nYou need to call \"PreloadBackgroundImages\"\nto manually load all background images again." },
+#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FFunctionParams FuncParams;
@@ -139,9 +151,13 @@ struct Z_Construct_UFunction_UAsyncLoadingScreenLibrary_SetDisplayBackgroundInde
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "Async Loading Screen" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Set which background will be displayed on the loading screen by index. The \"SetDisplayBackgroundManually\" option in Background setting needs to be \"true\" to use this function.\n\x09 * \n\x09 * @param BackgroundIndex Valid index of the Background in \"Images\" array in Background setting. If the index is not valid, then it will display random background instead.\n\x09 **/" },
+#endif
 		{ "ModuleRelativePath", "Public/AsyncLoadingScreenLibrary.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Set which background will be displayed on the loading screen by index. The \"SetDisplayBackgroundManually\" option in Background setting needs to be \"true\" to use this function.\n\n@param BackgroundIndex Valid index of the Background in \"Images\" array in Background setting. If the index is not valid, then it will display random background instead." },
+#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FIntPropertyParams NewProp_BackgroundIndex;
@@ -184,9 +200,13 @@ struct Z_Construct_UFunction_UAsyncLoadingScreenLibrary_SetDisplayMovieIndex_Sta
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "Async Loading Screen" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Set which movie will be displayed on the loading screen by index. The \"SetDisplayMovieIndexManually\" option needs to be \"true\" to use this function.\n\x09 *\n\x09 * @param MovieIndex Valid index of the movie in \"MoviePaths\" array.\n\x09 **/" },
+#endif
 		{ "ModuleRelativePath", "Public/AsyncLoadingScreenLibrary.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Set which movie will be displayed on the loading screen by index. The \"SetDisplayMovieIndexManually\" option needs to be \"true\" to use this function.\n\n@param MovieIndex Valid index of the movie in \"MoviePaths\" array." },
+#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FIntPropertyParams NewProp_MovieIndex;
@@ -229,9 +249,13 @@ struct Z_Construct_UFunction_UAsyncLoadingScreenLibrary_SetDisplayTipTextIndex_S
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "Async Loading Screen" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Set which text will be displayed on the loading screen by index. The \"SetDisplayTipTextManually\" option in Tip Widget setting needs to be \"true\" to use this function.\n\x09 *\n\x09 * @param TipTextIndex Valid index of the text in \"TipText\" array in Tip Widget setting. If the index is not valid, then it will display random text instead.\n\x09 **/" },
+#endif
 		{ "ModuleRelativePath", "Public/AsyncLoadingScreenLibrary.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Set which text will be displayed on the loading screen by index. The \"SetDisplayTipTextManually\" option in Tip Widget setting needs to be \"true\" to use this function.\n\n@param TipTextIndex Valid index of the text in \"TipText\" array in Tip Widget setting. If the index is not valid, then it will display random text instead." },
+#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FIntPropertyParams NewProp_TipTextIndex;
@@ -274,9 +298,13 @@ struct Z_Construct_UFunction_UAsyncLoadingScreenLibrary_SetEnableLoadingScreen_S
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "Async Loading Screen" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Set enable/disable the loading screen for next levels\n\x09 *\n\x09 * @param bIsEnableLoadingScreen Should we enable the loading screen for next level?\n\x09 **/" },
+#endif
 		{ "ModuleRelativePath", "Public/AsyncLoadingScreenLibrary.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Set enable/disable the loading screen for next levels\n\n@param bIsEnableLoadingScreen Should we enable the loading screen for next level?" },
+#endif
 	};
 #endif // WITH_METADATA
 	static void NewProp_bIsEnableLoadingScreen_SetBit(void* Obj);
@@ -320,9 +348,13 @@ struct Z_Construct_UFunction_UAsyncLoadingScreenLibrary_StopLoadingScreen_Static
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "Async Loading Screen" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Stop the loading screen. To use this function, you must enable the \"bAllowEngineTick\" option.\n\x09 * Call this function in BeginPlay event to stop the Loading Screen (works with Delay node).\n\x09 *\n\x09 **/" },
+#endif
 		{ "ModuleRelativePath", "Public/AsyncLoadingScreenLibrary.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Stop the loading screen. To use this function, you must enable the \"bAllowEngineTick\" option.\nCall this function in BeginPlay event to stop the Loading Screen (works with Delay node)." },
+#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FFunctionParams FuncParams;
@@ -371,22 +403,26 @@ struct Z_Construct_UClass_UAsyncLoadingScreenLibrary_Statics
 {
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Class_MetaDataParams[] = {
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n * Async Loading Screen Function Library\n */" },
+#endif
 		{ "IncludePath", "AsyncLoadingScreenLibrary.h" },
 		{ "ModuleRelativePath", "Public/AsyncLoadingScreenLibrary.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Async Loading Screen Function Library" },
+#endif
 	};
 #endif // WITH_METADATA
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
-		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_GetIsEnableLoadingScreen, "GetIsEnableLoadingScreen" }, // 220626513
-		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_PreloadBackgroundImages, "PreloadBackgroundImages" }, // 3931240459
-		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_RemovePreloadedBackgroundImages, "RemovePreloadedBackgroundImages" }, // 2002524508
-		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_SetDisplayBackgroundIndex, "SetDisplayBackgroundIndex" }, // 1216407989
-		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_SetDisplayMovieIndex, "SetDisplayMovieIndex" }, // 1220876763
-		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_SetDisplayTipTextIndex, "SetDisplayTipTextIndex" }, // 1922343262
-		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_SetEnableLoadingScreen, "SetEnableLoadingScreen" }, // 3873052416
-		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_StopLoadingScreen, "StopLoadingScreen" }, // 938782706
+		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_GetIsEnableLoadingScreen, "GetIsEnableLoadingScreen" }, // 3018577696
+		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_PreloadBackgroundImages, "PreloadBackgroundImages" }, // 2431557498
+		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_RemovePreloadedBackgroundImages, "RemovePreloadedBackgroundImages" }, // 4207527629
+		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_SetDisplayBackgroundIndex, "SetDisplayBackgroundIndex" }, // 2742616505
+		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_SetDisplayMovieIndex, "SetDisplayMovieIndex" }, // 3691349042
+		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_SetDisplayTipTextIndex, "SetDisplayTipTextIndex" }, // 4121642671
+		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_SetEnableLoadingScreen, "SetEnableLoadingScreen" }, // 3798544350
+		{ &Z_Construct_UFunction_UAsyncLoadingScreenLibrary_StopLoadingScreen, "StopLoadingScreen" }, // 1309400569
 	};
 	static_assert(UE_ARRAY_COUNT(FuncInfo) < 2048);
 	static constexpr FCppClassTypeInfoStatic StaticCppClassTypeInfo = {
@@ -432,14 +468,14 @@ UAsyncLoadingScreenLibrary::~UAsyncLoadingScreenLibrary() {}
 // End Class UAsyncLoadingScreenLibrary
 
 // Begin Registration
-struct Z_CompiledInDeferFile_FID_build_U5M_Sync_LocalBuilds_PluginTemp_HostProject_Plugins_AsyncLoadingScreen_Source_AsyncLoadingScreen_Public_AsyncLoadingScreenLibrary_h_Statics
+struct Z_CompiledInDeferFile_FID_Users_Christopher_Chandler_Development_Unreal_Engine_Projects_GMTK2025_GMTK2025_Plugins_AsyncLoac1ceae7b44acV11_Source_AsyncLoadingScreen_Public_AsyncLoadingScreenLibrary_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UAsyncLoadingScreenLibrary, UAsyncLoadingScreenLibrary::StaticClass, TEXT("UAsyncLoadingScreenLibrary"), &Z_Registration_Info_UClass_UAsyncLoadingScreenLibrary, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAsyncLoadingScreenLibrary), 3778277808U) },
+		{ Z_Construct_UClass_UAsyncLoadingScreenLibrary, UAsyncLoadingScreenLibrary::StaticClass, TEXT("UAsyncLoadingScreenLibrary"), &Z_Registration_Info_UClass_UAsyncLoadingScreenLibrary, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAsyncLoadingScreenLibrary), 3924209487U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_build_U5M_Sync_LocalBuilds_PluginTemp_HostProject_Plugins_AsyncLoadingScreen_Source_AsyncLoadingScreen_Public_AsyncLoadingScreenLibrary_h_826513524(TEXT("/Script/AsyncLoadingScreen"),
-	Z_CompiledInDeferFile_FID_build_U5M_Sync_LocalBuilds_PluginTemp_HostProject_Plugins_AsyncLoadingScreen_Source_AsyncLoadingScreen_Public_AsyncLoadingScreenLibrary_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_build_U5M_Sync_LocalBuilds_PluginTemp_HostProject_Plugins_AsyncLoadingScreen_Source_AsyncLoadingScreen_Public_AsyncLoadingScreenLibrary_h_Statics::ClassInfo),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Users_Christopher_Chandler_Development_Unreal_Engine_Projects_GMTK2025_GMTK2025_Plugins_AsyncLoac1ceae7b44acV11_Source_AsyncLoadingScreen_Public_AsyncLoadingScreenLibrary_h_2291705349(TEXT("/Script/AsyncLoadingScreen"),
+	Z_CompiledInDeferFile_FID_Users_Christopher_Chandler_Development_Unreal_Engine_Projects_GMTK2025_GMTK2025_Plugins_AsyncLoac1ceae7b44acV11_Source_AsyncLoadingScreen_Public_AsyncLoadingScreenLibrary_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Users_Christopher_Chandler_Development_Unreal_Engine_Projects_GMTK2025_GMTK2025_Plugins_AsyncLoac1ceae7b44acV11_Source_AsyncLoadingScreen_Public_AsyncLoadingScreenLibrary_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);
 // End Registration

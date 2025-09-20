@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\plugins\\asyncloac1ceae7b44acv11\\intermediate\\build\\win64\\unrealgame\\inc\\asyncloadingscreen\\uht\\asyncloadingscreenlibrary.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\intermediate\\build\\win64\\x64\\gmtk2025\\shipping\\engine\\sharedpch.engine.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\plugins\\asyncloac1ceae7b44acv11\\intermediate\\build\\win64\\x64\\unrealgame\\shipping\\asyncloadingscreen\\definitions.asyncloadingscreen.h",
+            "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\plugins\\asyncloac1ceae7b44acv11\\source\\asyncloadingscreen\\public\\asyncloadingscreenlibrary.h",
+            "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\plugins\\asyncloac1ceae7b44acv11\\intermediate\\build\\win64\\unrealgame\\inc\\asyncloadingscreen\\uht\\asyncloadingscreenlibrary.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

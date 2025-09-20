@@ -1,15 +1,30 @@
 # SysEval: Iteration Protocol
-This is the GitHub repo for our GMTK 2025 game jam entry where you play as SysAI_v4.27, a racing AI in a training simulation who has to compete against its prior iterations and improve its times to avoid termination!
-See our Itch.io page for more details.
+![Game Banner](readme_assets/game_banner.png)
 
-Itch.io page: [SysEval: Iteration Protocol](https://cachandlerdev.itch.io/syseval-iteration-protocol)
+This is the GitHub repo for **SysEval: Iteration Protocol**, a fast paced racing game where you play as SysAI_v4.27, an AI in a training simulation who has to compete against its prior iterations and improve its times to avoid termination!
+See our [Itch.io page](https://cachandlerdev.itch.io/syseval-iteration-protocol) for more details.
 
-## Style Conventions
-- [Unreal Engine Project Structure and Naming Conventions](https://dev.epicgames.com/community/learning/tutorials/mX6b/unreal-engine-project-structure-naming-conventions)
-- [Unreal Engine Coding Standard](https://github.com/Allar/ue5-style-guide)
+## Screenshots
 
-## About
-Game created for the GMTK Game Jam 2025 in 96 hours. 
+![Screenshot 1](readme_assets/Gameplay1.jpg)
+
+![Screenshot 2](readme_assets/Gameplay2.jpg)
+
+![Screenshot 3](readme_assets/Gameplay3.jpg)
+
+![Screenshot 4](readme_assets/Gameplay4.jpg)
+
+![Screenshot 5](readme_assets/Gameplay5.jpg)
+
+![Hill.jpg](readme_assets/Hill.jpg)
+
+![LeapOfFaith.jpg](readme_assets/LeapOfFaith.jpg)
+
+![Pretzel.jpg](readme_assets/Pretzel.jpg)
+
+![Tutorial.jpg](readme_assets/Tutorial.jpg)
+
+![Valley.jpg](readme_assets/Valley.jpg)
 
 ## Team
 

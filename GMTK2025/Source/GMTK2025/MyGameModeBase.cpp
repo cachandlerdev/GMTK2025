@@ -213,6 +213,7 @@ void AMyGameModeBase::RestartThisLoop()
 		GameInstance->PlayerSteering[CurrentLoopNumber].ArrayOfFloats.Reset();
 		GameInstance->PlayerWantsToGoForwardOrBackwards[CurrentLoopNumber].ArrayOfBools.Reset();
 		GameInstance->PlayerSteerDirections[CurrentLoopNumber].ArrayOfDirections.Reset();
+		GameInstance->PlayerTransforms[CurrentLoopNumber].ArrayOfTransforms.Reset();	
 		
 		CurrentLoopStartTime = GetWorld()->TimeSeconds;
 		
@@ -243,7 +244,15 @@ void AMyGameModeBase::RestartThisLoop()
 		}
 		else
 		{
-			UGameplayStatics::PlaySound2D(GetWorld(), RestartLoopSound);
+			UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+			if (instance)
+			{
+				float volume = instance->MusicVolume;
+				if (RestartLoopSound)
+				{
+					UGameplayStatics::PlaySound2D(GetWorld(), RestartLoopSound, volume * RestartLoopSound->GetVolumeMultiplier());
+				}
+			}
 			FVector location = playerStarts[0]->GetActorLocation();
 			FRotator rotation = playerStarts[0]->GetActorRotation();
 			APawn* player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);

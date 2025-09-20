@@ -90,9 +90,13 @@ struct Z_Construct_UEnum_AsyncLoadingScreen_EAsyncLoadingScreenLayout_Statics
 		{ "ALSL_Sidebar.Name", "EAsyncLoadingScreenLayout::ALSL_Sidebar" },
 		{ "ALSL_Sidebar.ToolTip", "The Sidebar layout has a vertical border on the left or right of the screen. The Sidebar\nis suitable for storytelling, long paragraphs due to the height of the tip widget." },
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** \n * Asynce Loading Screen Layouts\n */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Asynce Loading Screen Layouts" },
+#endif
 	};
 #endif // WITH_METADATA
 	static constexpr UECodeGen_Private::FEnumeratorParam Enumerators[] = {
@@ -145,7 +149,9 @@ struct Z_Construct_UEnum_AsyncLoadingScreen_ELoadingIconType_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Enum_MetaDataParams[] = {
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Loading Icon Type*/" },
+#endif
 		{ "LIT_CircularThrobber.Comment", "/** SCircularThrobber widget */" },
 		{ "LIT_CircularThrobber.DisplayName", "Circular Throbber" },
 		{ "LIT_CircularThrobber.Name", "ELoadingIconType::LIT_CircularThrobber" },
@@ -159,7 +165,9 @@ struct Z_Construct_UEnum_AsyncLoadingScreen_ELoadingIconType_Statics
 		{ "LIT_Throbber.Name", "ELoadingIconType::LIT_Throbber" },
 		{ "LIT_Throbber.ToolTip", "SThrobber widget" },
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Loading Icon Type" },
+#endif
 	};
 #endif // WITH_METADATA
 	static constexpr UECodeGen_Private::FEnumeratorParam Enumerators[] = {
@@ -210,7 +218,9 @@ struct Z_Construct_UEnum_AsyncLoadingScreen_ELoadingWidgetType_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Enum_MetaDataParams[] = {
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Loading Widget type */" },
+#endif
 		{ "LWT_Horizontal.Comment", "/** Horizontal alignment */" },
 		{ "LWT_Horizontal.DisplayName", "Horizontal" },
 		{ "LWT_Horizontal.Name", "ELoadingWidgetType::LWT_Horizontal" },
@@ -220,7 +230,9 @@ struct Z_Construct_UEnum_AsyncLoadingScreen_ELoadingWidgetType_Statics
 		{ "LWT_Vertical.Name", "ELoadingWidgetType::LWT_Vertical" },
 		{ "LWT_Vertical.ToolTip", "Vertical alignment" },
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Loading Widget type" },
+#endif
 	};
 #endif // WITH_METADATA
 	static constexpr UECodeGen_Private::FEnumeratorParam Enumerators[] = {
@@ -270,21 +282,33 @@ struct Z_Construct_UScriptStruct_FWidgetAlignment_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Struct_MetaDataParams[] = {
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Alignment for widget*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Alignment for widget" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_HorizontalAlignment_MetaData[] = {
 		{ "Category", "Alignment Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The horizontal alignment of the widget.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The horizontal alignment of the widget." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_VerticalAlignment_MetaData[] = {
 		{ "Category", "Alignment Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The vertical alignment of the widget.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The vertical alignment of the widget." },
+#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FBytePropertyParams NewProp_HorizontalAlignment;
@@ -345,39 +369,63 @@ struct Z_Construct_UScriptStruct_FTextAppearance_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Struct_MetaDataParams[] = {
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// Text appearance settings\n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Text appearance settings" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ColorAndOpacity_MetaData[] = {
 		{ "Category", "Text Appearance" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Text color and opacity */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Text color and opacity" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Font_MetaData[] = {
 		{ "Category", "Text Appearance" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// The font to render the text with.\n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The font to render the text with." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ShadowOffset_MetaData[] = {
 		{ "Category", "Text Appearance" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Drop shadow offset in pixels */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Drop shadow offset in pixels" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ShadowColorAndOpacity_MetaData[] = {
 		{ "Category", "Text Appearance" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Shadow color and opacity */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Shadow color and opacity" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Justification_MetaData[] = {
 		{ "Category", "Text Appearance" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** How the text should be aligned with the margin. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "How the text should be aligned with the margin." },
+#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FStructPropertyParams NewProp_ColorAndOpacity;
@@ -453,35 +501,55 @@ struct Z_Construct_UScriptStruct_FThrobberSettings_Statics
 		{ "Category", "Appearance" },
 		{ "ClampMax", "25" },
 		{ "ClampMin", "1" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** How many pieces there are */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "How many pieces there are" },
+#endif
 		{ "UIMax", "25" },
 		{ "UIMin", "1" },
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bAnimateHorizontally_MetaData[] = {
 		{ "Category", "Appearance" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Should the pieces animate horizontally? */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Should the pieces animate horizontally?" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bAnimateVertically_MetaData[] = {
 		{ "Category", "Appearance" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Should the pieces animate vertically? */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Should the pieces animate vertically?" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bAnimateOpacity_MetaData[] = {
 		{ "Category", "Appearance" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Should the pieces animate their opacity? */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Should the pieces animate their opacity?" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Image_MetaData[] = {
 		{ "Category", "Appearance" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Image to use for each segment of the throbber */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Image to use for each segment of the throbber" },
+#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FIntPropertyParams NewProp_NumberOfPieces;
@@ -572,31 +640,47 @@ struct Z_Construct_UScriptStruct_FCircularThrobberSettings_Statics
 		{ "Category", "Appearance" },
 		{ "ClampMax", "25" },
 		{ "ClampMin", "1" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** How many pieces there are */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "How many pieces there are" },
+#endif
 		{ "UIMax", "25" },
 		{ "UIMin", "1" },
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Period_MetaData[] = {
 		{ "Category", "Appearance" },
 		{ "ClampMin", "0" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The amount of time for a full circle (in seconds) */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The amount of time for a full circle (in seconds)" },
+#endif
 		{ "UIMin", "0" },
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Radius_MetaData[] = {
 		{ "Category", "Appearance" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The radius of the circle. If the throbber is a child of Canvas Panel, the 'Size to Content' option must be enabled in order to set Radius. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The radius of the circle. If the throbber is a child of Canvas Panel, the 'Size to Content' option must be enabled in order to set Radius." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Image_MetaData[] = {
 		{ "Category", "Appearance" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Image to use for each segment of the throbber */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Image to use for each segment of the throbber" },
+#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FIntPropertyParams NewProp_NumberOfPieces;
@@ -668,31 +752,47 @@ struct Z_Construct_UScriptStruct_FImageSequenceSettings_Statics
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Images_MetaData[] = {
 		{ "AllowedClasses", "/Script/Engine.Texture2D" },
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** An array of images for animating the loading icon.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "An array of images for animating the loading icon." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Scale_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Scale of the images.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Scale of the images." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Interval_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
 		{ "ClampMax", "1" },
 		{ "ClampMin", "0" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Time in second to update the images, the smaller value the faster of the animation. A zero value will update the images every frame.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Time in second to update the images, the smaller value the faster of the animation. A zero value will update the images every frame." },
+#endif
 		{ "UIMax", "1.000000" },
 		{ "UIMin", "0.000000" },
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bPlayReverse_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Play the image sequence in reverse.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Play the image sequence in reverse." },
+#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_Images_Inner;
@@ -767,40 +867,64 @@ struct Z_Construct_UScriptStruct_FBackgroundSettings_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Struct_MetaDataParams[] = {
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n * Background widget for the widget loading screen\n */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Background widget for the widget loading screen" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Images_MetaData[] = {
 		{ "AllowedClasses", "/Script/Engine.Texture2D" },
 		{ "Category", "Background" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// The images randomly display while in the loading screen on top of the movie \n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The images randomly display while in the loading screen on top of the movie" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ImageStretch_MetaData[] = {
 		{ "Category", "Background" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// The scaling type to apply to images.\n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The scaling type to apply to images." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Padding_MetaData[] = {
 		{ "Category", "Background" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The padding area between the border and the image it contains.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The padding area between the border and the image it contains." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BackgroundColor_MetaData[] = {
 		{ "Category", "Background" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// The border's background color if there is any image defined. If padding = 0 you will not see the border color.\n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The border's background color if there is any image defined. If padding = 0 you will not see the border color." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bSetDisplayBackgroundManually_MetaData[] = {
 		{ "Category", "Background" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * If true, you will have to manually set which background index you want to display on the loading screen by calling \"SetDisplayBackgroundIndex\" function\n\x09 * in your Blueprint before opening a new level. If the index you set is not valid, then it will display random background in the \"Images\" array.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "If true, you will have to manually set which background index you want to display on the loading screen by calling \"SetDisplayBackgroundIndex\" function\nin your Blueprint before opening a new level. If the index you set is not valid, then it will display random background in the \"Images\" array." },
+#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FStructPropertyParams NewProp_Images_Inner;
@@ -878,105 +1002,173 @@ struct Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Struct_MetaDataParams[] = {
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n * Loading widget settings\n */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Loading widget settings" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_LoadingIconType_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Loading icon type*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Loading icon type" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_LoadingWidgetType_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Loading Widget type*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Loading Widget type" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TransformTranslation_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Render transform translation of the loading icon.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Render transform translation of the loading icon." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TransformScale_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Render transform scale of the loading icon, a negative value will flip the icon.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Render transform scale of the loading icon, a negative value will flip the icon." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TransformPivot_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Render transform pivot of the loading icon (in normalized local space).*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Render transform pivot of the loading icon (in normalized local space)." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_LoadingText_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// Text displayed beside the animated icon\n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Text displayed beside the animated icon" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bLoadingTextRightPosition_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Is Loading Text on the right of the loading icon? Ignore this if you don't choose Loading Widget Type = Horizontal.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Is Loading Text on the right of the loading icon? Ignore this if you don't choose Loading Widget Type = Horizontal." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bLoadingTextTopPosition_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Is Loading Text on the top of the loading icon? Ignore this if you don't choose Loading Widget Type = Vertical.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Is Loading Text on the top of the loading icon? Ignore this if you don't choose Loading Widget Type = Vertical." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Appearance_MetaData[] = {
 		{ "Category", "Tip Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// Loading text appearance settings\n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Loading text appearance settings" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ThrobberSettings_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Throbber settings. Ignore this if you don't choose the 'Throbber' icon type*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Throbber settings. Ignore this if you don't choose the 'Throbber' icon type" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CircularThrobberSettings_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Circular Throbber settings. Ignore this if you don't choose the 'Circular Throbber' icon type*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Circular Throbber settings. Ignore this if you don't choose the 'Circular Throbber' icon type" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ImageSequenceSettings_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Image Sequence settings. Ignore this if you don't choose the 'Image Sequence' icon type*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Image Sequence settings. Ignore this if you don't choose the 'Image Sequence' icon type" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TextAlignment_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The alignment of the loading text.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The alignment of the loading text." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_LoadingIconAlignment_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The alignment of the loading icon. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The alignment of the loading icon." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Space_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Empty space between the loading text and the loading icon */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Empty space between the loading text and the loading icon" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bHideLoadingWidgetWhenCompletes_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Hide the loading widget when the level loading is complete*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Hide the loading widget when the level loading is complete" },
+#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FBytePropertyParams NewProp_LoadingIconType_Underlying;
@@ -1008,9 +1200,9 @@ struct Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics
 	static const UECodeGen_Private::FStructParams StructParams;
 };
 const UECodeGen_Private::FBytePropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_LoadingIconType_Underlying = { "UnderlyingType", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, nullptr, METADATA_PARAMS(0, nullptr) };
-const UECodeGen_Private::FEnumPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_LoadingIconType = { "LoadingIconType", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, LoadingIconType), Z_Construct_UEnum_AsyncLoadingScreen_ELoadingIconType, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LoadingIconType_MetaData), NewProp_LoadingIconType_MetaData) }; // 250101964
+const UECodeGen_Private::FEnumPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_LoadingIconType = { "LoadingIconType", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, LoadingIconType), Z_Construct_UEnum_AsyncLoadingScreen_ELoadingIconType, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LoadingIconType_MetaData), NewProp_LoadingIconType_MetaData) }; // 1252965477
 const UECodeGen_Private::FBytePropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_LoadingWidgetType_Underlying = { "UnderlyingType", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, nullptr, METADATA_PARAMS(0, nullptr) };
-const UECodeGen_Private::FEnumPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_LoadingWidgetType = { "LoadingWidgetType", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, LoadingWidgetType), Z_Construct_UEnum_AsyncLoadingScreen_ELoadingWidgetType, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LoadingWidgetType_MetaData), NewProp_LoadingWidgetType_MetaData) }; // 2419381618
+const UECodeGen_Private::FEnumPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_LoadingWidgetType = { "LoadingWidgetType", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, LoadingWidgetType), Z_Construct_UEnum_AsyncLoadingScreen_ELoadingWidgetType, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LoadingWidgetType_MetaData), NewProp_LoadingWidgetType_MetaData) }; // 3444560743
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_TransformTranslation = { "TransformTranslation", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, TransformTranslation), Z_Construct_UScriptStruct_FVector2D, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TransformTranslation_MetaData), NewProp_TransformTranslation_MetaData) };
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_TransformScale = { "TransformScale", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, TransformScale), Z_Construct_UScriptStruct_FVector2D, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TransformScale_MetaData), NewProp_TransformScale_MetaData) };
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_TransformPivot = { "TransformPivot", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, TransformPivot), Z_Construct_UScriptStruct_FVector2D, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TransformPivot_MetaData), NewProp_TransformPivot_MetaData) };
@@ -1025,12 +1217,12 @@ void Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_bLoadingT
 	((FLoadingWidgetSettings*)Obj)->bLoadingTextTopPosition = 1;
 }
 const UECodeGen_Private::FBoolPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_bLoadingTextTopPosition = { "bLoadingTextTopPosition", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(FLoadingWidgetSettings), &Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_bLoadingTextTopPosition_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bLoadingTextTopPosition_MetaData), NewProp_bLoadingTextTopPosition_MetaData) };
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_Appearance = { "Appearance", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, Appearance), Z_Construct_UScriptStruct_FTextAppearance, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Appearance_MetaData), NewProp_Appearance_MetaData) }; // 3227196346
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_ThrobberSettings = { "ThrobberSettings", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, ThrobberSettings), Z_Construct_UScriptStruct_FThrobberSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ThrobberSettings_MetaData), NewProp_ThrobberSettings_MetaData) }; // 1232286367
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_CircularThrobberSettings = { "CircularThrobberSettings", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, CircularThrobberSettings), Z_Construct_UScriptStruct_FCircularThrobberSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CircularThrobberSettings_MetaData), NewProp_CircularThrobberSettings_MetaData) }; // 615113133
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_ImageSequenceSettings = { "ImageSequenceSettings", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, ImageSequenceSettings), Z_Construct_UScriptStruct_FImageSequenceSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ImageSequenceSettings_MetaData), NewProp_ImageSequenceSettings_MetaData) }; // 584027274
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_TextAlignment = { "TextAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, TextAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TextAlignment_MetaData), NewProp_TextAlignment_MetaData) }; // 3872820991
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_LoadingIconAlignment = { "LoadingIconAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, LoadingIconAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LoadingIconAlignment_MetaData), NewProp_LoadingIconAlignment_MetaData) }; // 3872820991
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_Appearance = { "Appearance", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, Appearance), Z_Construct_UScriptStruct_FTextAppearance, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Appearance_MetaData), NewProp_Appearance_MetaData) }; // 2367012672
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_ThrobberSettings = { "ThrobberSettings", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, ThrobberSettings), Z_Construct_UScriptStruct_FThrobberSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ThrobberSettings_MetaData), NewProp_ThrobberSettings_MetaData) }; // 2104428535
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_CircularThrobberSettings = { "CircularThrobberSettings", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, CircularThrobberSettings), Z_Construct_UScriptStruct_FCircularThrobberSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CircularThrobberSettings_MetaData), NewProp_CircularThrobberSettings_MetaData) }; // 913296650
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_ImageSequenceSettings = { "ImageSequenceSettings", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, ImageSequenceSettings), Z_Construct_UScriptStruct_FImageSequenceSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ImageSequenceSettings_MetaData), NewProp_ImageSequenceSettings_MetaData) }; // 3207018030
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_TextAlignment = { "TextAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, TextAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TextAlignment_MetaData), NewProp_TextAlignment_MetaData) }; // 3814092113
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_LoadingIconAlignment = { "LoadingIconAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, LoadingIconAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LoadingIconAlignment_MetaData), NewProp_LoadingIconAlignment_MetaData) }; // 3814092113
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_Space = { "Space", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingWidgetSettings, Space), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Space_MetaData), NewProp_Space_MetaData) };
 void Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewProp_bHideLoadingWidgetWhenCompletes_SetBit(void* Obj)
 {
@@ -1100,34 +1292,54 @@ struct Z_Construct_UScriptStruct_FTipSettings_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Struct_MetaDataParams[] = {
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n * Tips text settings\n */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Tips text settings" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TipText_MetaData[] = {
 		{ "Category", "Tip Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// The tip text randomly display in the loading screen.\n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
 		{ "MultiLine", "TRUE" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The tip text randomly display in the loading screen." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Appearance_MetaData[] = {
 		{ "Category", "Tip Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// Tip text appearance settings\n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Tip text appearance settings" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TipWrapAt_MetaData[] = {
 		{ "Category", "Tip Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// The size of the tip before it's wrapped to the next line\n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The size of the tip before it's wrapped to the next line" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bSetDisplayTipTextManually_MetaData[] = {
 		{ "Category", "Background" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * If true, you will have to manually set which TipText index you want to display on the loading screen by calling \"SetDisplayTipTextIndex\" function\n\x09 * in your Blueprint before opening a new level. If the index you set is not valid, then it will display random Tip in the \"TipText\" array.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "If true, you will have to manually set which TipText index you want to display on the loading screen by calling \"SetDisplayTipTextIndex\" function\nin your Blueprint before opening a new level. If the index you set is not valid, then it will display random Tip in the \"TipText\" array." },
+#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FTextPropertyParams NewProp_TipText_Inner;
@@ -1145,7 +1357,7 @@ struct Z_Construct_UScriptStruct_FTipSettings_Statics
 };
 const UECodeGen_Private::FTextPropertyParams Z_Construct_UScriptStruct_FTipSettings_Statics::NewProp_TipText_Inner = { "TipText", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Text, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, METADATA_PARAMS(0, nullptr) };
 const UECodeGen_Private::FArrayPropertyParams Z_Construct_UScriptStruct_FTipSettings_Statics::NewProp_TipText = { "TipText", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FTipSettings, TipText), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TipText_MetaData), NewProp_TipText_MetaData) };
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FTipSettings_Statics::NewProp_Appearance = { "Appearance", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FTipSettings, Appearance), Z_Construct_UScriptStruct_FTextAppearance, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Appearance_MetaData), NewProp_Appearance_MetaData) }; // 3227196346
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FTipSettings_Statics::NewProp_Appearance = { "Appearance", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FTipSettings, Appearance), Z_Construct_UScriptStruct_FTextAppearance, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Appearance_MetaData), NewProp_Appearance_MetaData) }; // 2367012672
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FTipSettings_Statics::NewProp_TipWrapAt = { "TipWrapAt", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FTipSettings, TipWrapAt), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TipWrapAt_MetaData), NewProp_TipWrapAt_MetaData) };
 void Z_Construct_UScriptStruct_FTipSettings_Statics::NewProp_bSetDisplayTipTextManually_SetBit(void* Obj)
 {
@@ -1202,47 +1414,75 @@ struct Z_Construct_UScriptStruct_FLoadingCompleteTextSettings_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Struct_MetaDataParams[] = {
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n * The text that displayed when loading is complete. Ignore this if you don't set \"bShowLoadingCompletedText\" = true\n */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The text that displayed when loading is complete. Ignore this if you don't set \"bShowLoadingCompletedText\" = true" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_LoadingCompleteText_MetaData[] = {
 		{ "Category", "Loading Complete Text Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// The text that shows up when level loading is done.\n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The text that shows up when level loading is done." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Appearance_MetaData[] = {
 		{ "Category", "Loading Complete Text Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// Text appearance settings\n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Text appearance settings" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Alignment_MetaData[] = {
 		{ "Category", "Loading Widget Setting" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The alignment of the text.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The alignment of the text." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Padding_MetaData[] = {
 		{ "Category", "Loading Complete Text Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Text padding. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Text padding." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bFadeInOutAnim_MetaData[] = {
 		{ "Category", "Loading Complete Text Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// Animate the text?\n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Animate the text?" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_AnimationSpeed_MetaData[] = {
 		{ "Category", "Loading Complete Text Settings" },
 		{ "ClampMax", "10" },
 		{ "ClampMin", "0" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Animation speed\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Animation speed" },
+#endif
 		{ "UIMax", "10.000000" },
 		{ "UIMin", "0.000000" },
 	};
@@ -1262,8 +1502,8 @@ struct Z_Construct_UScriptStruct_FLoadingCompleteTextSettings_Statics
 	static const UECodeGen_Private::FStructParams StructParams;
 };
 const UECodeGen_Private::FTextPropertyParams Z_Construct_UScriptStruct_FLoadingCompleteTextSettings_Statics::NewProp_LoadingCompleteText = { "LoadingCompleteText", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Text, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingCompleteTextSettings, LoadingCompleteText), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LoadingCompleteText_MetaData), NewProp_LoadingCompleteText_MetaData) };
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingCompleteTextSettings_Statics::NewProp_Appearance = { "Appearance", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingCompleteTextSettings, Appearance), Z_Construct_UScriptStruct_FTextAppearance, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Appearance_MetaData), NewProp_Appearance_MetaData) }; // 3227196346
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingCompleteTextSettings_Statics::NewProp_Alignment = { "Alignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingCompleteTextSettings, Alignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Alignment_MetaData), NewProp_Alignment_MetaData) }; // 3872820991
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingCompleteTextSettings_Statics::NewProp_Appearance = { "Appearance", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingCompleteTextSettings, Appearance), Z_Construct_UScriptStruct_FTextAppearance, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Appearance_MetaData), NewProp_Appearance_MetaData) }; // 2367012672
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingCompleteTextSettings_Statics::NewProp_Alignment = { "Alignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingCompleteTextSettings, Alignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Alignment_MetaData), NewProp_Alignment_MetaData) }; // 3814092113
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLoadingCompleteTextSettings_Statics::NewProp_Padding = { "Padding", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLoadingCompleteTextSettings, Padding), Z_Construct_UScriptStruct_FMargin, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Padding_MetaData), NewProp_Padding_MetaData) }; // 2986890016
 void Z_Construct_UScriptStruct_FLoadingCompleteTextSettings_Statics::NewProp_bFadeInOutAnim_SetBit(void* Obj)
 {
@@ -1322,111 +1562,183 @@ struct Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Struct_MetaDataParams[] = {
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n * Loading Screen Settings\n */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Loading Screen Settings" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MinimumLoadingScreenDisplayTime_MetaData[] = {
 		{ "Category", "Movies Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// The minimum time that a loading screen should be opened for, -1 if there is no minimum time. I recommend set it to -1.\n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The minimum time that a loading screen should be opened for, -1 if there is no minimum time. I recommend set it to -1." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bAutoCompleteWhenLoadingCompletes_MetaData[] = {
 		{ "Category", "Movies Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// If true, the loading screen will disappear as soon as loading is done.\n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "If true, the loading screen will disappear as soon as loading is done." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bMoviesAreSkippable_MetaData[] = {
 		{ "Category", "Movies Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "// If true, movies can be skipped by clicking the loading screen as long as loading is done.\n" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "If true, movies can be skipped by clicking the loading screen as long as loading is done." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bWaitForManualStop_MetaData[] = {
 		{ "Category", "Movies Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** \n\x09 * If true, movie playback continue until Stop is called.\n\x09 * \n\x09 * NOTE: If set \"Minimum Loading Screen Display Time\" = -1, it will allow players to press any key to stop the loading screen.\n\x09 * If \"Minimum Loading Screen Display Time\" >= 0, you have to call \"StopLoadingScreen\" in the BeginPlay event \n\x09 * of your GameInstance, GameMode, or PlayerController blueprint to stop the loading screen (\"bAllowEngineTick\" must be true)\n\x09 **/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "If true, movie playback continue until Stop is called.\n\nNOTE: If set \"Minimum Loading Screen Display Time\" = -1, it will allow players to press any key to stop the loading screen.\nIf \"Minimum Loading Screen Display Time\" >= 0, you have to call \"StopLoadingScreen\" in the BeginPlay event\nof your GameInstance, GameMode, or PlayerController blueprint to stop the loading screen (\"bAllowEngineTick\" must be true)" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bAllowInEarlyStartup_MetaData[] = {
 		{ "Category", "Movies Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** If true loading screens here cannot have any uobjects of any kind or use any engine features at all. This will start the movies very early as a result on platforms that support it */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "If true loading screens here cannot have any uobjects of any kind or use any engine features at all. This will start the movies very early as a result on platforms that support it" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bAllowEngineTick_MetaData[] = {
 		{ "Category", "Movies Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** If true, this will call the engine tick while the game thread is stalled waiting for a loading movie to finish. This only works for post-startup load screens and is potentially unsafe */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "If true, this will call the engine tick while the game thread is stalled waiting for a loading movie to finish. This only works for post-startup load screens and is potentially unsafe" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_PlaybackType_MetaData[] = {
 		{ "Category", "Movies Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Should we just play back, loop, etc.  NOTE: if the playback type is MT_LoopLast, then bAutoCompleteWhenLoadingCompletes will be togged on when the last movie is hit*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Should we just play back, loop, etc.  NOTE: if the playback type is MT_LoopLast, then bAutoCompleteWhenLoadingCompletes will be togged on when the last movie is hit" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MoviePaths_MetaData[] = {
 		{ "Category", "Movies Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * All movie files must be locate at Content/Movies/ directory. Suggested format: MPEG-4 Movie (mp4). Enter file path/name without the extension.\n\x09 * E.g., if you have a movie name my_movie.mp4 in the 'Content/Movies' folder, then enter my_movie in the input field.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "All movie files must be locate at Content/Movies/ directory. Suggested format: MPEG-4 Movie (mp4). Enter file path/name without the extension.\nE.g., if you have a movie name my_movie.mp4 in the 'Content/Movies' folder, then enter my_movie in the input field." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bShuffle_MetaData[] = {
 		{ "Category", "Movies Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * If true, shuffle the movies list before playing.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "If true, shuffle the movies list before playing." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bSetDisplayMovieIndexManually_MetaData[] = {
 		{ "Category", "Movies Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * If true, the \"Shuffle\" option will be ignored, and you will have to manually set which Movie index you want to display on the loading screen \n\x09 * by calling \"SetDisplayMovieIndex\" function in your Blueprint before opening a new level.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "If true, the \"Shuffle\" option will be ignored, and you will have to manually set which Movie index you want to display on the loading screen\nby calling \"SetDisplayMovieIndex\" function in your Blueprint before opening a new level." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bShowWidgetOverlay_MetaData[] = {
 		{ "Category", "Loading Screen Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** \n\x09 * Should we show the loading screen widgets (background/tips/loading widget)? Generally you'll want to set this to false if you just want to show a movie.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Should we show the loading screen widgets (background/tips/loading widget)? Generally you'll want to set this to false if you just want to show a movie." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bShowLoadingCompleteText_MetaData[] = {
 		{ "Category", "Loading Screen Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * If true show a text when level loading is completed. Ignore this if you choose \"Show Widget Overlay\" = false\n\x09 *\n\x09 * NOTE: To enable this option properly, you need to set \"Wait For Manual Stop\" = true, and \"Minimum Loading Screen Display Time\" = -1.\n\x09 * This also allows players press any button to stop the Loading Screen.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "If true show a text when level loading is completed. Ignore this if you choose \"Show Widget Overlay\" = false\n\nNOTE: To enable this option properly, you need to set \"Wait For Manual Stop\" = true, and \"Minimum Loading Screen Display Time\" = -1.\nThis also allows players press any button to stop the Loading Screen." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_LoadingCompleteTextSettings_MetaData[] = {
 		{ "Category", "Loading Screen Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * The text that displayed when loading is complete. Ignore this if you set \"Show Loading Complete Text\" = false.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The text that displayed when loading is complete. Ignore this if you set \"Show Loading Complete Text\" = false." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Background_MetaData[] = {
 		{ "Category", "Loading Screen Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Background widget for the loading screen. Ignore this if you choose \"Show Widget Overlay = false\" */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Background widget for the loading screen. Ignore this if you choose \"Show Widget Overlay = false\"" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TipWidget_MetaData[] = {
 		{ "Category", "Loading Screen Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Tip widget for the loading screen. Ignore this if you choose \"Show Widget Overlay = false\" */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Tip widget for the loading screen. Ignore this if you choose \"Show Widget Overlay = false\"" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_LoadingWidget_MetaData[] = {
 		{ "Category", "Loading Screen Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Loading widget for the loading screen. Ignore this if you choose \"Show Widget Overlay = false\" */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Loading widget for the loading screen. Ignore this if you choose \"Show Widget Overlay = false\"" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Layout_MetaData[] = {
 		{ "Category", "Loading Screen Settings" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Select async loading screen Layout. Ignore this if you choose \"Show Widget Overlay = false\"\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Select async loading screen Layout. Ignore this if you choose \"Show Widget Overlay = false\"" },
+#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_MinimumLoadingScreenDisplayTime;
@@ -1513,12 +1825,12 @@ void Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_bShowLoa
 	((FALoadingScreenSettings*)Obj)->bShowLoadingCompleteText = 1;
 }
 const UECodeGen_Private::FBoolPropertyParams Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_bShowLoadingCompleteText = { "bShowLoadingCompleteText", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(FALoadingScreenSettings), &Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_bShowLoadingCompleteText_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bShowLoadingCompleteText_MetaData), NewProp_bShowLoadingCompleteText_MetaData) };
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_LoadingCompleteTextSettings = { "LoadingCompleteTextSettings", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FALoadingScreenSettings, LoadingCompleteTextSettings), Z_Construct_UScriptStruct_FLoadingCompleteTextSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LoadingCompleteTextSettings_MetaData), NewProp_LoadingCompleteTextSettings_MetaData) }; // 2759698446
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_Background = { "Background", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FALoadingScreenSettings, Background), Z_Construct_UScriptStruct_FBackgroundSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Background_MetaData), NewProp_Background_MetaData) }; // 1698284326
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_TipWidget = { "TipWidget", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FALoadingScreenSettings, TipWidget), Z_Construct_UScriptStruct_FTipSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TipWidget_MetaData), NewProp_TipWidget_MetaData) }; // 2673501722
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_LoadingWidget = { "LoadingWidget", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FALoadingScreenSettings, LoadingWidget), Z_Construct_UScriptStruct_FLoadingWidgetSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LoadingWidget_MetaData), NewProp_LoadingWidget_MetaData) }; // 4231774665
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_LoadingCompleteTextSettings = { "LoadingCompleteTextSettings", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FALoadingScreenSettings, LoadingCompleteTextSettings), Z_Construct_UScriptStruct_FLoadingCompleteTextSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LoadingCompleteTextSettings_MetaData), NewProp_LoadingCompleteTextSettings_MetaData) }; // 2517252889
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_Background = { "Background", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FALoadingScreenSettings, Background), Z_Construct_UScriptStruct_FBackgroundSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Background_MetaData), NewProp_Background_MetaData) }; // 2107532212
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_TipWidget = { "TipWidget", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FALoadingScreenSettings, TipWidget), Z_Construct_UScriptStruct_FTipSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TipWidget_MetaData), NewProp_TipWidget_MetaData) }; // 3482184756
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_LoadingWidget = { "LoadingWidget", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FALoadingScreenSettings, LoadingWidget), Z_Construct_UScriptStruct_FLoadingWidgetSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LoadingWidget_MetaData), NewProp_LoadingWidget_MetaData) }; // 2427728391
 const UECodeGen_Private::FBytePropertyParams Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_Layout_Underlying = { "UnderlyingType", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, nullptr, METADATA_PARAMS(0, nullptr) };
-const UECodeGen_Private::FEnumPropertyParams Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_Layout = { "Layout", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FALoadingScreenSettings, Layout), Z_Construct_UEnum_AsyncLoadingScreen_EAsyncLoadingScreenLayout, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Layout_MetaData), NewProp_Layout_MetaData) }; // 2376893636
+const UECodeGen_Private::FEnumPropertyParams Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_Layout = { "Layout", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FALoadingScreenSettings, Layout), Z_Construct_UEnum_AsyncLoadingScreen_EAsyncLoadingScreenLayout, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Layout_MetaData), NewProp_Layout_MetaData) }; // 2492976519
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_MinimumLoadingScreenDisplayTime,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewProp_bAutoCompleteWhenLoadingCompletes,
@@ -1583,51 +1895,83 @@ struct Z_Construct_UScriptStruct_FClassicLayoutSettings_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Struct_MetaDataParams[] = {
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Classic Layout settings*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Classic Layout settings" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bIsWidgetAtBottom_MetaData[] = {
 		{ "Category", "Classic Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Is the border that contains loading and tip widget located at the bottom or top? */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Is the border that contains loading and tip widget located at the bottom or top?" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bIsLoadingWidgetAtLeft_MetaData[] = {
 		{ "Category", "Classic Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Is loading widget on the left of the tip? */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Is loading widget on the left of the tip?" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Space_MetaData[] = {
 		{ "Category", "Classic Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The empty space between loading widget and the tip.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The empty space between loading widget and the tip." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TipAlignment_MetaData[] = {
 		{ "Category", "Classic Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The alignment of the tips. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The alignment of the tips." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BorderHorizontalAlignment_MetaData[] = {
 		{ "Category", "Center Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The horizontal alignment of the border background.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The horizontal alignment of the border background." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BorderPadding_MetaData[] = {
 		{ "Category", "Classic Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The padding area between the border and the widget it contains.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The padding area between the border and the widget it contains." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BorderBackground_MetaData[] = {
 		{ "Category", "Classic Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Background appearance settings for the border widget */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Background appearance settings for the border widget" },
+#endif
 	};
 #endif // WITH_METADATA
 	static void NewProp_bIsWidgetAtBottom_SetBit(void* Obj);
@@ -1657,7 +2001,7 @@ void Z_Construct_UScriptStruct_FClassicLayoutSettings_Statics::NewProp_bIsLoadin
 }
 const UECodeGen_Private::FBoolPropertyParams Z_Construct_UScriptStruct_FClassicLayoutSettings_Statics::NewProp_bIsLoadingWidgetAtLeft = { "bIsLoadingWidgetAtLeft", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(FClassicLayoutSettings), &Z_Construct_UScriptStruct_FClassicLayoutSettings_Statics::NewProp_bIsLoadingWidgetAtLeft_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bIsLoadingWidgetAtLeft_MetaData), NewProp_bIsLoadingWidgetAtLeft_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FClassicLayoutSettings_Statics::NewProp_Space = { "Space", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FClassicLayoutSettings, Space), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Space_MetaData), NewProp_Space_MetaData) };
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FClassicLayoutSettings_Statics::NewProp_TipAlignment = { "TipAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FClassicLayoutSettings, TipAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TipAlignment_MetaData), NewProp_TipAlignment_MetaData) }; // 3872820991
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FClassicLayoutSettings_Statics::NewProp_TipAlignment = { "TipAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FClassicLayoutSettings, TipAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TipAlignment_MetaData), NewProp_TipAlignment_MetaData) }; // 3814092113
 const UECodeGen_Private::FBytePropertyParams Z_Construct_UScriptStruct_FClassicLayoutSettings_Statics::NewProp_BorderHorizontalAlignment = { "BorderHorizontalAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FClassicLayoutSettings, BorderHorizontalAlignment), Z_Construct_UEnum_SlateCore_EHorizontalAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BorderHorizontalAlignment_MetaData), NewProp_BorderHorizontalAlignment_MetaData) }; // 1062133256
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FClassicLayoutSettings_Statics::NewProp_BorderPadding = { "BorderPadding", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FClassicLayoutSettings, BorderPadding), Z_Construct_UScriptStruct_FMargin, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BorderPadding_MetaData), NewProp_BorderPadding_MetaData) }; // 2986890016
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FClassicLayoutSettings_Statics::NewProp_BorderBackground = { "BorderBackground", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FClassicLayoutSettings, BorderBackground), Z_Construct_UScriptStruct_FSlateBrush, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BorderBackground_MetaData), NewProp_BorderBackground_MetaData) }; // 4269649686
@@ -1713,45 +2057,73 @@ struct Z_Construct_UScriptStruct_FCenterLayoutSettings_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Struct_MetaDataParams[] = {
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Center Layout settings*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Center Layout settings" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bIsTipAtBottom_MetaData[] = {
 		{ "Category", "Center Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Is tip located at the bottom or top? */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Is tip located at the bottom or top?" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TipAlignment_MetaData[] = {
 		{ "Category", "Center Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The alignment of the tips. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The alignment of the tips." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BorderHorizontalAlignment_MetaData[] = {
 		{ "Category", "Center Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The horizontal alignment of the border.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The horizontal alignment of the border." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BorderVerticalOffset_MetaData[] = {
 		{ "Category", "Center Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Offset to bottom or top of the screen depending on the tip located at the bottom or top position.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Offset to bottom or top of the screen depending on the tip located at the bottom or top position." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BorderPadding_MetaData[] = {
 		{ "Category", "Center Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The padding area between the border and the tips it contains.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The padding area between the border and the tips it contains." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BorderBackground_MetaData[] = {
 		{ "Category", "Center Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Background appearance settings for tip area */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Background appearance settings for tip area" },
+#endif
 	};
 #endif // WITH_METADATA
 	static void NewProp_bIsTipAtBottom_SetBit(void* Obj);
@@ -1773,7 +2145,7 @@ void Z_Construct_UScriptStruct_FCenterLayoutSettings_Statics::NewProp_bIsTipAtBo
 	((FCenterLayoutSettings*)Obj)->bIsTipAtBottom = 1;
 }
 const UECodeGen_Private::FBoolPropertyParams Z_Construct_UScriptStruct_FCenterLayoutSettings_Statics::NewProp_bIsTipAtBottom = { "bIsTipAtBottom", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(FCenterLayoutSettings), &Z_Construct_UScriptStruct_FCenterLayoutSettings_Statics::NewProp_bIsTipAtBottom_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bIsTipAtBottom_MetaData), NewProp_bIsTipAtBottom_MetaData) };
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FCenterLayoutSettings_Statics::NewProp_TipAlignment = { "TipAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FCenterLayoutSettings, TipAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TipAlignment_MetaData), NewProp_TipAlignment_MetaData) }; // 3872820991
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FCenterLayoutSettings_Statics::NewProp_TipAlignment = { "TipAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FCenterLayoutSettings, TipAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TipAlignment_MetaData), NewProp_TipAlignment_MetaData) }; // 3814092113
 const UECodeGen_Private::FBytePropertyParams Z_Construct_UScriptStruct_FCenterLayoutSettings_Statics::NewProp_BorderHorizontalAlignment = { "BorderHorizontalAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FCenterLayoutSettings, BorderHorizontalAlignment), Z_Construct_UEnum_SlateCore_EHorizontalAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BorderHorizontalAlignment_MetaData), NewProp_BorderHorizontalAlignment_MetaData) }; // 1062133256
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FCenterLayoutSettings_Statics::NewProp_BorderVerticalOffset = { "BorderVerticalOffset", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FCenterLayoutSettings, BorderVerticalOffset), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BorderVerticalOffset_MetaData), NewProp_BorderVerticalOffset_MetaData) };
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FCenterLayoutSettings_Statics::NewProp_BorderPadding = { "BorderPadding", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FCenterLayoutSettings, BorderPadding), Z_Construct_UScriptStruct_FMargin, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BorderPadding_MetaData), NewProp_BorderPadding_MetaData) }; // 2986890016
@@ -1829,63 +2201,103 @@ struct Z_Construct_UScriptStruct_FLetterboxLayoutSettings_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Struct_MetaDataParams[] = {
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Letterbox Layout settings*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Letterbox Layout settings" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bIsLoadingWidgetAtTop_MetaData[] = {
 		{ "Category", "Letterbox Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Is loading widget located at the bottom or top? */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Is loading widget located at the bottom or top?" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TipAlignment_MetaData[] = {
 		{ "Category", "Letterbox Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The alignment of the tips. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The alignment of the tips." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_LoadingWidgetAlignment_MetaData[] = {
 		{ "Category", "Letterbox Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The alignment of the loading widget. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The alignment of the loading widget." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TopBorderHorizontalAlignment_MetaData[] = {
 		{ "Category", "Letterbox Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The horizontal alignment of the top border.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The horizontal alignment of the top border." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BottomBorderHorizontalAlignment_MetaData[] = {
 		{ "Category", "Letterbox Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The horizontal alignment of the bottom border.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The horizontal alignment of the bottom border." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TopBorderPadding_MetaData[] = {
 		{ "Category", "Letterbox Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The top padding area between the border and the widget it contains.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The top padding area between the border and the widget it contains." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BottomBorderPadding_MetaData[] = {
 		{ "Category", "Letterbox Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The bottom padding area between the border and the widget it contains.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The bottom padding area between the border and the widget it contains." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TopBorderBackground_MetaData[] = {
 		{ "Category", "Letterbox Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Background appearance settings for top border */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Background appearance settings for top border" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BottomBorderBackground_MetaData[] = {
 		{ "Category", "Letterbox Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Background appearance settings for bottom border */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Background appearance settings for bottom border" },
+#endif
 	};
 #endif // WITH_METADATA
 	static void NewProp_bIsLoadingWidgetAtTop_SetBit(void* Obj);
@@ -1910,8 +2322,8 @@ void Z_Construct_UScriptStruct_FLetterboxLayoutSettings_Statics::NewProp_bIsLoad
 	((FLetterboxLayoutSettings*)Obj)->bIsLoadingWidgetAtTop = 1;
 }
 const UECodeGen_Private::FBoolPropertyParams Z_Construct_UScriptStruct_FLetterboxLayoutSettings_Statics::NewProp_bIsLoadingWidgetAtTop = { "bIsLoadingWidgetAtTop", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(FLetterboxLayoutSettings), &Z_Construct_UScriptStruct_FLetterboxLayoutSettings_Statics::NewProp_bIsLoadingWidgetAtTop_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bIsLoadingWidgetAtTop_MetaData), NewProp_bIsLoadingWidgetAtTop_MetaData) };
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLetterboxLayoutSettings_Statics::NewProp_TipAlignment = { "TipAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLetterboxLayoutSettings, TipAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TipAlignment_MetaData), NewProp_TipAlignment_MetaData) }; // 3872820991
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLetterboxLayoutSettings_Statics::NewProp_LoadingWidgetAlignment = { "LoadingWidgetAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLetterboxLayoutSettings, LoadingWidgetAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LoadingWidgetAlignment_MetaData), NewProp_LoadingWidgetAlignment_MetaData) }; // 3872820991
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLetterboxLayoutSettings_Statics::NewProp_TipAlignment = { "TipAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLetterboxLayoutSettings, TipAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TipAlignment_MetaData), NewProp_TipAlignment_MetaData) }; // 3814092113
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLetterboxLayoutSettings_Statics::NewProp_LoadingWidgetAlignment = { "LoadingWidgetAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLetterboxLayoutSettings, LoadingWidgetAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LoadingWidgetAlignment_MetaData), NewProp_LoadingWidgetAlignment_MetaData) }; // 3814092113
 const UECodeGen_Private::FBytePropertyParams Z_Construct_UScriptStruct_FLetterboxLayoutSettings_Statics::NewProp_TopBorderHorizontalAlignment = { "TopBorderHorizontalAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLetterboxLayoutSettings, TopBorderHorizontalAlignment), Z_Construct_UEnum_SlateCore_EHorizontalAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TopBorderHorizontalAlignment_MetaData), NewProp_TopBorderHorizontalAlignment_MetaData) }; // 1062133256
 const UECodeGen_Private::FBytePropertyParams Z_Construct_UScriptStruct_FLetterboxLayoutSettings_Statics::NewProp_BottomBorderHorizontalAlignment = { "BottomBorderHorizontalAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLetterboxLayoutSettings, BottomBorderHorizontalAlignment), Z_Construct_UEnum_SlateCore_EHorizontalAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BottomBorderHorizontalAlignment_MetaData), NewProp_BottomBorderHorizontalAlignment_MetaData) }; // 1062133256
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FLetterboxLayoutSettings_Statics::NewProp_TopBorderPadding = { "TopBorderPadding", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FLetterboxLayoutSettings, TopBorderPadding), Z_Construct_UScriptStruct_FMargin, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TopBorderPadding_MetaData), NewProp_TopBorderPadding_MetaData) }; // 2986890016
@@ -1972,69 +2384,113 @@ struct Z_Construct_UScriptStruct_FSidebarLayoutSettings_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Struct_MetaDataParams[] = {
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Sidebar Layout settings*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Sidebar Layout settings" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bIsWidgetAtRight_MetaData[] = {
 		{ "Category", "Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Is the border that contains loading and tip widgets located at the right or left? */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Is the border that contains loading and tip widgets located at the right or left?" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bIsLoadingWidgetAtTop_MetaData[] = {
 		{ "Category", "Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Is loading widget on the top of the tip? */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Is loading widget on the top of the tip?" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Space_MetaData[] = {
 		{ "Category", "Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The empty space between loading widget and the tip.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The empty space between loading widget and the tip." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_VerticalAlignment_MetaData[] = {
 		{ "Category", "Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The vertical alignment of the vertical box that contains loading/tip widgets. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The vertical alignment of the vertical box that contains loading/tip widgets." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_LoadingWidgetAlignment_MetaData[] = {
 		{ "Category", "Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The alignment of the loading widget. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The alignment of the loading widget." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TipAlignment_MetaData[] = {
 		{ "Category", "Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The alignment of the tips. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The alignment of the tips." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BorderVerticalAlignment_MetaData[] = {
 		{ "Category", "Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The vertical alignment of the border background that contains all widgets. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The vertical alignment of the border background that contains all widgets." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BorderHorizontalOffset_MetaData[] = {
 		{ "Category", "Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Offset to left or right of the screen depending on the border that contains loading and tip widgets located at the left or right position.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Offset to left or right of the screen depending on the border that contains loading and tip widgets located at the left or right position." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BorderPadding_MetaData[] = {
 		{ "Category", "Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The padding area between the border and the widget it contains.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The padding area between the border and the widget it contains." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BorderBackground_MetaData[] = {
 		{ "Category", "Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Background appearance settings for the border widget */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Background appearance settings for the border widget" },
+#endif
 	};
 #endif // WITH_METADATA
 	static void NewProp_bIsWidgetAtRight_SetBit(void* Obj);
@@ -2068,8 +2524,8 @@ void Z_Construct_UScriptStruct_FSidebarLayoutSettings_Statics::NewProp_bIsLoadin
 const UECodeGen_Private::FBoolPropertyParams Z_Construct_UScriptStruct_FSidebarLayoutSettings_Statics::NewProp_bIsLoadingWidgetAtTop = { "bIsLoadingWidgetAtTop", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(FSidebarLayoutSettings), &Z_Construct_UScriptStruct_FSidebarLayoutSettings_Statics::NewProp_bIsLoadingWidgetAtTop_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bIsLoadingWidgetAtTop_MetaData), NewProp_bIsLoadingWidgetAtTop_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FSidebarLayoutSettings_Statics::NewProp_Space = { "Space", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FSidebarLayoutSettings, Space), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Space_MetaData), NewProp_Space_MetaData) };
 const UECodeGen_Private::FBytePropertyParams Z_Construct_UScriptStruct_FSidebarLayoutSettings_Statics::NewProp_VerticalAlignment = { "VerticalAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FSidebarLayoutSettings, VerticalAlignment), Z_Construct_UEnum_SlateCore_EVerticalAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_VerticalAlignment_MetaData), NewProp_VerticalAlignment_MetaData) }; // 550775363
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FSidebarLayoutSettings_Statics::NewProp_LoadingWidgetAlignment = { "LoadingWidgetAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FSidebarLayoutSettings, LoadingWidgetAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LoadingWidgetAlignment_MetaData), NewProp_LoadingWidgetAlignment_MetaData) }; // 3872820991
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FSidebarLayoutSettings_Statics::NewProp_TipAlignment = { "TipAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FSidebarLayoutSettings, TipAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TipAlignment_MetaData), NewProp_TipAlignment_MetaData) }; // 3872820991
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FSidebarLayoutSettings_Statics::NewProp_LoadingWidgetAlignment = { "LoadingWidgetAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FSidebarLayoutSettings, LoadingWidgetAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LoadingWidgetAlignment_MetaData), NewProp_LoadingWidgetAlignment_MetaData) }; // 3814092113
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FSidebarLayoutSettings_Statics::NewProp_TipAlignment = { "TipAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FSidebarLayoutSettings, TipAlignment), Z_Construct_UScriptStruct_FWidgetAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TipAlignment_MetaData), NewProp_TipAlignment_MetaData) }; // 3814092113
 const UECodeGen_Private::FBytePropertyParams Z_Construct_UScriptStruct_FSidebarLayoutSettings_Statics::NewProp_BorderVerticalAlignment = { "BorderVerticalAlignment", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FSidebarLayoutSettings, BorderVerticalAlignment), Z_Construct_UEnum_SlateCore_EVerticalAlignment, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BorderVerticalAlignment_MetaData), NewProp_BorderVerticalAlignment_MetaData) }; // 550775363
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FSidebarLayoutSettings_Statics::NewProp_BorderHorizontalOffset = { "BorderHorizontalOffset", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FSidebarLayoutSettings, BorderHorizontalOffset), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BorderHorizontalOffset_MetaData), NewProp_BorderHorizontalOffset_MetaData) };
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FSidebarLayoutSettings_Statics::NewProp_BorderPadding = { "BorderPadding", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FSidebarLayoutSettings, BorderPadding), Z_Construct_UScriptStruct_FMargin, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BorderPadding_MetaData), NewProp_BorderPadding_MetaData) }; // 2986890016
@@ -2129,63 +2585,103 @@ struct Z_Construct_UScriptStruct_FDualSidebarLayoutSettings_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Struct_MetaDataParams[] = {
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Dual Sidebar Layout settings*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Dual Sidebar Layout settings" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bIsLoadingWidgetAtRight_MetaData[] = {
 		{ "Category", "Dual Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Is loading widget on the right or left border? */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Is loading widget on the right or left border?" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_LeftVerticalAlignment_MetaData[] = {
 		{ "Category", "Dual Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The vertical alignment of the left widget. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The vertical alignment of the left widget." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_RightVerticalAlignment_MetaData[] = {
 		{ "Category", "Dual Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The vertical alignment of the right widget. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The vertical alignment of the right widget." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_LeftBorderVerticalAlignment_MetaData[] = {
 		{ "Category", "Dual Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The vertical alignment of the left border background that contains all widgets. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The vertical alignment of the left border background that contains all widgets." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_RightBorderVerticalAlignment_MetaData[] = {
 		{ "Category", "Dual Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The vertical alignment of the right border background that contains all widgets. */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The vertical alignment of the right border background that contains all widgets." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_LeftBorderPadding_MetaData[] = {
 		{ "Category", "Dual Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The padding area between the left border and the widget it contains.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The padding area between the left border and the widget it contains." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_RightBorderPadding_MetaData[] = {
 		{ "Category", "Dual Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** The padding area between the right border and the widget it contains.*/" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The padding area between the right border and the widget it contains." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_LeftBorderBackground_MetaData[] = {
 		{ "Category", "Dual Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Background appearance settings for the left border widget */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Background appearance settings for the left border widget" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_RightBorderBackground_MetaData[] = {
 		{ "Category", "Dual Sidebar Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/** Background appearance settings for the right border widget */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Background appearance settings for the right border widget" },
+#endif
 	};
 #endif // WITH_METADATA
 	static void NewProp_bIsLoadingWidgetAtRight_SetBit(void* Obj);
@@ -2266,60 +2762,96 @@ struct Z_Construct_UClass_ULoadingScreenSettings_Statics
 {
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Class_MetaDataParams[] = {
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n * Async Loading Screen Settings \n */" },
+#endif
 		{ "DisplayName", "Async Loading Screen" },
 		{ "IncludePath", "LoadingScreenSettings.h" },
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
 		{ "ObjectInitializerConstructorDeclared", "" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Async Loading Screen Settings" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bPreloadBackgroundImages_MetaData[] = {
 		{ "Category", "General" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * If true, load all background images at the start of the game.\n\x09 * \n\x09 * This is a workaround for the issue when the background image \n\x09 * is loaded too late with the wrong image scaling. \n\x09 * \n\x09 * This issue only happens in the Standalone or Launch mode.\n\x09 * The packaged game should work fine.\n\x09 * \n\x09 * If you don't encounter this issue when developing, don't enable \n\x09 * this option, since it will keep the background images in the \n\x09 * memory all the time, therefore consumes memory resources.\n\x09 * \n\x09 * However, you can manually remove all the preloaded background\n\x09 * images by calling the Blueprint function \n\x09 * \"RemovePreloadedBackgroundImages\"\n\x09 * \n\x09 * You will need to re-load all background images by calling \n\x09 * the Blueprint function \"PreloadBackgroundImages\"\n\x09 * \n\x09 * Note: Call \"PreloadBackgroundImages\" before the \"OpenLevel\"\n\x09 * \n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "If true, load all background images at the start of the game.\n\nThis is a workaround for the issue when the background image\nis loaded too late with the wrong image scaling.\n\nThis issue only happens in the Standalone or Launch mode.\nThe packaged game should work fine.\n\nIf you don't encounter this issue when developing, don't enable\nthis option, since it will keep the background images in the\nmemory all the time, therefore consumes memory resources.\n\nHowever, you can manually remove all the preloaded background\nimages by calling the Blueprint function\n\"RemovePreloadedBackgroundImages\"\n\nYou will need to re-load all background images by calling\nthe Blueprint function \"PreloadBackgroundImages\"\n\nNote: Call \"PreloadBackgroundImages\" before the \"OpenLevel\"" },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_StartupLoadingScreen_MetaData[] = {
 		{ "Category", "General" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * The startup loading screen when you first open the game. Setup any studio logo movies here.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The startup loading screen when you first open the game. Setup any studio logo movies here." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_DefaultLoadingScreen_MetaData[] = {
 		{ "Category", "General" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * The default loading screen that shows up whenever you open a new level.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The default loading screen that shows up whenever you open a new level." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Classic_MetaData[] = {
 		{ "Category", "Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Classic Layout settings.\n\x09 * The Classic is a simple, generic layout and fits well with many designs.\n\x09 * A border that contains loading and tip widgets can be at the bottom or top.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Classic Layout settings.\nThe Classic is a simple, generic layout and fits well with many designs.\nA border that contains loading and tip widgets can be at the bottom or top." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Center_MetaData[] = {
 		{ "Category", "Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Center Layout settings.\n\x09 * The loading widget is at the center of the screen, tip widget can be at the bottom or top.\n\x09 * The Center layout is a good choice if your loading icon is the main design.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Center Layout settings.\nThe loading widget is at the center of the screen, tip widget can be at the bottom or top.\nThe Center layout is a good choice if your loading icon is the main design." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Letterbox_MetaData[] = {
 		{ "Category", "Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Letterbox Layout settings.\n\x09 * The Letterbox layout has two borders on top and bottom of the screen. Loading widget\n\x09 * can be on the top and the tip is at the bottom of the screen, or vice versa.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Letterbox Layout settings.\nThe Letterbox layout has two borders on top and bottom of the screen. Loading widget\ncan be on the top and the tip is at the bottom of the screen, or vice versa." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Sidebar_MetaData[] = {
 		{ "Category", "Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Sidebar Layout settings.\n\x09 * The Sidebar layout has a vertical border on the left or right of the screen. The Sidebar \n\x09 * is suitable for storytelling, long paragraphs due to the height of the tip widget.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Sidebar Layout settings.\nThe Sidebar layout has a vertical border on the left or right of the screen. The Sidebar\nis suitable for storytelling, long paragraphs due to the height of the tip widget." },
+#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_DualSidebar_MetaData[] = {
 		{ "Category", "Layout" },
+#if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n\x09 * Dual Sidebar Layout settings\n\x09 * Similar to Sidebar layout but Dual Sidebar layout has two vertical borders on both left and right of the screen.\n\x09 * The Dual Sidebar layout is suitable for storytelling, long paragraphs due to the height of the tip widget.\n\x09 */" },
+#endif
 		{ "ModuleRelativePath", "Public/LoadingScreenSettings.h" },
+#if !UE_BUILD_SHIPPING
 		{ "ToolTip", "Dual Sidebar Layout settings\nSimilar to Sidebar layout but Dual Sidebar layout has two vertical borders on both left and right of the screen.\nThe Dual Sidebar layout is suitable for storytelling, long paragraphs due to the height of the tip widget." },
+#endif
 	};
 #endif // WITH_METADATA
 	static void NewProp_bPreloadBackgroundImages_SetBit(void* Obj);
@@ -2343,13 +2875,13 @@ void Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_bPreloadBackgrou
 	((ULoadingScreenSettings*)Obj)->bPreloadBackgroundImages = 1;
 }
 const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_bPreloadBackgroundImages = { "bPreloadBackgroundImages", nullptr, (EPropertyFlags)0x0010000000004001, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(ULoadingScreenSettings), &Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_bPreloadBackgroundImages_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bPreloadBackgroundImages_MetaData), NewProp_bPreloadBackgroundImages_MetaData) };
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_StartupLoadingScreen = { "StartupLoadingScreen", nullptr, (EPropertyFlags)0x0010000000004001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ULoadingScreenSettings, StartupLoadingScreen), Z_Construct_UScriptStruct_FALoadingScreenSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_StartupLoadingScreen_MetaData), NewProp_StartupLoadingScreen_MetaData) }; // 1934922393
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_DefaultLoadingScreen = { "DefaultLoadingScreen", nullptr, (EPropertyFlags)0x0010000000004001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ULoadingScreenSettings, DefaultLoadingScreen), Z_Construct_UScriptStruct_FALoadingScreenSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_DefaultLoadingScreen_MetaData), NewProp_DefaultLoadingScreen_MetaData) }; // 1934922393
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_Classic = { "Classic", nullptr, (EPropertyFlags)0x0010000000004001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ULoadingScreenSettings, Classic), Z_Construct_UScriptStruct_FClassicLayoutSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Classic_MetaData), NewProp_Classic_MetaData) }; // 1362563564
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_Center = { "Center", nullptr, (EPropertyFlags)0x0010000000004001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ULoadingScreenSettings, Center), Z_Construct_UScriptStruct_FCenterLayoutSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Center_MetaData), NewProp_Center_MetaData) }; // 1334505308
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_Letterbox = { "Letterbox", nullptr, (EPropertyFlags)0x0010000000004001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ULoadingScreenSettings, Letterbox), Z_Construct_UScriptStruct_FLetterboxLayoutSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Letterbox_MetaData), NewProp_Letterbox_MetaData) }; // 2540378594
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_Sidebar = { "Sidebar", nullptr, (EPropertyFlags)0x0010000000004001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ULoadingScreenSettings, Sidebar), Z_Construct_UScriptStruct_FSidebarLayoutSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Sidebar_MetaData), NewProp_Sidebar_MetaData) }; // 3206132957
-const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_DualSidebar = { "DualSidebar", nullptr, (EPropertyFlags)0x0010000000004001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ULoadingScreenSettings, DualSidebar), Z_Construct_UScriptStruct_FDualSidebarLayoutSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_DualSidebar_MetaData), NewProp_DualSidebar_MetaData) }; // 4235503631
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_StartupLoadingScreen = { "StartupLoadingScreen", nullptr, (EPropertyFlags)0x0010000000004001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ULoadingScreenSettings, StartupLoadingScreen), Z_Construct_UScriptStruct_FALoadingScreenSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_StartupLoadingScreen_MetaData), NewProp_StartupLoadingScreen_MetaData) }; // 2465446090
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_DefaultLoadingScreen = { "DefaultLoadingScreen", nullptr, (EPropertyFlags)0x0010000000004001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ULoadingScreenSettings, DefaultLoadingScreen), Z_Construct_UScriptStruct_FALoadingScreenSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_DefaultLoadingScreen_MetaData), NewProp_DefaultLoadingScreen_MetaData) }; // 2465446090
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_Classic = { "Classic", nullptr, (EPropertyFlags)0x0010000000004001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ULoadingScreenSettings, Classic), Z_Construct_UScriptStruct_FClassicLayoutSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Classic_MetaData), NewProp_Classic_MetaData) }; // 1033039436
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_Center = { "Center", nullptr, (EPropertyFlags)0x0010000000004001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ULoadingScreenSettings, Center), Z_Construct_UScriptStruct_FCenterLayoutSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Center_MetaData), NewProp_Center_MetaData) }; // 2171163439
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_Letterbox = { "Letterbox", nullptr, (EPropertyFlags)0x0010000000004001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ULoadingScreenSettings, Letterbox), Z_Construct_UScriptStruct_FLetterboxLayoutSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Letterbox_MetaData), NewProp_Letterbox_MetaData) }; // 3814849521
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_Sidebar = { "Sidebar", nullptr, (EPropertyFlags)0x0010000000004001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ULoadingScreenSettings, Sidebar), Z_Construct_UScriptStruct_FSidebarLayoutSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Sidebar_MetaData), NewProp_Sidebar_MetaData) }; // 2969038530
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_DualSidebar = { "DualSidebar", nullptr, (EPropertyFlags)0x0010000000004001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ULoadingScreenSettings, DualSidebar), Z_Construct_UScriptStruct_FDualSidebarLayoutSettings, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_DualSidebar_MetaData), NewProp_DualSidebar_MetaData) }; // 631059198
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_ULoadingScreenSettings_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_bPreloadBackgroundImages,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ULoadingScreenSettings_Statics::NewProp_StartupLoadingScreen,
@@ -2398,37 +2930,37 @@ ULoadingScreenSettings::~ULoadingScreenSettings() {}
 // End Class ULoadingScreenSettings
 
 // Begin Registration
-struct Z_CompiledInDeferFile_FID_build_U5M_Sync_LocalBuilds_PluginTemp_HostProject_Plugins_AsyncLoadingScreen_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_Statics
+struct Z_CompiledInDeferFile_FID_Users_Christopher_Chandler_Development_Unreal_Engine_Projects_GMTK2025_GMTK2025_Plugins_AsyncLoac1ceae7b44acV11_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_Statics
 {
 	static constexpr FEnumRegisterCompiledInInfo EnumInfo[] = {
-		{ EAsyncLoadingScreenLayout_StaticEnum, TEXT("EAsyncLoadingScreenLayout"), &Z_Registration_Info_UEnum_EAsyncLoadingScreenLayout, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 2376893636U) },
-		{ ELoadingIconType_StaticEnum, TEXT("ELoadingIconType"), &Z_Registration_Info_UEnum_ELoadingIconType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 250101964U) },
-		{ ELoadingWidgetType_StaticEnum, TEXT("ELoadingWidgetType"), &Z_Registration_Info_UEnum_ELoadingWidgetType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 2419381618U) },
+		{ EAsyncLoadingScreenLayout_StaticEnum, TEXT("EAsyncLoadingScreenLayout"), &Z_Registration_Info_UEnum_EAsyncLoadingScreenLayout, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 2492976519U) },
+		{ ELoadingIconType_StaticEnum, TEXT("ELoadingIconType"), &Z_Registration_Info_UEnum_ELoadingIconType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 1252965477U) },
+		{ ELoadingWidgetType_StaticEnum, TEXT("ELoadingWidgetType"), &Z_Registration_Info_UEnum_ELoadingWidgetType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 3444560743U) },
 	};
 	static constexpr FStructRegisterCompiledInInfo ScriptStructInfo[] = {
-		{ FWidgetAlignment::StaticStruct, Z_Construct_UScriptStruct_FWidgetAlignment_Statics::NewStructOps, TEXT("WidgetAlignment"), &Z_Registration_Info_UScriptStruct_WidgetAlignment, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FWidgetAlignment), 3872820991U) },
-		{ FTextAppearance::StaticStruct, Z_Construct_UScriptStruct_FTextAppearance_Statics::NewStructOps, TEXT("TextAppearance"), &Z_Registration_Info_UScriptStruct_TextAppearance, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FTextAppearance), 3227196346U) },
-		{ FThrobberSettings::StaticStruct, Z_Construct_UScriptStruct_FThrobberSettings_Statics::NewStructOps, TEXT("ThrobberSettings"), &Z_Registration_Info_UScriptStruct_ThrobberSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FThrobberSettings), 1232286367U) },
-		{ FCircularThrobberSettings::StaticStruct, Z_Construct_UScriptStruct_FCircularThrobberSettings_Statics::NewStructOps, TEXT("CircularThrobberSettings"), &Z_Registration_Info_UScriptStruct_CircularThrobberSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FCircularThrobberSettings), 615113133U) },
-		{ FImageSequenceSettings::StaticStruct, Z_Construct_UScriptStruct_FImageSequenceSettings_Statics::NewStructOps, TEXT("ImageSequenceSettings"), &Z_Registration_Info_UScriptStruct_ImageSequenceSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FImageSequenceSettings), 584027274U) },
-		{ FBackgroundSettings::StaticStruct, Z_Construct_UScriptStruct_FBackgroundSettings_Statics::NewStructOps, TEXT("BackgroundSettings"), &Z_Registration_Info_UScriptStruct_BackgroundSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FBackgroundSettings), 1698284326U) },
-		{ FLoadingWidgetSettings::StaticStruct, Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewStructOps, TEXT("LoadingWidgetSettings"), &Z_Registration_Info_UScriptStruct_LoadingWidgetSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FLoadingWidgetSettings), 4231774665U) },
-		{ FTipSettings::StaticStruct, Z_Construct_UScriptStruct_FTipSettings_Statics::NewStructOps, TEXT("TipSettings"), &Z_Registration_Info_UScriptStruct_TipSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FTipSettings), 2673501722U) },
-		{ FLoadingCompleteTextSettings::StaticStruct, Z_Construct_UScriptStruct_FLoadingCompleteTextSettings_Statics::NewStructOps, TEXT("LoadingCompleteTextSettings"), &Z_Registration_Info_UScriptStruct_LoadingCompleteTextSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FLoadingCompleteTextSettings), 2759698446U) },
-		{ FALoadingScreenSettings::StaticStruct, Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewStructOps, TEXT("ALoadingScreenSettings"), &Z_Registration_Info_UScriptStruct_ALoadingScreenSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FALoadingScreenSettings), 1934922393U) },
-		{ FClassicLayoutSettings::StaticStruct, Z_Construct_UScriptStruct_FClassicLayoutSettings_Statics::NewStructOps, TEXT("ClassicLayoutSettings"), &Z_Registration_Info_UScriptStruct_ClassicLayoutSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FClassicLayoutSettings), 1362563564U) },
-		{ FCenterLayoutSettings::StaticStruct, Z_Construct_UScriptStruct_FCenterLayoutSettings_Statics::NewStructOps, TEXT("CenterLayoutSettings"), &Z_Registration_Info_UScriptStruct_CenterLayoutSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FCenterLayoutSettings), 1334505308U) },
-		{ FLetterboxLayoutSettings::StaticStruct, Z_Construct_UScriptStruct_FLetterboxLayoutSettings_Statics::NewStructOps, TEXT("LetterboxLayoutSettings"), &Z_Registration_Info_UScriptStruct_LetterboxLayoutSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FLetterboxLayoutSettings), 2540378594U) },
-		{ FSidebarLayoutSettings::StaticStruct, Z_Construct_UScriptStruct_FSidebarLayoutSettings_Statics::NewStructOps, TEXT("SidebarLayoutSettings"), &Z_Registration_Info_UScriptStruct_SidebarLayoutSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FSidebarLayoutSettings), 3206132957U) },
-		{ FDualSidebarLayoutSettings::StaticStruct, Z_Construct_UScriptStruct_FDualSidebarLayoutSettings_Statics::NewStructOps, TEXT("DualSidebarLayoutSettings"), &Z_Registration_Info_UScriptStruct_DualSidebarLayoutSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FDualSidebarLayoutSettings), 4235503631U) },
+		{ FWidgetAlignment::StaticStruct, Z_Construct_UScriptStruct_FWidgetAlignment_Statics::NewStructOps, TEXT("WidgetAlignment"), &Z_Registration_Info_UScriptStruct_WidgetAlignment, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FWidgetAlignment), 3814092113U) },
+		{ FTextAppearance::StaticStruct, Z_Construct_UScriptStruct_FTextAppearance_Statics::NewStructOps, TEXT("TextAppearance"), &Z_Registration_Info_UScriptStruct_TextAppearance, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FTextAppearance), 2367012672U) },
+		{ FThrobberSettings::StaticStruct, Z_Construct_UScriptStruct_FThrobberSettings_Statics::NewStructOps, TEXT("ThrobberSettings"), &Z_Registration_Info_UScriptStruct_ThrobberSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FThrobberSettings), 2104428535U) },
+		{ FCircularThrobberSettings::StaticStruct, Z_Construct_UScriptStruct_FCircularThrobberSettings_Statics::NewStructOps, TEXT("CircularThrobberSettings"), &Z_Registration_Info_UScriptStruct_CircularThrobberSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FCircularThrobberSettings), 913296650U) },
+		{ FImageSequenceSettings::StaticStruct, Z_Construct_UScriptStruct_FImageSequenceSettings_Statics::NewStructOps, TEXT("ImageSequenceSettings"), &Z_Registration_Info_UScriptStruct_ImageSequenceSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FImageSequenceSettings), 3207018030U) },
+		{ FBackgroundSettings::StaticStruct, Z_Construct_UScriptStruct_FBackgroundSettings_Statics::NewStructOps, TEXT("BackgroundSettings"), &Z_Registration_Info_UScriptStruct_BackgroundSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FBackgroundSettings), 2107532212U) },
+		{ FLoadingWidgetSettings::StaticStruct, Z_Construct_UScriptStruct_FLoadingWidgetSettings_Statics::NewStructOps, TEXT("LoadingWidgetSettings"), &Z_Registration_Info_UScriptStruct_LoadingWidgetSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FLoadingWidgetSettings), 2427728391U) },
+		{ FTipSettings::StaticStruct, Z_Construct_UScriptStruct_FTipSettings_Statics::NewStructOps, TEXT("TipSettings"), &Z_Registration_Info_UScriptStruct_TipSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FTipSettings), 3482184756U) },
+		{ FLoadingCompleteTextSettings::StaticStruct, Z_Construct_UScriptStruct_FLoadingCompleteTextSettings_Statics::NewStructOps, TEXT("LoadingCompleteTextSettings"), &Z_Registration_Info_UScriptStruct_LoadingCompleteTextSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FLoadingCompleteTextSettings), 2517252889U) },
+		{ FALoadingScreenSettings::StaticStruct, Z_Construct_UScriptStruct_FALoadingScreenSettings_Statics::NewStructOps, TEXT("ALoadingScreenSettings"), &Z_Registration_Info_UScriptStruct_ALoadingScreenSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FALoadingScreenSettings), 2465446090U) },
+		{ FClassicLayoutSettings::StaticStruct, Z_Construct_UScriptStruct_FClassicLayoutSettings_Statics::NewStructOps, TEXT("ClassicLayoutSettings"), &Z_Registration_Info_UScriptStruct_ClassicLayoutSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FClassicLayoutSettings), 1033039436U) },
+		{ FCenterLayoutSettings::StaticStruct, Z_Construct_UScriptStruct_FCenterLayoutSettings_Statics::NewStructOps, TEXT("CenterLayoutSettings"), &Z_Registration_Info_UScriptStruct_CenterLayoutSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FCenterLayoutSettings), 2171163439U) },
+		{ FLetterboxLayoutSettings::StaticStruct, Z_Construct_UScriptStruct_FLetterboxLayoutSettings_Statics::NewStructOps, TEXT("LetterboxLayoutSettings"), &Z_Registration_Info_UScriptStruct_LetterboxLayoutSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FLetterboxLayoutSettings), 3814849521U) },
+		{ FSidebarLayoutSettings::StaticStruct, Z_Construct_UScriptStruct_FSidebarLayoutSettings_Statics::NewStructOps, TEXT("SidebarLayoutSettings"), &Z_Registration_Info_UScriptStruct_SidebarLayoutSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FSidebarLayoutSettings), 2969038530U) },
+		{ FDualSidebarLayoutSettings::StaticStruct, Z_Construct_UScriptStruct_FDualSidebarLayoutSettings_Statics::NewStructOps, TEXT("DualSidebarLayoutSettings"), &Z_Registration_Info_UScriptStruct_DualSidebarLayoutSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FDualSidebarLayoutSettings), 631059198U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_ULoadingScreenSettings, ULoadingScreenSettings::StaticClass, TEXT("ULoadingScreenSettings"), &Z_Registration_Info_UClass_ULoadingScreenSettings, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(ULoadingScreenSettings), 3139336885U) },
+		{ Z_Construct_UClass_ULoadingScreenSettings, ULoadingScreenSettings::StaticClass, TEXT("ULoadingScreenSettings"), &Z_Registration_Info_UClass_ULoadingScreenSettings, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(ULoadingScreenSettings), 1029991660U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_build_U5M_Sync_LocalBuilds_PluginTemp_HostProject_Plugins_AsyncLoadingScreen_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_2628735366(TEXT("/Script/AsyncLoadingScreen"),
-	Z_CompiledInDeferFile_FID_build_U5M_Sync_LocalBuilds_PluginTemp_HostProject_Plugins_AsyncLoadingScreen_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_build_U5M_Sync_LocalBuilds_PluginTemp_HostProject_Plugins_AsyncLoadingScreen_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_Statics::ClassInfo),
-	Z_CompiledInDeferFile_FID_build_U5M_Sync_LocalBuilds_PluginTemp_HostProject_Plugins_AsyncLoadingScreen_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_Statics::ScriptStructInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_build_U5M_Sync_LocalBuilds_PluginTemp_HostProject_Plugins_AsyncLoadingScreen_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_Statics::ScriptStructInfo),
-	Z_CompiledInDeferFile_FID_build_U5M_Sync_LocalBuilds_PluginTemp_HostProject_Plugins_AsyncLoadingScreen_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_build_U5M_Sync_LocalBuilds_PluginTemp_HostProject_Plugins_AsyncLoadingScreen_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_Statics::EnumInfo));
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Users_Christopher_Chandler_Development_Unreal_Engine_Projects_GMTK2025_GMTK2025_Plugins_AsyncLoac1ceae7b44acV11_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_2367772646(TEXT("/Script/AsyncLoadingScreen"),
+	Z_CompiledInDeferFile_FID_Users_Christopher_Chandler_Development_Unreal_Engine_Projects_GMTK2025_GMTK2025_Plugins_AsyncLoac1ceae7b44acV11_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Users_Christopher_Chandler_Development_Unreal_Engine_Projects_GMTK2025_GMTK2025_Plugins_AsyncLoac1ceae7b44acV11_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_Statics::ClassInfo),
+	Z_CompiledInDeferFile_FID_Users_Christopher_Chandler_Development_Unreal_Engine_Projects_GMTK2025_GMTK2025_Plugins_AsyncLoac1ceae7b44acV11_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_Statics::ScriptStructInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Users_Christopher_Chandler_Development_Unreal_Engine_Projects_GMTK2025_GMTK2025_Plugins_AsyncLoac1ceae7b44acV11_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_Statics::ScriptStructInfo),
+	Z_CompiledInDeferFile_FID_Users_Christopher_Chandler_Development_Unreal_Engine_Projects_GMTK2025_GMTK2025_Plugins_AsyncLoac1ceae7b44acV11_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Users_Christopher_Chandler_Development_Unreal_Engine_Projects_GMTK2025_GMTK2025_Plugins_AsyncLoac1ceae7b44acV11_Source_AsyncLoadingScreen_Public_LoadingScreenSettings_h_Statics::EnumInfo));
 // End Registration
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

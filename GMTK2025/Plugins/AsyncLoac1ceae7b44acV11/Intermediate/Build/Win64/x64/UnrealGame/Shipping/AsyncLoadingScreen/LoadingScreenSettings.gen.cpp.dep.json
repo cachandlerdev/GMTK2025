@@ -1,0 +1,21 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\plugins\\asyncloac1ceae7b44acv11\\intermediate\\build\\win64\\unrealgame\\inc\\asyncloadingscreen\\uht\\loadingscreensettings.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\intermediate\\build\\win64\\x64\\gmtk2025\\shipping\\engine\\sharedpch.engine.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\plugins\\asyncloac1ceae7b44acv11\\intermediate\\build\\win64\\x64\\unrealgame\\shipping\\asyncloadingscreen\\definitions.asyncloadingscreen.h",
+            "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\plugins\\asyncloac1ceae7b44acv11\\source\\asyncloadingscreen\\public\\loadingscreensettings.h",
+            "c:\\program files\\epic games\\ue_5.5\\engine\\source\\runtime\\movieplayer\\public\\movieplayer.h",
+            "c:\\program files\\epic games\\ue_5.5\\engine\\source\\runtime\\engine\\public\\slate\\slatetextures.h",
+            "c:\\program files\\epic games\\ue_5.5\\engine\\source\\runtime\\slatecore\\public\\textures\\slateupdatabletexture.h",
+            "c:\\program files\\epic games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\movieplayer\\uht\\movieplayer.generated.h",
+            "c:\\program files\\epic games\\ue_5.5\\engine\\source\\runtime\\slate\\public\\widgets\\layout\\sscalebox.h",
+            "c:\\program files\\epic games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\slate\\uht\\sscalebox.generated.h",
+            "c:\\users\\christopher chandler\\development\\unreal engine\\projects\\gmtk2025\\gmtk2025\\plugins\\asyncloac1ceae7b44acv11\\intermediate\\build\\win64\\unrealgame\\inc\\asyncloadingscreen\\uht\\loadingscreensettings.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
