@@ -19,7 +19,7 @@ public:
 
 	virtual void HandlePickup(AActor* PickupInstigator) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pickups")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pickups")//Tells the blueprint what item is granted on pickup
 	TSubclassOf<UVehicleItems> VehicleItemClass;
 };
 
