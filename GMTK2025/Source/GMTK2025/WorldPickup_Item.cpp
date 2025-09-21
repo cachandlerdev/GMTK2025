@@ -12,7 +12,7 @@ void AWorldPickup_Item::HandlePickup(AActor* PickupInstigator)
 
 	if (player && player->IsPlayerControlled())
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickupSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickupSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation(), PickupSound->GetVolumeMultiplier());
 
 		player->InventoryComponent->AddVehicleItem(VehicleItemClass);
 		Destroy();

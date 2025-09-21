@@ -245,12 +245,7 @@ void APlayerPawn::OnActivateToggleHud(const FInputActionValue& value)
 	}
 	if (sound)
 	{
-		UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-		if (instance)
-		{
-			float volume = instance->MusicVolume;
-			UGameplayStatics::PlaySoundAtLocation(GetWorld(), sound, GetActorLocation(), sound->GetVolumeMultiplier() * volume);
-		}
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), sound, GetActorLocation(), sound->GetVolumeMultiplier());
 	}
 	OnToggleHudBP();
 }
@@ -267,14 +262,9 @@ void APlayerPawn::OnActivateBrake(const FInputActionValue& value)
 
 void APlayerPawn::OnActivateHandbrake(const FInputActionValue& value)
 {
-	UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (instance)
+	if (ActivateHandbrakeSound)
 	{
-		float volume = instance->MusicVolume;
-		if (ActivateHandbrakeSound)
-		{
-			UGameplayStatics::PlaySoundAtLocation(GetWorld(), ActivateHandbrakeSound, GetActorLocation(), GetActorRotation(), ActivateHandbrakeSound->GetVolumeMultiplier() * volume);
-		}
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ActivateHandbrakeSound, GetActorLocation(), GetActorRotation(), ActivateHandbrakeSound->GetVolumeMultiplier());
 	}
 	MovementComponent->Handbrake();
 }
@@ -296,14 +286,9 @@ void APlayerPawn::OnReleaseBrake(const FInputActionValue& value)
 
 void APlayerPawn::OnReleaseHandbrake(const FInputActionValue& value)
 {
-	UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (instance)
+	if (ReleaseHandbrakeSound)
 	{
-		float volume = instance->MusicVolume;
-		if (ReleaseHandbrakeSound)
-		{
-			UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReleaseHandbrakeSound, GetActorLocation(), GetActorRotation(), ReleaseHandbrakeSound->GetVolumeMultiplier() * volume);
-		}
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReleaseHandbrakeSound, GetActorLocation(), GetActorRotation(), ReleaseHandbrakeSound->GetVolumeMultiplier());
 	}
 	MovementComponent->ReleaseHandbrake();
 }

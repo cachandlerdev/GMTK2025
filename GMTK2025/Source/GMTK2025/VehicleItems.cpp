@@ -41,14 +41,9 @@ void UVehicleItems::UseItem()
 	if (PlayerPawn)
 	{
 		
-		UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-		if (instance)
+		if (UseSound)
 		{
-			float volume = instance->MusicVolume;
-			if (UseSound)
-			{
-				UGameplayStatics::PlaySoundAtLocation(GetWorld(), UseSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation(), UseSound->GetVolumeMultiplier() * volume);
-			}
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), UseSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation(), UseSound->GetVolumeMultiplier());
 		}
 		PlayerPawn->InventoryComponent->VehicleItem = nullptr; // Clear the vehicle item reference
 	}

@@ -118,14 +118,9 @@ void AMyGameModeBase::StartFirstLoopWithCountdown()
 	
 	CurrentLoopStartTime = GetWorld()->TimeSeconds;
 	SetupPlayerForLoop();
-	UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (instance)
+	if (FirstLoopSound)
 	{
-		float volume = instance->MusicVolume;
-		if (FirstLoopSound)
-		{
-			UGameplayStatics::PlaySoundAtLocation(GetWorld(), FirstLoopSound, PlayerPawn->GetActorLocation(), PlayerPawn->GetActorRotation(), FirstLoopSound->GetVolumeMultiplier() * volume);
-		}
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FirstLoopSound, PlayerPawn->GetActorLocation(), PlayerPawn->GetActorRotation(), FirstLoopSound->GetVolumeMultiplier());
 	}
 	
 	GetWorldTimerManager().SetTimer(FirstLoopCountdownHandle, this, &AMyGameModeBase::StartNextLoop,
@@ -168,26 +163,16 @@ void AMyGameModeBase::StartNextLoop()
 	{
 		AddNewGhost();
 		
-		UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-		if (instance)
+		if (NewLoopSound)
 		{
-			float volume = instance->MusicVolume;
-			if (NewLoopSound)
-			{
-				UGameplayStatics::PlaySound2D(GetWorld(), NewLoopSound, NewLoopSound->GetVolumeMultiplier() * volume);
-			}
+			UGameplayStatics::PlaySound2D(GetWorld(), NewLoopSound, NewLoopSound->GetVolumeMultiplier());
 		}
 	}
 	else
 	{
-		UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-		if (instance)
+		if (NoRecordedTimesVoiceLine)
 		{
-			float volume = instance->MusicVolume;
-			if (NoRecordedTimesVoiceLine)
-			{
-				UGameplayStatics::PlaySound2D(GetWorld(), NoRecordedTimesVoiceLine, volume * NoRecordedTimesVoiceLine->GetVolumeMultiplier());
-			}
+			UGameplayStatics::PlaySound2D(GetWorld(), NoRecordedTimesVoiceLine, NoRecordedTimesVoiceLine->GetVolumeMultiplier());
 		}
 	}
 
@@ -217,14 +202,9 @@ void AMyGameModeBase::RestartThisLoop()
 		
 		CurrentLoopStartTime = GetWorld()->TimeSeconds;
 		
-		UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-		if (instance)
+		if (RestartLoopSound)
 		{
-			float volume = instance->MusicVolume;
-			if (RestartLoopSound)
-			{
-				UGameplayStatics::PlaySound2D(GetWorld(), RestartLoopSound, volume * RestartLoopSound->GetVolumeMultiplier());
-			}
+			UGameplayStatics::PlaySound2D(GetWorld(), RestartLoopSound, RestartLoopSound->GetVolumeMultiplier());
 		}
 		LoopFinishedDelegateCalls();
 		OnRestartThisLoopBP();
@@ -244,14 +224,9 @@ void AMyGameModeBase::RestartThisLoop()
 		}
 		else
 		{
-			UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-			if (instance)
+			if (RestartLoopSound)
 			{
-				float volume = instance->MusicVolume;
-				if (RestartLoopSound)
-				{
-					UGameplayStatics::PlaySound2D(GetWorld(), RestartLoopSound, volume * RestartLoopSound->GetVolumeMultiplier());
-				}
+				UGameplayStatics::PlaySound2D(GetWorld(), RestartLoopSound, RestartLoopSound->GetVolumeMultiplier());
 			}
 			FVector location = playerStarts[0]->GetActorLocation();
 			FRotator rotation = playerStarts[0]->GetActorRotation();
@@ -283,14 +258,9 @@ void AMyGameModeBase::FinishThisLoop()
 			// Player keeps going
 			OnLoseRoundBP();
 			
-			UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-			if (instance)
+			if (RoundLostVoiceLine)
 			{
-				float volume = instance->MusicVolume;
-				if (RoundLostVoiceLine)
-				{
-					UGameplayStatics::PlaySound2D(GetWorld(), RoundLostVoiceLine, RoundLostVoiceLine->GetVolumeMultiplier() * volume);
-				}
+				UGameplayStatics::PlaySound2D(GetWorld(), RoundLostVoiceLine, RoundLostVoiceLine->GetVolumeMultiplier());
 			}
 		}
 		else
@@ -382,27 +352,17 @@ void AMyGameModeBase::SetupPlayerForLoop()
 
 void AMyGameModeBase::PlayLoseSound()
 {
-	UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (instance)
+	if (GameLoseSound)
 	{
-		float volume = instance->MusicVolume;
-		if (GameLoseSound)
-		{
-			UGameplayStatics::PlaySound2D(GetWorld(), GameLoseSound);
-		}
+		UGameplayStatics::PlaySound2D(GetWorld(), GameLoseSound, GameLoseSound->GetVolumeMultiplier());
 	}
 }
 
 void AMyGameModeBase::OnLoseGame()
 {
-	UMyGameInstance* instance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (instance)
+	if (GameLoseVoiceLine)
 	{
-		float volume = instance->MusicVolume;
-		if (GameLoseVoiceLine)
-		{
-			UGameplayStatics::PlaySound2D(GetWorld(), GameLoseVoiceLine, GameLoseVoiceLine->GetVolumeMultiplier() * volume);
-		}
+		UGameplayStatics::PlaySound2D(GetWorld(), GameLoseVoiceLine, GameLoseVoiceLine->GetVolumeMultiplier());
 	}
 	GetWorldTimerManager().SetTimer(GameLoseSoundDelayHandle, this, &AMyGameModeBase::PlayLoseSound,
 		GameLoseVoiceLine->GetDuration(), false);	

@@ -35,7 +35,7 @@ void APickup_Base::HandlePickup(AActor* PickupInstigator)
 	// Logic for handling the pickup
 	// This could include adding to inventory, updating score, etc.
 	UE_LOG(LogTemp, Warning, TEXT("Pickup handled!"));
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickupSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation());
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickupSound, UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation(), PickupSound->GetVolumeMultiplier());
 
 	// Optionally destroy the pickup actor after handling
 	Destroy();
