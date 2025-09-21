@@ -2,9 +2,6 @@
 	"RemapUnityFiles": 
 	{
 		"Module.AsyncLoadingScreen.cpp.obj": [
-			"AsyncLoadingScreen.init.gen.cpp.obj",
-			"AsyncLoadingScreenLibrary.gen.cpp.obj",
-			"LoadingScreenSettings.gen.cpp.obj",
 			"PerModuleInline.gen.cpp.obj",
 			"AsyncLoadingScreen.cpp.obj",
 			"AsyncLoadingScreenLibrary.cpp.obj",
@@ -20,7 +17,10 @@
 			"SLoadingWidget.cpp.obj",
 			"SSidebarLayout.cpp.obj",
 			"STipWidget.cpp.obj",
-			"SVerticalLoadingWidget.cpp.obj"
+			"SVerticalLoadingWidget.cpp.obj",
+			"AsyncLoadingScreen.init.gen.cpp.obj",
+			"AsyncLoadingScreenLibrary.gen.cpp.obj",
+			"LoadingScreenSettings.gen.cpp.obj"
 		]
 	}
 }
