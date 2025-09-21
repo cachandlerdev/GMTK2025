@@ -36,9 +36,9 @@
 /NODEFAULTLIB:"LIBCPD"
 /FUNCTIONPADMIN:6
 /NOIMPLIB
-"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Intermediate\Build\Win64\x64\GMTK2025Editor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
-"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Module.AsyncLoadingScreen.cpp.obj"
-"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Default.rc2.res"
+"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Intermediate\Build\Win64\x64\GMTK2025Editor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
+"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Module.AsyncLoadingScreen.cpp.obj"
+"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Default.rc2.res"
 "..\Intermediate\Build\Win64\x64\UnrealEditor\Development\CoreUObject\UnrealEditor-CoreUObject.lib"
 "..\Intermediate\Build\Win64\x64\UnrealEditor\Development\Engine\UnrealEditor-Engine.lib"
 "..\Intermediate\Build\Win64\x64\UnrealEditor\Development\Slate\UnrealEditor-Slate.lib"
@@ -71,6 +71,6 @@
 "synchronization.lib"
 "dwmapi.lib"
 "imm32.lib"
-/OUT:"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Binaries\Win64\UnrealEditor-AsyncLoadingScreen.dll"
-/PDB:"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Binaries\Win64\UnrealEditor-AsyncLoadingScreen.pdb"
+/OUT:"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Binaries\Win64\UnrealEditor-AsyncLoadingScreen.dll"
+/PDB:"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Binaries\Win64\UnrealEditor-AsyncLoadingScreen.pdb"
 /ignore:4078

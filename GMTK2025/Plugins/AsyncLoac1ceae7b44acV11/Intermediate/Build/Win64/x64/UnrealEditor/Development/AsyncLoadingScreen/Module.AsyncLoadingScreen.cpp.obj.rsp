@@ -1,12 +1,12 @@
-"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Module.AsyncLoadingScreen.cpp"
-/FI"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Intermediate\Build\Win64\x64\GMTK2025Editor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h"
-/FI"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Definitions.AsyncLoadingScreen.h"
-/Yu"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Intermediate\Build\Win64\x64\GMTK2025Editor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h"
-/Fp"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Intermediate\Build\Win64\x64\GMTK2025Editor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.pch"
-/Fo"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Module.AsyncLoadingScreen.cpp.obj"
-/experimental:log "C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Module.AsyncLoadingScreen.cpp.sarif"
-/sourceDependencies "C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Module.AsyncLoadingScreen.cpp.dep.json"
-@"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\AsyncLoadingScreen.Shared.rsp"
+"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Module.AsyncLoadingScreen.cpp"
+/FI"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Intermediate\Build\Win64\x64\GMTK2025Editor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h"
+/FI"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Definitions.AsyncLoadingScreen.h"
+/Yu"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Intermediate\Build\Win64\x64\GMTK2025Editor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h"
+/Fp"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Intermediate\Build\Win64\x64\GMTK2025Editor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.pch"
+/Fo"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Module.AsyncLoadingScreen.cpp.obj"
+/experimental:log "C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Module.AsyncLoadingScreen.cpp.sarif"
+/sourceDependencies "C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Module.AsyncLoadingScreen.cpp.dep.json"
+@"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\AsyncLoadingScreen.Shared.rsp"
 /d2ssa-cfg-question-
 /Zc:inline
 /nologo

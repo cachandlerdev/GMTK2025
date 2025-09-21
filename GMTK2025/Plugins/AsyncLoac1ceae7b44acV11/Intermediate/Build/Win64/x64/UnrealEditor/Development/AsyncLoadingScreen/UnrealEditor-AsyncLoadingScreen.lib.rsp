@@ -6,7 +6,7 @@
 /NAME:"UnrealEditor-AsyncLoadingScreen.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Intermediate\Build\Win64\x64\GMTK2025Editor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
-"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Module.AsyncLoadingScreen.cpp.obj"
-"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Default.rc2.res"
-/OUT:"C:\Users\Christopher Chandler\Development\Unreal Engine\Projects\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\UnrealEditor-AsyncLoadingScreen.lib"
+"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Intermediate\Build\Win64\x64\GMTK2025Editor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
+"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Module.AsyncLoadingScreen.cpp.obj"
+"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\Default.rc2.res"
+/OUT:"C:\Users\brand\Documents\GitHub\GMTK2025\GMTK2025\Plugins\AsyncLoac1ceae7b44acV11\Intermediate\Build\Win64\x64\UnrealEditor\Development\AsyncLoadingScreen\UnrealEditor-AsyncLoadingScreen.lib"
