@@ -12,5 +12,6 @@ void AChild_PickupType_Coin::HandlePickup(AActor* PickupInstigator)
 	{
 		player->InventoryComponent->AddCoins();
 	}
-	Super::HandlePickup(PickupInstigator);
+	//Super::HandlePickup(PickupInstigator);
+	Destroy();
 }
